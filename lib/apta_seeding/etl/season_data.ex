@@ -1,4 +1,4 @@
-defmodule AptaSeeding.ETL.TournamentData do
+defmodule AptaSeeding.ETL.SeasonData do
 
   @doc """
   This takes in a map that gets converted to json, but they are really post params
@@ -9,15 +9,24 @@ defmodule AptaSeeding.ETL.TournamentData do
     api_url: "/services/2015ServiceRanking.asmx/GetRanking"
     post_params: {"stype":2,"rtype":1,"sid":10,"rnum":0,"copt":3,"xid":0}
   """
-  def call(request_target) do
-    # request_target
-    # |> prepare_request
-    # |> make_request()
-    # |> parse_response_json()
-    # |> parse_html()
-    # |> prepare_output()
+  def call(tournament_params_to_post) do
+    tournament_params_to_post
+    |> extract()
+    |> transform()
+    |> load()
+  end
 
-    [:tournaments_payload]
+  def extract(args) do
+    args
+  end
+
+  def transform(args) do
+    args
+  end
+
+  def load(args) do
+    args
+    {:ok, args}
   end
 
   @doc """

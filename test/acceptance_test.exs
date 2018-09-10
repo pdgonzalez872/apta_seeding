@@ -6,7 +6,7 @@ defmodule AptaSeeding.AcceptanceTest do
   describe "This is where we try things out" do
     test "playground" do
 
-      result = ETL.handle_multiple_tournaments_context("hahaha html right")
+      {:ok, result} = ETL.handle_season_data(["hahaha html right"])
 
       assert Enum.at(result, 0) == %{third_party_tournament_id: "416",
                                      tournament_date: "12/09/17",
