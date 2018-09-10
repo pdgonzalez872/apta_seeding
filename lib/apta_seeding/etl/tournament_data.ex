@@ -1,4 +1,4 @@
-defmodule AptaSeeding.ETL.Extract.TournamentsPayload do
+defmodule AptaSeeding.ETL.TournamentData do
 
   @doc """
   This takes in a map that gets converted to json, but they are really post params
@@ -17,7 +17,7 @@ defmodule AptaSeeding.ETL.Extract.TournamentsPayload do
     # |> parse_html()
     # |> prepare_output()
 
-    :tournaments_payload
+    [:tournaments_payload]
   end
 
   @doc """

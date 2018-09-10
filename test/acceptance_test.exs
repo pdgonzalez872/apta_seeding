@@ -1,13 +1,12 @@
 defmodule AptaSeeding.AcceptanceTest do
   use ExUnit.Case
 
-  alias AptaSeeding.ETL.Extract
+  alias AptaSeeding.ETL
 
   describe "This is where we try things out" do
-    test "main" do
-      assert Extract.handle_tournaments_payload("hahaha html right") == 1
+    test "playground" do
 
-      result = []
+      result = ETL.handle_multiple_tournaments_context("hahaha html right")
 
       assert Enum.at(result, 0) == %{third_party_tournament_id: "416",
                                      tournament_date: "12/09/17",
