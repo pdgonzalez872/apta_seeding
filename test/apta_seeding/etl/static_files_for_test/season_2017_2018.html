@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	American Platform Tennis Association Tournament Live Scoring
+</title><meta name="viewport" content="width=device-width" /><link rel='stylesheet' type='text/css' href='scorecss/site.min.css' />
+    
+    
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) { i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o), m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m) })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'); ga('create', 'UA-54526368-1', 'auto'); ga('send', 'pageview');
+    </script>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript">window.jQuery || document.write('<script src="/js/jQuery-1.12.4.min.js">\x3C/script>')</script>
+    <script type="text/javascript" src="js/scoresite.js"></script>
+    <script type="text/javascript">
+        jQuery(window).load(function () {
+            $(".lvl1.nav1expand").click(function (event) { // binding onclick
+                if ($(this).hasClass('selected')) {
+                    $(".nav1expchild").slideUp(100); // hiding menus
+                    $("#nav1bar .selected").removeClass("selected");
+                } else {
+                    $(".nav1expchild").slideUp(100); // hiding menus
+                    $("#nav1bar .selected").removeClass("selected");
+                    if ($(this).children(".subs").length) {
+                        $(this).addClass("selected"); // display menu
+                        $(this).children(".subs").children().slideDown(200);
+                    }
+                }
+                // ie needs this
+                var isMSIE = /*@cc_on!@*/0;
+                if (isMSIE) { window.event.cancelBubble = true; }
+                else { event.stopPropagation(); }
+            });
+            $(".lvl2.nav1expand").click(function (event) { // binding onclick
+                if ($(this).css('float') == 'none') {
+                    if ($(this).hasClass('selected')) {
+                        $('.lvl2.nav1expand').removeClass("selected");
+                        $('.lvl3ul').slideUp(200)
+                    } else {
+                        $('.lvl3ul').slideUp(200)
+                        $('.lvl2.nav1expand').removeClass("selected");
+                        $(this).addClass("selected");
+                        $(this).children("ul").slideDown(200); // display menu
+                    }
+                }
+                // ie needs this
+                var isMSIE = /*@cc_on!@*/0;
+                if (isMSIE) { window.event.cancelBubble = true; }
+                else { event.stopPropagation(); }
+            });
+            // close the main menu if a non-expando, or child of an expando, is clicked
+            $(':not(.nav1expand)').click(function (event) {
+                if (event.target != $('.nav1expand')) {
+                    if ($(this).parents(".nav1expand").length == 0) {
+                        $("#nav1bar .selected").find(".nav1expchild").slideUp(100); // hiding menus
+                        $("#nav1bar .selected").removeClass("selected");
+                        $(".notnav").show()
+                    }
+                }
+            });
+            // open the main menu from the menu button
+            $('#nav1btn').click(function (event) {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass("selected");
+                    $('#nav1').removeClass("showme")
+                    $(".notnav").show();
+                } else {
+                    $(this).addClass("selected");
+                    $('#nav1').addClass("showme")
+                    $(".notnav").hide();
+                }
+                // ie needs this
+                var isMSIE = /*@cc_on!@*/0;
+                if (isMSIE) { window.event.cancelBubble = true; }
+                else { event.stopPropagation(); }
+            });
+        });
+    </script>
+    
+    
+    
+    
+    
+    <script type="text/javascript" src="js/RankingDisplay.js"></script>
+    <script type="text/javascript" src="js/ExpandoNav.js"></script>
+
+
+    
+    
+    <script type="text/javascript">
+        function slideMeDown(arg) { $(arg).slideDown(); }
+    </script>
+
+</head>
+<body>
+    <form method="post" action="Ranking.aspx?stype=2&amp;rtype=1&amp;sid=13&amp;copt=3" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwUKMTU5MzE2MzU0Ng9kFgJmD2QWAmYPZBYCZg9kFgJmD2QWAgIBD2QWAgIBD2QWAgIBD2QWAgIBDxYCHgVzdHlsZQUNZGlzcGxheTpub25lOxYCAgEPZBYMZg8PFgQeCENzc0NsYXNzBQRpZHB3HgRfIVNCAgJkZAIBDw8WBB8BBQRpZHB3HwICAmRkAgMPDxYEHwEFCmdyb3VwYWxvbmUfAgICZBYCAgEPDxYEHwEFA2J0bh8CAgJkZAIEDxYCHgdWaXNpYmxlaGQCBQ8WAh8DaGQCBg8PFgQfAQUKZ3JvdXBhbG9uZR8CAgJkZBgBBR5fX0NvbnRyb2xzUmVxdWlyZVBvc3RCYWNrS2V5X18WAQVIY3RsMDAkY3RsMDAkY3RsMDAkY3RsMDAkYWJvdmV0b3Bjb250ZW50JGFib3ZldG9wY29udGVudCR1Y1NpZ25JbiRjaGtTaG93KZvWYDUY9CXqkCpWeNbm7xC+qWo1tFt6loviRN1GEX4=" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=LyZPMAqv5t6GObxUkCAdd-pmixCoj5ArthPTHH3wLS8exL4LBfy_ShOQm9HxFwGg1F_FLFyOpcDkXJM-XVpwo5Zoy41hFTn8XuPKua0EmkE1&amp;t=635195277660000000" type="text/javascript"></script>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+	<input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAWf/rweaqYrx3CxXyhxVDPmspAJFj+TCGFNjNpNzA3g1Wih94dx1xwjJ5DyagXZ9ckB+gdcR225KqIqqy9VLTSnmHI9UMU/FY/0ZD8epYpRPIxOo9AYk80LGL9EmVnXeVZLnwfWRI3sH1YkcR+Z9fH4" />
+</div>
+        <div id="spin">
+        </div>
+        
+        
+        <div id="abovetopbox">
+            
+    
+    <div id="aptamenubox">
+        <a href='http://www.platformtennis.org' class="mediaonly">
+            <img src='images/apta-v40.png' height='40' /></a>
+        <ul id="aptamenu" class="nopr">
+            <li class="menu1 imghome"><a href="http://www.platformtennis.org">APTA Home</a></li>
+            <li class="menu1 imgtv"><a href="http://www.aptanetwork.org">APTA Network</a></li>
+            <li class="menu1 imghof"><a href="http://platformtennishalloffame.org/"><span class="go850">Museum & </span>Hall of Fame</a></li>
+            
+            <li class="menu1 imgsignin">
+                
+                <a href="javascript: slideMeDown(document.getElementById('divAuth'));">Sign In</a>
+                <div id="divAuth" class="dropdownauth" style="display:none;">
+                    <style type='text/css'>input.idpw {vertical-align: top;white-space: normal;background-color: #e8e8e8;border: solid 1px #999;border-radius: 4px;font-size: 1em;height: 2em;margin-bottom: 5px;padding: 2px 5px;width:150px;}.btn {box-shadow: inset 0px 1px 0px 0px #fff;background-color: #DFE2F9;border: solid 1px #999;border-radius: 4px;color: #333;cursor: pointer;font-size: 1em;font-weight: normal;height: 2em;width: 150px;}.inputalone {background-color: #e8e8e8;border: solid 1px #999;border-radius: 4px;color: #333;cursor: pointer;display: inline-block;height: 2em;line-height: 1.5em;margin-bottom: 5px;overflow: hidden;padding: 3px 10px 0 0;}.inputalone input[type=checkbox] {cursor: pointer;margin: 3px 5px 0 10px;vertical-align: top;}p.editlabel {margin: 0;}hr.halfspace {border: none;border-top: solid 1px transparent;margin: 5px 0 0;}hr.doublespace {border: none;border-top: solid 1px transparent;margin: 20px 0 0;}hr.spacer { border: none; border-top: solid 1px transparent; margin: 10px 0 0; }.error {border:none;color:red;line-height:1.2em;margin: 5px 0;-moz-box-shadow: none;-webkit-box-shadow: none;box-shadow: none;font-weight:normal;}#divAuth label.wxl {width:150px;}</style>
+
+<div class="groupalone">
+    <p class="editlabel">User Name</p>
+    <input name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$txtName" type="text" id="txtName" class="idpw" />
+</div>
+<div class="groupalone">
+    <p class="editlabel">Password</p>
+    <input name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$txtPW" type="password" id="txtPW" class="idpw" /><br />
+</div>
+<hr class="halfspace" />
+<div class="groupalone">
+    <label class="inputalone wxl">
+        <input id="chkShow" type="checkbox" name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$chkShow" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$chkShow\&#39;,\&#39;\&#39;)&#39;, 0)" />
+        Show Password</label>
+</div>
+<div id="divButton" class="groupalone">
+	
+    <span id="lblError"></span>
+    <hr class="spacer" />
+    <input type="submit" name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$btnDropDownSignIn" value="Sign In" id="btnDropDownSignIn" class="btn" />
+    
+</div>
+
+
+<div id="divCancel" class="groupalone">
+	
+    
+    <hr class="spacer" />
+    <input type="button"
+        class="btn"
+        value="Cancel"
+        onclick="javascript: $('#divAuth').slideUp(); $('#btnDropDownSignIn').attr('disabled', 'disabled');" />
+    
+</div>
+
+                </div>
+            </li>
+            
+        </ul>
+    </div>
+
+
+        </div>
+        
+        <div id="topbox">
+            
+    <div id="header">
+        
+        
+        <h1 class="oneline">American Platform Tennis Association<br />National Rankings</h1>
+        
+        
+        <div id="logoleft">
+            <a href="/" title="American Platform Tennis Association">
+                <img src="images/logoleft.png" alt="American Platform Tennis Association" /></a>
+        </div>
+        
+        
+        
+        
+        
+        
+    </div>
+    
+    <div id='nav1btn'>Menu</div><div id='nav1'><ul id='nav1bar'><li class='lvl1 pbig pnor radleft'><a href='Ranking.aspx?rtype=1'>Men's Rankings</a></li><li class='lvl1 pbig pnor'><a href='Ranking.aspx?rtype=2'>Women's Rankings</a></li ><li class='lvl1 nav1expand pmed radright'><a href='javascript:void(0);'>Tournaments</a><div class='subs'><div class='wrap0 nav1expchild'><ul class='lvl2ul wide'><li class='lvl3'><a href='TournamentHome.aspx?eid=224&tid=0'>Sue Watson</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=202&tid=0'>Mixed & H/W Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=217&tid=0'>APTA Men's B Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=200&tid=0'>IL State Championships</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=223&tid=0'>APTA Women's B Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=199&tid=0'>2018 APTA Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=201&tid=0'>IL Married Mixed</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=216&tid=0'>Women 45+/60+, Men 45+/55+/65+</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=198&tid=0'>Indianapolis Open </a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=197&tid=0'>Philadelphia Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=195&tid=0'>Hinsdale Men's Challenge</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=194&tid=0'>Short Hills Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=188&tid=0'>Peachtree Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=193&tid=0'>Arapahoe Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=192&tid=0'>Detroit Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=196&tid=0'>Hinsdale Women's Challenge </a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=204&tid=0'>Boston Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=209&tid=0'>CPTC Series Tournaments</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=215&tid=0'>LIPTA Men's A Championship</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=214&tid=0'>APTA Women's 50+ Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=203&tid=0'>Lagunitas Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=186&tid=0'>Midwesterns</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=180&tid=0'>Western New England Men</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=187&tid=0'>Brae Burn Men's B</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=178&tid=0'>Kansas City</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=162&tid=0'>Long Island Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=174&tid=0'>West Penn Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=185&tid=0'>Illinois Men's Intermediates</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=172&tid=0'>The Lake Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=173&tid=0'>Sound Shore Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=167&tid=0'>Delaware State Men</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=165&tid=0'>Cleveland Masters</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=159&tid=0'>Chicago Charities</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=156&tid=0'>Milwaukee Men's Open </a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=157&tid=0'>Lake Forest Women's Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=154&tid=0'>PNC Steel City Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=155&tid=0'>The Patterson Club Open</a></li></ul></div></div></li><li class='lvl1 mediaonly imghome'><a href='http://www.platformtennis.org'>APTA Home</a></li><li class='lvl1 mediaonly imgtv'><a href='http://dev.enetlive.tv/apta/live-apta-2/' target='_blank'>APTA Network</a></li><li class='lvl1 mediaonly imghof'><a href='http://platformtennishalloffame.org/'>Museum & Hall of Fame</a></li></ul></div>
+    
+    
+
+
+        </div>
+        <div id="midbox" class="notnav">
+            
+    
+    
+    
+    <div class="rankingboxmain">
+        
+    <div class="contentwrap">
+        <div class="abovecontent">
+            <p class='contenttitle'>Men's National Rankings</p>
+            <div class='nav5'><div class='expandlist nav5selected closed' divname='listdivA'>Ranking Period: <span family='a' class='listdivA selectedtext'>2017-2018</span></div><div class='listdiv nav5selected' id='listdivA' style='display:none' display='none'><a family='a' class='nav5list pickme navrb'  selected' href='Ranking.aspx?stype=2&rtype=1&sid=13&copt=3'>2017-2018</a><a family='a' class='nav5list pickme navrb'  available' href='Ranking.aspx?stype=2&rtype=1&sid=10&copt=3'>2016-2017</a><a family='a' class='nav5list pickme navrb'  available' href='Ranking.aspx?stype=2&rtype=1&sid=9&copt=3'>2015-2016</a><a family='a' class='nav5list pickme navrb'  available' href='Ranking.aspx?stype=2&rtype=1&sid=8&copt=3'>2014-2015</a><a family='a' class='nav5list pickme navrb'  available' href='Ranking.aspx?stype=2&rtype=1&sid=5&copt=3'>2013-2014</a></div></div>
+            <ul class='nav2 four'><li class='navrc available'><a href='Ranking.aspx?stype=2&rtype=1&sid=13&copt=1'>Teams</a></li><li class='navrc selected'>Tournaments</li><li class='navrc available'><a href='Ranking.aspx?stype=2&rtype=1&sid=13&copt=4'>Procedures</a></li></ul>
+        </div>
+        <div id="contentarea" class="rankingcontent">
+            <table class='ranking'><tr><th class='c1t'>Date</th><th class='c2'>Name</th><th class='c3'>Weighting</th><th class='c4'></th></table><div class='expandobtn expb' xid='460'><table class='ranking'><tr><td class='c1t'>03/09/18</td><td class='c2'>APTA Men's Nationals</td><td class='c3'>1.000</td><td class='exptxt flip c4' id='exptxt460'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r460'></div></div><div class='expandobtn expb' xid='441'><table class='ranking'><tr><td class='c1t'>02/24/18</td><td class='c2'>Indianapolis Open Men</td><td class='c3'>2.750</td><td class='exptxt flip c4' id='exptxt441'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r441'></div></div><div class='expandobtn expb' xid='442'><table class='ranking'><tr><td class='c1t'>02/17/18</td><td class='c2'>Philadelphia Open Men</td><td class='c3'>3.75</td><td class='exptxt flip c4' id='exptxt442'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r442'></div></div><div class='expandobtn expb' xid='440'><table class='ranking'><tr><td class='c1t'>02/10/18</td><td class='c2'>Hinsdale Men's Challenge</td><td class='c3'>2.375</td><td class='exptxt flip c4' id='exptxt440'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r440'></div></div><div class='expandobtn expb' xid='452'><table class='ranking'><tr><td class='c1t'>02/10/18</td><td class='c2'>Short Hills Invitational Men</td><td class='c3'>3.375</td><td class='exptxt flip c4' id='exptxt452'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r452'></div></div><div class='expandobtn expb' xid='429'><table class='ranking'><tr><td class='c1t'>02/10/18</td><td class='c2'>Peachtree Invitational Men</td><td class='c3'>1.625</td><td class='exptxt flip c4' id='exptxt429'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r429'></div></div><div class='expandobtn expb' xid='481'><table class='ranking'><tr><td class='c1t'>02/09/18</td><td class='c2'>Arapahoe Men</td><td class='c3'>1.250</td><td class='exptxt flip c4' id='exptxt481'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r481'></div></div><div class='expandobtn expb' xid='449'><table class='ranking'><tr><td class='c1t'>02/03/18</td><td class='c2'>Detroit Invitational Men</td><td class='c3'>1.500</td><td class='exptxt flip c4' id='exptxt449'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r449'></div></div><div class='expandobtn expb' xid='459'><table class='ranking'><tr><td class='c1t'>02/02/18</td><td class='c2'>St. Louis Open Men</td><td class='c3'>1.625</td><td class='exptxt flip c4' id='exptxt459'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r459'></div></div><div class='expandobtn expb' xid='450'><table class='ranking'><tr><td class='c1t'>01/27/18</td><td class='c2'>Southern Invitational Men</td><td class='c3'>1.500</td><td class='exptxt flip c4' id='exptxt450'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r450'></div></div><div class='expandobtn expb' xid='431'><table class='ranking'><tr><td class='c1t'>01/27/18</td><td class='c2'>Boston Open Men</td><td class='c3'>4.000</td><td class='exptxt flip c4' id='exptxt431'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r431'></div></div><div class='expandobtn expb' xid='434'><table class='ranking'><tr><td class='c1t'>01/19/18</td><td class='c2'>Lagunitas Open Men</td><td class='c3'>1.625</td><td class='exptxt flip c4' id='exptxt434'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r434'></div></div><div class='expandobtn expb' xid='420'><table class='ranking'><tr><td class='c1t'>01/13/18</td><td class='c2'>Midwesterns Men</td><td class='c3'>3.000</td><td class='exptxt flip c4' id='exptxt420'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r420'></div></div><div class='expandobtn expb' xid='416'><table class='ranking'><tr><td class='c1t'>12/09/17</td><td class='c2'>Western New England Men</td><td class='c3'>2.500</td><td class='exptxt flip c4' id='exptxt416'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r416'></div></div><div class='expandobtn expb' xid='408'><table class='ranking'><tr><td class='c1t'>12/02/17</td><td class='c2'>Duane L. Hayden Invitational Men</td><td class='c3'>3.75</td><td class='exptxt flip c4' id='exptxt408'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r408'></div></div><div class='expandobtn expb' xid='426'><table class='ranking'><tr><td class='c1t'>12/02/17</td><td class='c2'>West Penn Men</td><td class='c3'>2.375</td><td class='exptxt flip c4' id='exptxt426'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r426'></div></div><div class='expandobtn expb' xid='423'><table class='ranking'><tr><td class='c1t'>12/02/17</td><td class='c2'>Games on the James</td><td class='c3'>1.125</td><td class='exptxt flip c4' id='exptxt423'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r423'></div></div><div class='expandobtn expb' xid='415'><table class='ranking'><tr><td class='c1t'>12/01/17</td><td class='c2'>Kansas City Open Men</td><td class='c3'>1.250</td><td class='exptxt flip c4' id='exptxt415'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r415'></div></div><div class='expandobtn expb' xid='412'><table class='ranking'><tr><td class='c1t'>11/18/17</td><td class='c2'>Sound Shore Men</td><td class='c3'>2.875</td><td class='exptxt flip c4' id='exptxt412'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r412'></div></div><div class='expandobtn expb' xid='414'><table class='ranking'><tr><td class='c1t'>11/11/17</td><td class='c2'>Delaware State Men</td><td class='c3'>1.750</td><td class='exptxt flip c4' id='exptxt414'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r414'></div></div><div class='expandobtn expb' xid='410'><table class='ranking'><tr><td class='c1t'>11/11/17</td><td class='c2'>Cleveland Masters Men</td><td class='c3'>2.625</td><td class='exptxt flip c4' id='exptxt410'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r410'></div></div><div class='expandobtn expb' xid='402'><table class='ranking'><tr><td class='c1t'>11/04/17</td><td class='c2'>Chicago Charities Men</td><td class='c3'>3.250</td><td class='exptxt flip c4' id='exptxt402'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r402'></div></div><div class='expandobtn expb' xid='405'><table class='ranking'><tr><td class='c1t'>10/28/17</td><td class='c2'>Atlantic Classic Men</td><td class='c3'>3.250</td><td class='exptxt flip c4' id='exptxt405'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r405'></div></div><div class='expandobtn expb' xid='399'><table class='ranking'><tr><td class='c1t'>10/21/17</td><td class='c2'>Rochester Open Men</td><td class='c3'>1.375</td><td class='exptxt flip c4' id='exptxt399'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r399'></div></div><div class='expandobtn expb' xid='397'><table class='ranking'><tr><td class='c1t'>10/21/17</td><td class='c2'>Milwaukee Men</td><td class='c3'>2.125</td><td class='exptxt flip c4' id='exptxt397'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r397'></div></div><div class='expandobtn expb' xid='393'><table class='ranking'><tr><td class='c1t'>10/14/17</td><td class='c2'>Steel City Open Men</td><td class='c3'>3.75</td><td class='exptxt flip c4' id='exptxt393'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r393'></div></div><div class='expandobtn expb' xid='396'><table class='ranking'><tr><td class='c1t'>10/07/17</td><td class='c2'>Patterson Club Men</td><td class='c3'>3.000</td><td class='exptxt flip c4' id='exptxt396'><img src='images/plusgrey16.png'></td></tr></table><div class='expandodiv expd' id='r396'></div></div><input id='hdnstype' type='hidden' value='2' /><input id='hdnrtype' type='hidden' value='1' /><input id='hdnsid' type='hidden' value='13' /><input id='hdnrnum' type='hidden' value='0' /><input id='hdncopt' type='hidden' value='3' />
+
+
+        </div>
+    </div>
+
+    </div>
+    
+    
+
+
+
+        </div>
+        <div id="footbox">
+            
+    
+    
+    
+    
+    
+
+    
+
+    
+
+            <div id="footer">
+                Copyright &copy; 2010-2018 American Platform Tennis Association. All rights reserved.
+            </div>
+        </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+//]]>
+</script>
+</form>
+</body>
+<script type="text/javascript" src='/js/SpinMinScore.js'></script>
+<script type="text/javascript">
+    !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+</script>
+</html>

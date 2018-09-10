@@ -45,8 +45,6 @@ defmodule AptaSeeding.ETL.SeasonData do
   put it in a format we like.
   """
   def transform({:ok, state}) do
-    # convert to json
-
     tournaments = parse_html(state.api_call_response_body)
 
     state =
@@ -61,6 +59,8 @@ defmodule AptaSeeding.ETL.SeasonData do
   We don't do anything with the data, just pass it along.
   """
   def load({:ok, state}) do
+    # this is where we create the tournaments
+
     state =
       state
       |> Map.put(:step, :load)
