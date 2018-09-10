@@ -1,5 +1,4 @@
 defmodule AptaSeeding.ETL.Extract do
-
   alias AptaSeeding.ETL.Extract.{TournamentsPayload}
 
   @doc """
@@ -9,7 +8,5 @@ defmodule AptaSeeding.ETL.Extract do
   """
   def handle_tournaments_payload(tournaments_payload) do
     TournamentsPayload.call(tournaments_payload)
-
   end
-
 end

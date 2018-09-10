@@ -11,7 +11,7 @@ defmodule AptaSeeding.Application do
       # Start the Ecto repository
       supervisor(AptaSeeding.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(AptaSeedingWeb.Endpoint, []),
+      supervisor(AptaSeedingWeb.Endpoint, [])
       # Start your own worker by calling: AptaSeeding.Worker.start_link(arg1, arg2, arg3)
       # worker(AptaSeeding.Worker, [arg1, arg2, arg3]),
     ]

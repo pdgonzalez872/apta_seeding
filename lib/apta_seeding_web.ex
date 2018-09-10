@@ -28,8 +28,9 @@ defmodule AptaSeedingWeb do
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/apta_seeding_web/templates",
-                        namespace: AptaSeedingWeb
+      use Phoenix.View,
+        root: "lib/apta_seeding_web/templates",
+        namespace: AptaSeedingWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 2, view_module: 1]

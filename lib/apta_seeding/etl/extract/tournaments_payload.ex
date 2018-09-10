@@ -1,8 +1,6 @@
 defmodule AptaSeeding.ETL.Extract.TournamentsPayload do
-
   def call() do
     :tournaments_payload
-
   end
 
   @doc """
@@ -10,6 +8,5 @@ defmodule AptaSeeding.ETL.Extract.TournamentsPayload do
   """
   def parse_html(html) do
     :parse_html
-
   end
 end
