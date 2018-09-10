@@ -27,15 +27,15 @@ defmodule AptaSeeding.ETL.SeasonData do
   We make the request to the third party api here.
   """
   def extract({:ok, state}) do
-    # HTTPoison.get!(target_url)
-    target_url = create_season_url(state.params)
 
-    api_call_response = "yay response"
+    {:ok, body} = state.params
+                  |> create_season_url()
+                  |> make_request()
 
     state =
       state
       |> Map.put(:step, :extract)
-      |> Map.put(:api_call_response, api_call_response)
+      |> Map.put(:api_call_response_body, body)
 
     {:ok, state}
   end
@@ -47,7 +47,7 @@ defmodule AptaSeeding.ETL.SeasonData do
   def transform({:ok, state}) do
     # convert to json
 
-    tournaments = parse_html(state.api_call_response)
+    tournaments = parse_html(state.api_call_response_body)
 
     state =
       state
@@ -91,5 +91,14 @@ defmodule AptaSeeding.ETL.SeasonData do
       }"
 
     root <> custom
+  end
+
+  def make_request(url) do
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, body}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
+    end
   end
 end
