@@ -1,5 +1,4 @@
 defmodule AptaSeeding.ETL.SeasonData do
-
   @doc """
   This takes in a map that gets converted to json, but they are really post params
   Then, we make a request to their api service:
@@ -30,9 +29,10 @@ defmodule AptaSeeding.ETL.SeasonData do
   def extract({:ok, state}) do
     api_call_response = "yay response"
 
-    state = state
-            |> Map.put(:step, :extract)
-            |> Map.put(:api_call_response, api_call_response)
+    state =
+      state
+      |> Map.put(:step, :extract)
+      |> Map.put(:api_call_response, api_call_response)
 
     {:ok, state}
   end
@@ -46,9 +46,10 @@ defmodule AptaSeeding.ETL.SeasonData do
 
     tournaments = parse_html(state.api_call_response)
 
-    state = state
-            |> Map.put(:step, :transform)
-            |> Map.put(:tournaments, tournaments)
+    state =
+      state
+      |> Map.put(:step, :transform)
+      |> Map.put(:tournaments, tournaments)
 
     {:ok, state}
   end
@@ -57,8 +58,9 @@ defmodule AptaSeeding.ETL.SeasonData do
   We don't do anything with the data, just pass it along.
   """
   def load({:ok, state}) do
-    state = state
-            |> Map.put(:step, :load)
+    state =
+      state
+      |> Map.put(:step, :load)
 
     {:ok, state}
   end

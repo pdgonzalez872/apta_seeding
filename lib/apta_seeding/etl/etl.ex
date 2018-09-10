@@ -1,5 +1,4 @@
 defmodule AptaSeeding.ETL do
-
   alias AptaSeeding.ETL.{SeasonData}
 
   @doc """
