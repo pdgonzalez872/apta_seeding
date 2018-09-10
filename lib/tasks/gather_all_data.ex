@@ -15,14 +15,36 @@ defmodule Mix.Tasks.GatherAllData do
 
     Application.ensure_all_started(:apta_seeding)
 
+    Logger.info("Creating Season Data")
+    {:ok, season_data} = create_season_data_for_request()
+
     Logger.info("Starting Hackney")
 
+    AptaSeeding.ETL.handle_season_data([
+      Enum.at(season_data.mens, 0)
+    ])
+    |> IO.inspect()
+
+    Logger.info("Finish Task")
+  end
+
+  def create_season_data_for_request() do
     #
     # Men's
     #
 
-    # https://platformtennisonline.org/Ranking.aspx?stype=1&rtype=1&copt=3
+    # Add url
     current_tournaments = %{
+      "stype" => 0,
+      "rtype" => 0,
+      "sid" => 0,
+      "rnum" => 0,
+      "copt" => 0,
+      "xid" => 0
+    }
+
+    # https://platformtennisonline.org/Ranking.aspx?stype=1&rtype=1&copt=3
+    season_ending_in_2018 = %{
       "stype" => 1,
       "rtype" => 1,
       "sid" => 0,
@@ -66,13 +88,11 @@ defmodule Mix.Tasks.GatherAllData do
       season_ending_in_2015,
       season_ending_in_2016,
       season_ending_in_2017
+      season_ending_in_2018
     ]
 
-    AptaSeeding.ETL.handle_season_data([
-      %{"stype" => 2, "rtype" => 1, "sid" => 10, "rnum" => 0, "copt" => 3, "xid" => 0}
-    ])
-    |> IO.inspect()
-
-    Logger.info("Finish Task")
+    # TODO
+    # When ready, port women as well
+    {:ok, %{mens: mens_tournament_collection, womens: []}}
   end
 end
