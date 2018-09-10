@@ -6,7 +6,7 @@ defmodule AptaSeeding.AcceptanceTest do
   describe "This is where we try things out" do
     test "playground" do
 
-      {:ok, result} = ETL.handle_season_data(["hahaha html right"])
+      {:ok, result} = ETL.handle_season_data([%{"stype" => 2,"rtype" => 1,"sid" => 10,"rnum" => 0,"copt" => 3,"xid" => 0}])
 
       assert result == 1
 

@@ -7,7 +7,7 @@ defmodule AptaSeeding.ETL.SeasonData do
   Ex:
     root_url: "https://platformtennisonline.org"
     api_url: "/services/2015ServiceRanking.asmx/GetRanking"
-    post_params: {"stype":2,"rtype":1,"sid":10,"rnum":0,"copt":3,"xid":0}
+    post_params: %{"stype":2,"rtype":1,"sid":10,"rnum":0,"copt":3,"xid":0}
 
   I came up with this after looking at how the website worked. I started with
   their url and also looked at their JS. That's where the bulk of the fetching was done.
@@ -42,7 +42,9 @@ defmodule AptaSeeding.ETL.SeasonData do
   put it in a format we like.
   """
   def transform({:ok, state}) do
-    tournaments = []
+    # convert to json
+
+    tournaments = parse_html(state.api_call_response)
 
     state = state
             |> Map.put(:step, :transform)
@@ -65,6 +67,6 @@ defmodule AptaSeeding.ETL.SeasonData do
   This function takes in a binary (html doc) and returns a data structure from it (map).
   """
   def parse_html(html) do
-    :parse_html
+    html
   end
 end
