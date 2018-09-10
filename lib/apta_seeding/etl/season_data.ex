@@ -19,14 +19,18 @@ defmodule AptaSeeding.ETL.SeasonData do
     |> load()
   end
 
-  def init(args) do
-    {:ok, %{step: :initialized, args: args}}
+  def init(params) do
+    {:ok, %{step: :initialized, params: params}}
   end
 
   @doc """
   We make the request to the third party api here.
   """
   def extract({:ok, state}) do
+
+    # HTTPoison.get!(target_url)
+    target_url = create_season_url(state.params)
+
     api_call_response = "yay response"
 
     state =
@@ -36,6 +40,7 @@ defmodule AptaSeeding.ETL.SeasonData do
 
     {:ok, state}
   end
+
 
   @doc """
   We take in a response from the 3rd party server and
@@ -70,5 +75,18 @@ defmodule AptaSeeding.ETL.SeasonData do
   """
   def parse_html(html) do
     html
+  end
+
+  @doc """
+  This is what a param looks like
+  %{"copt" => 3, "rnum" => 0, "rtype" => 1, "sid" => 8, "stype" => 2, "xid" => 0}
+
+  This is what this function should return
+  "https://platformtennisonline.org/Ranking.aspx?stype=2&rtype=1&sid=8&copt=3"
+  """
+  def create_season_url(%{} = params) do
+    root = "https://platformtennisonline.org/"
+    custom = "Ranking.aspx?stype=#{params["stype"]}&rtype=#{params["rtype"]}&sid=#{params["sid"]}&copt=#{params["copt"]}"
+    root <> custom
   end
 end

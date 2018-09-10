@@ -19,15 +19,15 @@ defmodule Mix.Tasks.GatherAllData do
     {:ok, season_data} = create_season_data_for_request()
 
     Logger.info("Starting Hackney")
+    HTTPoison.start()
 
-    AptaSeeding.ETL.handle_season_data([
-      Enum.at(season_data.mens, 0)
-    ])
+    AptaSeeding.ETL.handle_season_data(
+      Enum.at(season_data.mens, 1)
+    )
     |> IO.inspect()
 
     Logger.info("Finish Task")
   end
-
   def create_season_data_for_request() do
     #
     # Men's
@@ -87,7 +87,7 @@ defmodule Mix.Tasks.GatherAllData do
       current_tournaments,
       season_ending_in_2015,
       season_ending_in_2016,
-      season_ending_in_2017
+      season_ending_in_2017,
       season_ending_in_2018
     ]
 
