@@ -50,8 +50,11 @@ defmodule AptaSeeding.ETL.SeasonData do
   put it in a format we like.
   """
   def transform({:ok, state}) do
-    raise "Continue here: now, parse the html and find tournament data. There is name, date, and the xid and other vars that the APTA uses to make their request"
-    tournaments = parse_html(state.api_call_response_body)
+    tournaments = state.api_call_response_body
+                  |> parse_html()
+                  |> Enum.map(fn el ->
+                       Map.merge(el, state.params)
+                  end)
 
     state =
       state
@@ -82,13 +85,22 @@ defmodule AptaSeeding.ETL.SeasonData do
   tournament_name
   %{"copt" => 3, "rnum" => 0, "rtype" => 1, "sid" => 8, "stype" => 2, "xid" => 0}
   """
+  @spec parse_html(binary()) :: nonempty_list(any())
   def parse_html(html) do
-    # Floki here
     html
     |> Floki.find("div.expandobtn.expb")
     |> Enum.map(fn season_tournament_div ->
       parse_tournament(season_tournament_div)
     end)
+  end
+
+  def get_season_params(html) do
+    require IEx; IEx.pry
+    html
+    |> Floki.find("div.expandobtn.expb")
+    %{}
+
+    # %{"copt" => 3, "rnum" => 0, "rtype" => 1, "sid" => 8, "stype" => 2, "xid" => 0}
   end
 
   @doc false
@@ -97,6 +109,12 @@ defmodule AptaSeeding.ETL.SeasonData do
      [{_, _, [{_, _, [{_, _, [tournament_date]}, {_, _, [tournament_name]}, _, _]}]}, _]} = el
 
     %{tournament_name: tournament_name, tournament_date: tournament_date, xid: xid}
+  end
+
+  # map
+  def add_season_params_to_tournaments(el, season_params) do
+    require IEx; IEx.pry
+    el
   end
 
   @doc """

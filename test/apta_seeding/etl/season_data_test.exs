@@ -52,7 +52,15 @@ defmodule AptaSeeding.ETL.SeasonDataTest do
 
     result = SeasonData.parse_html(file)
 
-    assert Enum.at(result, 0) == %{tournament_date: "03/09/18", tournament_name: "APTA Men's Nationals", xid: "460"}
-    assert Enum.at(result, -1) == %{tournament_date: "10/07/17", tournament_name: "Patterson Club Men", xid: "396"}
+    nationals = Enum.at(result, 0)
+    patterson = Enum.at(result, -1)
+
+    assert nationals.tournament_name == "APTA Men's Nationals"
+    assert nationals.xid == "460"
+    assert nationals.tournament_date == "03/09/18"
+
+    assert patterson.tournament_name == "Patterson Club Men"
+    assert patterson.xid == "396"
+    assert patterson.tournament_date == "10/07/17"
   end
 end
