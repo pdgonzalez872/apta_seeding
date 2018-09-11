@@ -43,7 +43,10 @@ defmodule AptaSeeding.Mixfile do
       {:cowboy, "~> 1.0"},
 
       # http request handling
-      {:httpoison, "~> 1.0"}
+      {:httpoison, "~> 1.0"},
+
+      # html parsing
+      {:floki, "~> 0.20.0"}
     ]
   end
 

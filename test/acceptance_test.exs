@@ -1,14 +1,10 @@
 defmodule AptaSeeding.AcceptanceTest do
   use ExUnit.Case
 
-  alias AptaSeeding.ETL
-
+  @tag :skip
   describe "This is where we try things out" do
     test "playground" do
-      {:ok, result} =
-        ETL.handle_season_data([
-          %{"stype" => 2, "rtype" => 1, "sid" => 10, "rnum" => 0, "copt" => 3, "xid" => 0}
-        ])
+      {:ok, result} = AptaSeeding.ETL.SeasonData.parse_html("hklasdjf")
 
       assert result == 1
 
