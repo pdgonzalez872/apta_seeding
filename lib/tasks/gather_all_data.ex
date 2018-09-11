@@ -21,8 +21,15 @@ defmodule Mix.Tasks.GatherAllData do
     Logger.info("Starting Hackney")
     HTTPoison.start()
 
-    AptaSeeding.ETL.handle_season_data(Enum.at(season_data.mens, 1))
-    |> IO.inspect()
+    {:ok, result} = Enum.at(season_data.mens, 1)
+                    |> AptaSeeding.ETL.handle_season_data()
+                    |> AptaSeeding.ETL.handle_tournament_data()
+
+    # Enum.each(result.tournaments, fn tournament ->
+    #   AptaSeeding.ETL.handle_tournament_data(tournament)
+    # end)
+
+    require IEx; IEx.pry
 
     Logger.info("Finish Task")
   end

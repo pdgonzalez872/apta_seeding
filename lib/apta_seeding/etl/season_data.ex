@@ -25,7 +25,7 @@ defmodule AptaSeeding.ETL.SeasonData do
   end
 
   def init(params) do
-    {:ok, %{step: :initialized, params: params}}
+    {:ok, %{step: :season_init, params: params}}
   end
 
   @doc """
@@ -40,7 +40,7 @@ defmodule AptaSeeding.ETL.SeasonData do
 
     state =
       state
-      |> Map.put(:step, :extract)
+      |> Map.put(:step, :season_extract)
       |> Map.put(:api_call_response_body, body)
 
     {:ok, state}
@@ -59,7 +59,7 @@ defmodule AptaSeeding.ETL.SeasonData do
 
     state =
       state
-      |> Map.put(:step, :transform)
+      |> Map.put(:step, :season_transform)
       |> Map.put(:tournaments, tournaments)
 
     {:ok, state}
@@ -72,7 +72,7 @@ defmodule AptaSeeding.ETL.SeasonData do
   def load({:ok, state}) do
     state =
       state
-      |> Map.put(:step, :load)
+      |> Map.put(:step, :season_load)
 
     {:ok, state}
   end
