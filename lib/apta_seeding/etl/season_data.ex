@@ -31,6 +31,7 @@ defmodule AptaSeeding.ETL.SeasonData do
   @doc """
   We make the request to the third party api here.
   """
+  @spec extract(tuple()) :: tuple()
   def extract({:ok, state}) do
     {:ok, body} =
       state.params
@@ -66,10 +67,9 @@ defmodule AptaSeeding.ETL.SeasonData do
 
   @doc """
   We don't do anything with the data, just pass it along.
+  Keeping this function here to finish the ETL pattern.
   """
   def load({:ok, state}) do
-    # this is where we create the tournaments
-
     state =
       state
       |> Map.put(:step, :load)
@@ -78,29 +78,15 @@ defmodule AptaSeeding.ETL.SeasonData do
   end
 
   @doc """
-  This function takes in a binary (html doc) and returns a data structure from it (map).
-
-  third_party_tournament_id
-  tournament_date
-  tournament_name
-  %{"copt" => 3, "rnum" => 0, "rtype" => 1, "sid" => 8, "stype" => 2, "xid" => 0}
+  Finds the tournament data inside the html.
   """
-  @spec parse_html(binary()) :: nonempty_list(any())
+  @spec parse_html(binary()) :: nonempty_list(map())
   def parse_html(html) do
     html
     |> Floki.find("div.expandobtn.expb")
     |> Enum.map(fn season_tournament_div ->
       parse_tournament(season_tournament_div)
     end)
-  end
-
-  def get_season_params(html) do
-    require IEx; IEx.pry
-    html
-    |> Floki.find("div.expandobtn.expb")
-    %{}
-
-    # %{"copt" => 3, "rnum" => 0, "rtype" => 1, "sid" => 8, "stype" => 2, "xid" => 0}
   end
 
   @doc false
