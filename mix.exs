@@ -46,7 +46,10 @@ defmodule AptaSeeding.Mixfile do
       {:httpoison, "~> 1.0"},
 
       # html parsing
-      {:floki, "~> 0.20.0"}
+      {:floki, "~> 0.20.0"},
+
+      # json parsing
+      {:jason, "~> 1.1"}
     ]
   end
 

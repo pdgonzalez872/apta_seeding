@@ -53,13 +53,11 @@ defmodule AptaSeeding.ETL.TournamentData do
       |> Enum.map(fn tournament ->
         # check if tournament
 
-
         result = tournament
         |> create_tournament_json_payload()
+        |> make_request()
 
         require IEx; IEx.pry
-
-        # |> make_request()
 
         # else
         # :already_in_db
@@ -99,9 +97,65 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, state}
   end
 
+  @doc"""
+  We want to mimic the below request:
+
+  $.ajax({
+      async: false, type: "POST", url: "services/2015ServiceRanking.asmx/GetResults",
+      data: "{'stype':" + stype + ",'rtype':" + rtype + ",'sid':" + sid + ",'rnum':" + rnum + ",'copt':" + copt + ",'xid':" + xid + "}",
+      contentType: "application/json; charset=utf-8", dataType: "json",
+      success: function (msg) { $("#r" + xid).html(msg.d); }
+
+  This is what the map coming in looks like:
+  %{
+    :tournament_date => "03/06/15",
+    :tournament_name => "APTA Men's Nationals",
+    :xid => "214",
+    "copt" => 3,
+    "rnum" => 0,
+    "rtype" => 1,
+    "sid" => 8,
+    "stype" => 2,
+    "xid" => 0
+  }
+
+  Tried sending a json object to the api, didn't work. Will mimic the string creation like they do.
+  """
   @spec create_tournament_json_payload(map()) :: binary()
   def create_tournament_json_payload(tournament) do
 
+    # "{'stype':" + stype + ",'rtype':" + rtype + ",'sid':" + sid + ",'rnum':" + rnum + ",'copt':" + copt + ",'xid':" + xid + "}"
+
+      stype = tournament["stype"]
+      rtype = tournament["rtype"]
+      sid = tournament["sid"]
+      rnum = tournament["rnum"]
+      copt = tournament["copt"]
+      xid = tournament.xid
+
+    #raise "continue here must create the string below, just like she wants"
+    "{'stype':#{stype},'rtype':#{rtype},'sid':#{sid},'rnum':#{rnum},'copt':#{copt},'xid':#{xid}}"
   end
 
+  @doc """
+  Should not be a post, but it is.
+  """
+  def make_request(params_to_send) do
+    target_url = "https://platformtennisonline.org/services/2015ServiceRanking.asmx/GetResults"
+    json_content_type = [{"Content-Type", "application/json"}]
+
+    case HTTPoison.post(target_url, params_to_send, json_content_type) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        %{"d" => tournament_results_html} = Jason.decode! body
+        {:ok, tournament_results_html}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
+    end
+  end
+
+  @spec parse_tournament_results(binary()) :: list()
+  def parse_tournament_results(tournament_results_html) do
+
+  end
 end
