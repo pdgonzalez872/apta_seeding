@@ -20,6 +20,8 @@ defmodule AptaSeeding.ETL.TournamentData do
   - Team Result (points)
   """
 
+  require Logger
+
   @doc """
   Entry point for this api
   """
@@ -46,7 +48,7 @@ defmodule AptaSeeding.ETL.TournamentData do
   def extract({:ok, state}) do
 
     # make the requests for each tournament here if we don't have it already in the db
-    # tournament name and tournament date
+    # The check is: tournament name and tournament date
 
     {:ok, tournaments_data} =
       state.tournaments
@@ -56,8 +58,12 @@ defmodule AptaSeeding.ETL.TournamentData do
         result = tournament
         |> create_tournament_json_payload()
         |> make_request()
+        |> decode_json_response()
+        |> parse_tournament_results()
 
-        require IEx; IEx.pry
+        raise "Add the Data.Tournament concept: table, module"
+        raise "Add check that the tournament with the same name and date does not exist already"
+        raise "Move the decode_json_response and parse_tournament_results to the transform step"
 
         # else
         # :already_in_db
@@ -123,17 +129,14 @@ defmodule AptaSeeding.ETL.TournamentData do
   """
   @spec create_tournament_json_payload(map()) :: binary()
   def create_tournament_json_payload(tournament) do
+    stype = tournament["stype"]
+    rtype = tournament["rtype"]
+    sid = tournament["sid"]
+    rnum = tournament["rnum"]
+    copt = tournament["copt"]
+    xid = tournament.xid
 
-    # "{'stype':" + stype + ",'rtype':" + rtype + ",'sid':" + sid + ",'rnum':" + rnum + ",'copt':" + copt + ",'xid':" + xid + "}"
-
-      stype = tournament["stype"]
-      rtype = tournament["rtype"]
-      sid = tournament["sid"]
-      rnum = tournament["rnum"]
-      copt = tournament["copt"]
-      xid = tournament.xid
-
-    #raise "continue here must create the string below, just like she wants"
+    # This is not pretty. Unsure why passing a json object did not work. This did.
     "{'stype':#{stype},'rtype':#{rtype},'sid':#{sid},'rnum':#{rnum},'copt':#{copt},'xid':#{xid}}"
   end
 
@@ -146,16 +149,27 @@ defmodule AptaSeeding.ETL.TournamentData do
 
     case HTTPoison.post(target_url, params_to_send, json_content_type) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        %{"d" => tournament_results_html} = Jason.decode! body
-        {:ok, tournament_results_html}
+        {:ok, body}
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
     end
   end
 
-  @spec parse_tournament_results(binary()) :: list()
-  def parse_tournament_results(tournament_results_html) do
+  def decode_json_response({:ok, json}) do
+    %{"d" => tournament_results_html} = Jason.decode! json
+    {:ok, tournament_results_html}
+  end
 
+  @spec parse_tournament_results(binary()) :: list()
+  def parse_tournament_results({:ok, tournament_results_html}) do
+    results =
+      tournament_results_html
+      |> Floki.find("tr")
+      |> Enum.map(fn tr ->
+        {_, _, [{_, _, [team_name]}, _, {_, _, [team_points]}]} = tr
+        %{team_name: team_name, team_points: team_points}
+      end)
+    {:ok, results}
   end
 end
