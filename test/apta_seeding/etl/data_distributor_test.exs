@@ -27,36 +27,50 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
       result = DataDistributor.parse_tournament_results(html)
 
       assert Enum.at(result, 0) == %{team_name: "Ryan Baxter - Ricky Heath", team_points: "68.75"}
-      assert Enum.at(result, 5) == %{team_name: "Scott Kahler - Matt  Rogers", team_points: "38.5"}
-      assert Enum.at(result, 6) == %{team_name: "Paulo Gonzalez - Jay Schwab", team_points: "34.375"}
+
+      assert Enum.at(result, 5) == %{
+               team_name: "Scott Kahler - Matt  Rogers",
+               team_points: "38.5"
+             }
+
+      assert Enum.at(result, 6) == %{
+               team_name: "Paulo Gonzalez - Jay Schwab",
+               team_points: "34.375"
+             }
+
       assert Enum.count(result) == 40
     end
 
     test "create_result_data_structure/1 creates a data structure from a result map - simple name case" do
-      result = %{team_name: "Paulo Gonzalez - Jay Schwab", team_points: "34.375"}
-               |> DataDistributor.create_result_data_structure()
+      result =
+        %{team_name: "Paulo Gonzalez - Jay Schwab", team_points: "34.375"}
+        |> DataDistributor.create_result_data_structure()
 
       expected = %{
         team_name: "Paulo Gonzalez - Jay Schwab",
         player_1_name: "Paulo Gonzalez",
         player_2_name: "Jay Schwab",
         team_points: Decimal.new("34.375"),
-        individual_points: Decimal.new("17.1875"),
+        individual_points: Decimal.new("17.1875")
       }
+
       assert result == expected
     end
 
     test "create_result_data_structure/1 creates a data structure from a result map - spaces in name" do
-      result = %{team_name: "Scott Kahler - Matt  Rogers", team_points: "38.5"}
-               |> DataDistributor.create_result_data_structure()
+      result =
+        %{team_name: "Scott Kahler - Matt  Rogers", team_points: "38.5"}
+        |> DataDistributor.create_result_data_structure()
 
       expected = %{
         team_name: "Scott Kahler - Matt Rogers",
         player_1_name: "Scott Kahler",
-        player_2_name: "Matt Rogers", # no double space in the name here
+        # no double space in the name here
+        player_2_name: "Matt Rogers",
         team_points: Decimal.new("38.5"),
-        individual_points: Decimal.new("19.25"),
+        individual_points: Decimal.new("19.25")
       }
+
       assert result == expected
     end
 
@@ -65,16 +79,13 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
     # Scott  Yancey
 
     test "sanitize_player_name/1 - sanity test 1" do
-      #raise "Continue here"
-
+      # raise "Continue here"
     end
 
     test "sanitize_player_name/1 - sanity test 2" do
-
     end
 
     test "sanitize_player_name/1 - sanity test 3" do
-
     end
 
     test "call/1 - integration test here. Making sure that things fit together" do
@@ -103,13 +114,13 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
       {:ok, [results]} = DataDistributor.call(Data.list_tournaments())
 
       first_result = %{
-                       individual_points: Decimal.new("34.375"),
-                       player_1_name: "Ryan Baxter",
-                       player_2_name: "Ricky Heath",
-                       team_name: "Ryan Baxter - Ricky Heath",
-                       team_points: Decimal.new("68.75"),
-                       tournament_name_and_date_unique_name: "Indi|2018-02-01"
-                    }
+        individual_points: Decimal.new("34.375"),
+        player_1_name: "Ryan Baxter",
+        player_2_name: "Ricky Heath",
+        team_name: "Ryan Baxter - Ricky Heath",
+        team_points: Decimal.new("68.75"),
+        tournament_name_and_date_unique_name: "Indi|2018-02-01"
+      }
 
       assert Enum.at(results, 0) == first_result
     end
@@ -118,14 +129,13 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
       raise "persist here"
 
       input = %{
-                 individual_points: Decimal.new("34.375"),
-                 player_1_name: "Ryan Baxter",
-                 player_2_name: "Ricky Heath",
-                 team_name: "Ryan Baxter - Ricky Heath",
-                 team_points: Decimal.new("68.75"),
-                 tournament_name_and_date_unique_name: "Indi|2018-02-01"
-               }
-
+        individual_points: Decimal.new("34.375"),
+        player_1_name: "Ryan Baxter",
+        player_2_name: "Ricky Heath",
+        team_name: "Ryan Baxter - Ricky Heath",
+        team_points: Decimal.new("68.75"),
+        tournament_name_and_date_unique_name: "Indi|2018-02-01"
+      }
     end
   end
 end

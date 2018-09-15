@@ -55,10 +55,10 @@ defmodule AptaSeeding.ETL.TournamentData do
     tournaments_data =
       state.tournaments
       |> Enum.map(fn tournament ->
-
-        attrs = tournament
-                |> create_date_and_name()
-                |> create_attributes()
+        attrs =
+          tournament
+          |> create_date_and_name()
+          |> create_attributes()
 
         result =
           case Data.create_tournament(attrs) do

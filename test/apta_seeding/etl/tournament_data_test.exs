@@ -13,7 +13,7 @@ defmodule AptaSeeding.ETL.TournamentDataTest do
         rnum: 0,
         rtype: 1,
         sid: 8,
-        stype: 2,
+        stype: 2
       }
 
       result = TournamentData.create_tournament_json_payload(input)

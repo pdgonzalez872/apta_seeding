@@ -53,7 +53,6 @@ defmodule AptaSeeding.Mixfile do
 
       # time and date
       {:timex, "~> 3.1"},
-
       {:decimal, "~> 1.0"}
     ]
   end
