@@ -30,6 +30,7 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
                |> DataDistributor.create_result_data_structure()
 
       expected = %{
+        team_name: "Paulo Gonzalez - Jay Schwab",
         player_1_name: "Paulo Gonzalez",
         player_2_name: "Jay Schwab",
         team_points: Decimal.new("34.375"),
@@ -38,16 +39,16 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
       assert result == expected
     end
 
-    @tag :skip
     test "create_result_data_structure/1 creates a data structure from a result map - spaces in name" do
       result = %{team_name: "Scott Kahler - Matt  Rogers", team_points: "38.5"}
                |> DataDistributor.create_result_data_structure()
 
       expected = %{
+        team_name: "Scott Kahler - Matt Rogers",
         player_1_name: "Scott Kahler",
         player_2_name: "Matt Rogers", # no double space in the name here
-        team_points: 38.5,
-        individual_points: 19.25,
+        team_points: Decimal.new("38.5"),
+        individual_points: Decimal.new("19.25"),
       }
       assert result == expected
     end

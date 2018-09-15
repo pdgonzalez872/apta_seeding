@@ -39,10 +39,11 @@ defmodule AptaSeeding.ETL.DataDistributor do
   - Team Result (points)
   """
   def create_result_data_structure(%{team_name: team_name, team_points: team_points}) do
-    {player_1_name, player_2_name} = parse_team_players(team_name)
+    {player_1_name, player_2_name, real_team_name} = parse_team_players(team_name)
     {team_points, individual_points} = calculate_points(team_points)
 
     %{
+      team_name: real_team_name,
       player_1_name: player_1_name,
       player_2_name: player_2_name,
       team_points: team_points,
@@ -52,7 +53,17 @@ defmodule AptaSeeding.ETL.DataDistributor do
 
   def parse_team_players(team_name) do
     [player_1_name, player_2_name] = String.split(team_name, " - ")
-    {player_1_name, player_2_name}
+    p1 = sanitize_player_name(player_1_name)
+    p2 = sanitize_player_name(player_2_name)
+    team = [p1, p2] |> Enum.join(" - ")
+    {p1, p2, team}
+  end
+
+  def sanitize_player_name(player_name) do
+    player_name
+    |> String.split(" ")
+    |> Enum.filter(fn el -> !(el == "") end)
+    |> Enum.join(" ")
   end
 
   def calculate_points(team_points) do
