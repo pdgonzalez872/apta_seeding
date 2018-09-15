@@ -17,5 +17,6 @@ defmodule AptaSeeding.Data.Tournament do
     tournament
     |> cast(attrs, [:name, :name_and_date_unique_name, :date, :results_have_been_processed])
     |> validate_required([:name, :name_and_date_unique_name, :date, :results_have_been_processed])
+    |> unique_constraint(:name_and_date_unique_name)
   end
 end

@@ -20,7 +20,7 @@ defmodule AptaSeeding.Mixfile do
   def application do
     [
       mod: {AptaSeeding.Application, []},
-      extra_applications: [:logger, :runtime_tools, :httpoison]
+      extra_applications: [:logger, :runtime_tools, :httpoison, :timex]
     ]
   end
 
@@ -49,7 +49,10 @@ defmodule AptaSeeding.Mixfile do
       {:floki, "~> 0.20.0"},
 
       # json parsing
-      {:jason, "~> 1.1"}
+      {:jason, "~> 1.1"},
+
+      # time and date
+      {:timex, "~> 3.1"}
     ]
   end
 

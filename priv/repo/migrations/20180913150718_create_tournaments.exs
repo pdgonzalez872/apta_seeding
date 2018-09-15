@@ -11,5 +11,6 @@ defmodule AptaSeeding.Repo.Migrations.CreateTournaments do
       timestamps()
     end
 
+    create unique_index(:tournaments, [:name_and_date_unique_name])
   end
 end

@@ -22,6 +22,9 @@ defmodule AptaSeeding.ETL.TournamentData do
 
   require Logger
 
+  require Ecto.Query
+  alias AptaSeeding.Data.{Tournament}
+
   @doc """
   Entry point for this api
   """
@@ -49,11 +52,46 @@ defmodule AptaSeeding.ETL.TournamentData do
 
     # make the requests for each tournament here if we don't have it already in the db
     # The check is: tournament name and tournament date
+    # if already in the db, then move on. If not, make the request for the data and add to the state.
+    # all of the state will be processed later by the DataDistributor, in the "Load" part of the ETL
 
     {:ok, tournaments_data} =
       state.tournaments
       |> Enum.map(fn tournament ->
+
+        # Make keys atoms:
+        # TODO: Fix the source of this problem: When we make the original request to get the season
+        tournament = Enum.reduce(tournament, %{}, fn({k, v}, acc) ->
+          Map.put(acc, String.to_atom("#{k}"), v)
+        end)
+
         # check if tournament
+        date = parse_date(tournament.tournament_date)
+        name = tournament.tournament_name
+
+        attrs = %{
+          date: date,
+          name: name,
+          name_and_date_unique_name: "#{name}|#{Date.to_string(date)}",
+          results_have_been_processed: false,
+        }
+
+        change = Tournament.changeset(%Tournament{}, attrs)
+
+        case Repo.insert(change) do
+          {:ok, tournament} ->
+
+            Logger.info("New tournament, will process it")
+
+          {:error, changeset} ->
+            Logger.info("Tournament already created")
+          _ ->
+            raise "whoa"
+
+
+        end
+
+        require IEx; IEx.pry
 
         result = tournament
         |> create_tournament_json_payload()
@@ -61,9 +99,13 @@ defmodule AptaSeeding.ETL.TournamentData do
         |> decode_json_response()
         |> parse_tournament_results()
 
-        raise "Add the Data.Tournament concept: table, module"
-        raise "Add check that the tournament with the same name and date does not exist already"
+        # Continue here: check if the tournament exists or not already. If so, do nothing. If not, make request
+        # When done, add the tournaments to the state. I want a season to have tournaments. and the tournaments to have a "status"
+        # status are :nothing_to_do or :must_process (if they exist or not). If they don't make the request, and add it to a map
+
         raise "Move the decode_json_response and parse_tournament_results to the transform step"
+
+        # set "results_have_been_processed" to true for the tournament
 
         # else
         # :already_in_db
@@ -79,11 +121,15 @@ defmodule AptaSeeding.ETL.TournamentData do
   end
 
   def transform({:ok, state}) do
+    # Do the below in the DataDistributor
     # create the data structure
     # - Player
     # - Team
     # - Player Result (points, half of a team result)
     # - Team Result (points)
+
+    # Here, we want to only do some filtering on if a tournament needs to be processed or not.
+    # the ones that need to be processed will have the data to be processed (The results from the tournament).
 
     state =
       state
@@ -171,5 +217,12 @@ defmodule AptaSeeding.ETL.TournamentData do
         %{team_name: team_name, team_points: team_points}
       end)
     {:ok, results}
+  end
+
+  @spec parse_date(binary()) :: any()
+  def parse_date(date) do
+    [month, day, incomplete_year] = String.split(date, "/")
+    {:ok, date} = Date.new(String.to_integer("20#{incomplete_year}"), String.to_integer(month), String.to_integer(day))
+    date
   end
 end
