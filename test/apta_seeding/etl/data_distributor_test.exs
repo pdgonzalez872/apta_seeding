@@ -2,6 +2,13 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
   use ExUnit.Case
 
   alias AptaSeeding.ETL.DataDistributor
+  alias AptaSeeding.Data
+  alias AptaSeeding.Repo
+
+  setup do
+    # Explicitly get a connection before each test
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
+  end
 
   describe "DataDistributor" do
     test "parse_tournament_results/1 parses the tournament results correctly" do
@@ -17,7 +24,7 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
         |> Path.join()
         |> File.read!()
 
-      {:ok, result} = DataDistributor.parse_tournament_results(html)
+      result = DataDistributor.parse_tournament_results(html)
 
       assert Enum.at(result, 0) == %{team_name: "Ryan Baxter - Ricky Heath", team_points: "68.75"}
       assert Enum.at(result, 5) == %{team_name: "Scott Kahler - Matt  Rogers", team_points: "38.5"}
@@ -56,5 +63,55 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
     # TODO: Sanitize input -> Johan du Rant
     # Matt  Rogers
     # Scott  Yancey
+
+    test "sanitize_player_name/1 - sanity test 1" do
+      #raise "Continue here"
+
+    end
+
+    test "sanitize_player_name/1 - sanity test 2" do
+
+    end
+
+    test "sanitize_player_name/1 - sanity test 3" do
+
+    end
+
+    test "call/1 - integration test here. Making sure that things fit together" do
+      html =
+        [
+          System.cwd(),
+          "test",
+          "apta_seeding",
+          "etl",
+          "static_files_for_test",
+          "raw_tournament_result_indi_2018.html"
+        ]
+        |> Path.join()
+        |> File.read!()
+
+      attrs = %{
+        date: ~D[2018-02-01],
+        name: "Indi",
+        name_and_date_unique_name: "Indi|2018-02-01",
+        results_have_been_processed: false,
+        raw_results_html: html
+      }
+
+      tournament = Data.create_tournament(attrs)
+
+      {:ok, [results]} = DataDistributor.call(Data.list_tournaments())
+
+      first_result = %{
+                       individual_points: Decimal.new("34.375"),
+                       player_1_name: "Ryan Baxter",
+                       player_2_name: "Ricky Heath",
+                       team_name: "Ryan Baxter - Ricky Heath",
+                       team_points: Decimal.new("68.75"),
+                       tournament_name_and_date_unique_name: "Indi|2018-02-01"
+                    }
+
+      assert Enum.at(results, 0) == first_result
+    end
   end
 end

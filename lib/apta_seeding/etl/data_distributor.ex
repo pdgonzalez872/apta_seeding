@@ -7,27 +7,28 @@ defmodule AptaSeeding.ETL.DataDistributor do
   alias AptaSeeding.Data.{Tournament}
   alias AptaSeeding.Repo
 
-  def call() do
-    Tournament
-    |> Repo.all
-    |> Enum.each(fn tournament ->
-      tournament.raw_results_html
-      |> parse_tournament_results()
-      |> create_result_data_structure()
-    end)
+  def call(tournaments) do
+    results = tournaments
+              |> Enum.map(fn tournament ->
+                tournament.raw_results_html
+                |> parse_tournament_results()
+                |> Enum.map(fn r ->
+                  r
+                  |> create_result_data_structure()
+                  |> Map.put(:tournament_name_and_date_unique_name, tournament.name_and_date_unique_name)
+                end)
+              end)
+    {:ok, results}
   end
 
   @spec parse_tournament_results(binary()) :: list()
   def parse_tournament_results(tournament_results_html) do
-    results =
-      tournament_results_html
-      |> Floki.find("tr")
-      |> Enum.map(fn tr ->
-        {_, _, [{_, _, [team_name]}, _, {_, _, [team_points]}]} = tr
-        %{team_name: team_name, team_points: team_points}
-      end)
-
-    {:ok, results}
+    tournament_results_html
+    |> Floki.find("tr")
+    |> Enum.map(fn tr ->
+      {_, _, [{_, _, [team_name]}, _, {_, _, [team_points]}]} = tr
+      %{team_name: team_name, team_points: team_points}
+    end)
   end
 
   @doc """
