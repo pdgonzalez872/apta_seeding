@@ -23,7 +23,7 @@ defmodule Mix.Tasks.GatherAllData do
     Logger.info("Starting Hackney")
     HTTPoison.start()
 
-    {:ok, result} = Enum.at(season_data.mens, 1)
+    {:ok, result} = Enum.at(season_data.mens, -1)
                     |> ETL.handle_season_data()
                     |> ETL.handle_tournament_data()
                     # |> ETL.distribute_data()
@@ -39,62 +39,27 @@ defmodule Mix.Tasks.GatherAllData do
     # Men's
     #
 
-    # Add url
-    current_tournaments = %{
-      "stype" => 0,
-      "rtype" => 0,
-      "sid" => 0,
-      "rnum" => 0,
-      "copt" => 0,
-      "xid" => 0
-    }
-
     # https://platformtennisonline.org/Ranking.aspx?stype=1&rtype=1&copt=3
-    season_ending_in_2018 = %{
-      "stype" => 1,
-      "rtype" => 1,
-      "sid" => 0,
-      "rnum" => 0,
-      "copt" => 3,
-      "xid" => 0
-    }
+    current_tournaments = %{copt: 3, rnum: 0, rtype: 1, sid: 0, stype: 1, xid: 0}
+
+    # https://platformtennisonline.org/Ranking.aspx?stype=2&rtype=1&sid=13&copt=3
+    season_ending_in_2018 = %{copt: 3, rnum: 0, rtype: 1, sid: 13, stype: 2, xid: 0}
 
     # https://platformtennisonline.org/Ranking.aspx?stype=2&rtype=1&sid=10&copt=3
-    season_ending_in_2017 = %{
-      "stype" => 2,
-      "rtype" => 1,
-      "sid" => 10,
-      "rnum" => 0,
-      "copt" => 3,
-      "xid" => 0
-    }
+    season_ending_in_2017 = %{copt: 3, rnum: 0, rtype: 1, sid: 10, stype: 2, xid: 0}
 
     # https://platformtennisonline.org/Ranking.aspx?stype=2&rtype=1&sid=9&copt=3
-    season_ending_in_2016 = %{
-      "stype" => 2,
-      "rtype" => 1,
-      "sid" => 9,
-      "rnum" => 0,
-      "copt" => 3,
-      "xid" => 0
-    }
+    season_ending_in_2016 = %{copt: 3, rnum: 0, rtype: 1, sid: 9, stype: 2, xid: 0}
 
     # https://platformtennisonline.org/Ranking.aspx?stype=2&rtype=1&sid=8&copt=3
-    season_ending_in_2015 = %{
-      "stype" => 2,
-      "rtype" => 1,
-      "sid" => 8,
-      "rnum" => 0,
-      "copt" => 3,
-      "xid" => 0
-    }
+    season_ending_in_2015 = %{copt: 3, rnum: 0, rtype: 1, sid: 8, stype: 2, xid: 0}
 
     mens_tournament_collection = [
-      current_tournaments,
       season_ending_in_2015,
       season_ending_in_2016,
       season_ending_in_2017,
-      season_ending_in_2018
+      season_ending_in_2018,
+      current_tournaments
     ]
 
     # TODO

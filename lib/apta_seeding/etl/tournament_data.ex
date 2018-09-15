@@ -22,8 +22,8 @@ defmodule AptaSeeding.ETL.TournamentData do
 
   require Logger
 
-  require Ecto.Query
   alias AptaSeeding.Data.{Tournament}
+  alias AptaSeeding.Repo
 
   @doc """
   Entry point for this api
@@ -48,24 +48,17 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, %{step: :tournament_init, params: state.params, tournaments: state.tournaments}}
   end
 
+  @doc """
+  This is where we fetch the data for tournaments in a season.
+  We check if the tournament already exists in the database and if it does, we don't populate the
+  map with any additional data. If it does not (a new tournament in our perspective) we create
+  data and update the state.
+  """
   def extract({:ok, state}) do
-
-    # make the requests for each tournament here if we don't have it already in the db
-    # The check is: tournament name and tournament date
-    # if already in the db, then move on. If not, make the request for the data and add to the state.
-    # all of the state will be processed later by the DataDistributor, in the "Load" part of the ETL
-
     {:ok, tournaments_data} =
       state.tournaments
-      |> Enum.map(fn tournament ->
+      |> Enum.each(fn tournament ->
 
-        # Make keys atoms:
-        # TODO: Fix the source of this problem: When we make the original request to get the season
-        tournament = Enum.reduce(tournament, %{}, fn({k, v}, acc) ->
-          Map.put(acc, String.to_atom("#{k}"), v)
-        end)
-
-        # check if tournament
         date = parse_date(tournament.tournament_date)
         name = tournament.tournament_name
 
@@ -78,39 +71,28 @@ defmodule AptaSeeding.ETL.TournamentData do
 
         change = Tournament.changeset(%Tournament{}, attrs)
 
-        case Repo.insert(change) do
-          {:ok, tournament} ->
+        result = case Repo.insert(change) do
+          {:ok, tournament_record} ->
+            Logger.info("New tournament -> #{attrs.name_and_date_unique_name}, will fetch tournament results")
 
-            Logger.info("New tournament, will process it")
+            {:ok, raw_results_html} = tournament
+                                      |> create_tournament_json_payload()
+                                      |> make_request()
+                                      |> decode_json_response()
+
+            tournament_record
+            |> Tournament.changeset(%{raw_results_html: raw_results_html})
+            |> Repo.update!
 
           {:error, changeset} ->
             Logger.info("Tournament already created")
+
           _ ->
-            raise "whoa"
-
-
+            raise "whoa, not new or existing. Interesting! #{IO.inspect(tournament)}"
         end
 
         require IEx; IEx.pry
-
-        result = tournament
-        |> create_tournament_json_payload()
-        |> make_request()
-        |> decode_json_response()
-        |> parse_tournament_results()
-
-        # Continue here: check if the tournament exists or not already. If so, do nothing. If not, make request
-        # When done, add the tournaments to the state. I want a season to have tournaments. and the tournaments to have a "status"
-        # status are :nothing_to_do or :must_process (if they exist or not). If they don't make the request, and add it to a map
-
-        raise "Move the decode_json_response and parse_tournament_results to the transform step"
-
-        # set "results_have_been_processed" to true for the tournament
-
-        # else
-        # :already_in_db
       end)
-
 
     state =
       state
@@ -121,15 +103,10 @@ defmodule AptaSeeding.ETL.TournamentData do
   end
 
   def transform({:ok, state}) do
-    # Do the below in the DataDistributor
-    # create the data structure
-    # - Player
-    # - Team
-    # - Player Result (points, half of a team result)
-    # - Team Result (points)
-
     # Here, we want to only do some filtering on if a tournament needs to be processed or not.
     # the ones that need to be processed will have the data to be processed (The results from the tournament).
+
+    raise "Move the decode_json_response and parse_tournament_results to the transform step"
 
     state =
       state
@@ -175,11 +152,11 @@ defmodule AptaSeeding.ETL.TournamentData do
   """
   @spec create_tournament_json_payload(map()) :: binary()
   def create_tournament_json_payload(tournament) do
-    stype = tournament["stype"]
-    rtype = tournament["rtype"]
-    sid = tournament["sid"]
-    rnum = tournament["rnum"]
-    copt = tournament["copt"]
+    stype = tournament.stype
+    rtype = tournament.rtype
+    sid = tournament.sid
+    rnum = tournament.rnum
+    copt = tournament.copt
     xid = tournament.xid
 
     # This is not pretty. Unsure why passing a json object did not work. This did.

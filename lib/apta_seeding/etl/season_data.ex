@@ -1,4 +1,7 @@
 defmodule AptaSeeding.ETL.SeasonData do
+
+  require Logger
+
   @doc """
   This takes in a map that gets converted to json, but they are really post params
   Then, we make a request to their api service:
@@ -54,7 +57,7 @@ defmodule AptaSeeding.ETL.SeasonData do
     tournaments = state.api_call_response_body
                   |> parse_html()
                   |> Enum.map(fn el ->
-                       Map.merge(el, state.params)
+                       Map.merge(state.params, el)
                   end)
 
     state =
@@ -114,8 +117,8 @@ defmodule AptaSeeding.ETL.SeasonData do
     root = "https://platformtennisonline.org/"
 
     custom =
-      "Ranking.aspx?stype=#{params["stype"]}&rtype=#{params["rtype"]}&sid=#{params["sid"]}&copt=#{
-        params["copt"]
+      "Ranking.aspx?stype=#{params.stype}&rtype=#{params.rtype}&sid=#{params.sid}&copt=#{
+        params.copt
       }"
 
     root <> custom
