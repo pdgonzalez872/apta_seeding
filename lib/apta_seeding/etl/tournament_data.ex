@@ -22,8 +22,7 @@ defmodule AptaSeeding.ETL.TournamentData do
 
   require Logger
 
-  alias AptaSeeding.Data.{Tournament}
-  alias AptaSeeding.Repo
+  alias AptaSeeding.Data
 
   @doc """
   Entry point for this api
@@ -69,9 +68,7 @@ defmodule AptaSeeding.ETL.TournamentData do
           results_have_been_processed: false,
         }
 
-        change = Tournament.changeset(%Tournament{}, attrs)
-
-        result = case Repo.insert(change) do
+        result = case Data.create_tournament(attrs) do
           {:ok, tournament_record} ->
             Logger.info("New tournament -> #{attrs.name_and_date_unique_name}, will fetch tournament results")
 
@@ -81,8 +78,7 @@ defmodule AptaSeeding.ETL.TournamentData do
                                       |> decode_json_response()
 
             tournament_record
-            |> Tournament.changeset(%{raw_results_html: raw_results_html})
-            |> Repo.update!
+            |> Data.update_tournament(%{raw_results_html: raw_results_html})
 
           {:error, changeset} ->
             Logger.info("Tournament already created")
