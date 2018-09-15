@@ -23,11 +23,17 @@ defmodule Mix.Tasks.GatherAllData do
     Logger.info("Starting Hackney")
     HTTPoison.start()
 
-    {:ok, result} =
-      Enum.at(season_data.mens, -1)
+    season_data.mens
+    |> Enum.each(fn season ->
+      season
       |> ETL.handle_season_data()
       |> ETL.handle_tournament_data()
+    end)
 
+    # {:ok, result} =
+    #   Enum.at(season_data.mens, -1)
+    #   |> ETL.handle_season_data()
+    #   |> ETL.handle_tournament_data()
     # |> ETL.distribute_data()
 
     # The above should only be a call to ETL.call() or ETL.process_season_data()

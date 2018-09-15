@@ -52,9 +52,9 @@ defmodule AptaSeeding.ETL.TournamentData do
   data and update the state.
   """
   def extract({:ok, state}) do
-    {:ok, tournaments_data} =
+    tournaments_data =
       state.tournaments
-      |> Enum.each(fn tournament ->
+      |> Enum.map(fn tournament ->
 
         attrs = tournament
                 |> create_date_and_name()
