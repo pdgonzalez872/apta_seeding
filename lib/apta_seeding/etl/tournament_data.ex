@@ -31,8 +31,6 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, state}
     |> init()
     |> extract()
-    |> transform()
-    |> load()
   end
 
   @doc """
@@ -57,15 +55,10 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, tournaments_data} =
       state.tournaments
       |> Enum.each(fn tournament ->
-        date = parse_date(tournament.tournament_date)
-        name = tournament.tournament_name
 
-        attrs = %{
-          date: date,
-          name: name,
-          name_and_date_unique_name: "#{name}|#{Date.to_string(date)}",
-          results_have_been_processed: false
-        }
+        attrs = tournament
+                |> create_date_and_name()
+                |> create_attributes()
 
         result =
           case Data.create_tournament(attrs) do
@@ -89,39 +82,11 @@ defmodule AptaSeeding.ETL.TournamentData do
             _ ->
               raise "whoa, not new or existing. Interesting! #{IO.inspect(tournament)}"
           end
-
-        require IEx
-        IEx.pry()
       end)
 
     state =
       state
       |> Map.put(:step, :tournament_extract)
-      |> Map.put(:tournaments_data, tournaments_data)
-
-    {:ok, state}
-  end
-
-  def transform({:ok, state}) do
-    # Here, we want to only do some filtering on if a tournament needs to be processed or not.
-    # the ones that need to be processed will have the data to be processed (The results from the tournament).
-
-    raise "Move the decode_json_response and parse_tournament_results to the transform step"
-
-    state =
-      state
-      |> Map.put(:step, :tournament_transform)
-
-    {:ok, state}
-  end
-
-  def load({:ok, state}) do
-    # This is where we persist
-    # Or, we pass through here. Hand the main persisting to something else
-
-    state =
-      state
-      |> Map.put(:step, :tournament_load)
 
     {:ok, state}
   end
@@ -197,6 +162,12 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, results}
   end
 
+  def create_date_and_name(tournament) do
+    date = parse_date(tournament.tournament_date)
+    name = tournament.tournament_name
+    %{name: name, date: date}
+  end
+
   @spec parse_date(binary()) :: any()
   def parse_date(date) do
     [month, day, incomplete_year] = String.split(date, "/")
@@ -209,5 +180,14 @@ defmodule AptaSeeding.ETL.TournamentData do
       )
 
     date
+  end
+
+  def create_attributes(%{} = params) do
+    %{
+      date: params.date,
+      name: params.name,
+      name_and_date_unique_name: "#{params.name}|#{Date.to_string(params.date)}",
+      results_have_been_processed: false
+    }
   end
 end
