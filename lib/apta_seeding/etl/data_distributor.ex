@@ -4,8 +4,17 @@ defmodule AptaSeeding.ETL.DataDistributor do
 
   """
 
-  def call() do
+  alias AptaSeeding.Data.{Tournament}
+  alias AptaSeeding.Repo
 
+  def call() do
+    Tournament
+    |> Repo.all
+    |> Enum.each(fn tournament ->
+      tournament.raw_results_html
+      |> parse_tournament_results()
+      |> create_result_data_structure()
+    end)
   end
 
   @spec parse_tournament_results(binary()) :: list()
@@ -30,7 +39,25 @@ defmodule AptaSeeding.ETL.DataDistributor do
   - Team Result (points)
   """
   def create_result_data_structure(%{team_name: team_name, team_points: team_points}) do
-    nil
+    {player_1_name, player_2_name} = parse_team_players(team_name)
+    {team_points, individual_points} = calculate_points(team_points)
+
+    %{
+      player_1_name: player_1_name,
+      player_2_name: player_2_name,
+      team_points: team_points,
+      individual_points: individual_points
+    }
   end
 
+  def parse_team_players(team_name) do
+    [player_1_name, player_2_name] = String.split(team_name, " - ")
+    {player_1_name, player_2_name}
+  end
+
+  def calculate_points(team_points) do
+    team_points = Decimal.new(team_points)
+    individual_points = Decimal.div(team_points, Decimal.new(2))
+    {team_points, individual_points}
+  end
 end
