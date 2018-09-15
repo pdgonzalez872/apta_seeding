@@ -14,7 +14,7 @@ defmodule AptaSeeding.ETL.SeasonData do
   To see the JS code:
   - visit: https://platformtennisonline.org/Ranking.aspx?stype=2&rtype=1&sid=13&copt=3
   - Inspect |> Sources |> js folder |> RankingDisplay.js
-  - The fetching function is on like 74 of that file.
+  - The fetching function is on line 74 of that file.
   """
   def call(tournament_params_to_post) do
     tournament_params_to_post

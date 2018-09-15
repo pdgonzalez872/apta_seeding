@@ -3,6 +3,8 @@ defmodule Mix.Tasks.GatherAllData do
   require Logger
   require IEx
 
+  alias AptaSeeding.ETL
+
   @moduledoc """
   This is the task to be run on a daily/weekly basis
 
@@ -22,13 +24,11 @@ defmodule Mix.Tasks.GatherAllData do
     HTTPoison.start()
 
     {:ok, result} = Enum.at(season_data.mens, 1)
-                    |> AptaSeeding.ETL.handle_season_data()
-                    |> AptaSeeding.ETL.handle_tournament_data()
+                    |> ETL.handle_season_data()
+                    |> ETL.handle_tournament_data()
+                    # |> ETL.distribute_data()
 
-    # Enum.each(result.tournaments, fn tournament ->
-    #   AptaSeeding.ETL.handle_tournament_data(tournament)
-    # end)
-
+    # The above should only be a call to ETL.call() or ETL.process_season_data()
     require IEx; IEx.pry
 
     Logger.info("Finish Task")
