@@ -23,5 +23,12 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
       assert Enum.at(result, 6) == %{team_name: "Paulo Gonzalez - Jay Schwab", team_points: "34.375"}
       assert Enum.count(result) == 40
     end
+
+    test "create_result_data_structure/1 creates a data structure from a result map" do
+      result = %{team_name: "Paulo Gonzalez - Jay Schwab", team_points: "34.375"}
+               |> DataDistributor.create_result_data_structure()
+
+      assert result == 1
+    end
   end
 end
