@@ -149,19 +149,6 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, tournament_results_html}
   end
 
-  @spec parse_tournament_results(binary()) :: list()
-  def parse_tournament_results({:ok, tournament_results_html}) do
-    results =
-      tournament_results_html
-      |> Floki.find("tr")
-      |> Enum.map(fn tr ->
-        {_, _, [{_, _, [team_name]}, _, {_, _, [team_points]}]} = tr
-        %{team_name: team_name, team_points: team_points}
-      end)
-
-    {:ok, results}
-  end
-
   def create_date_and_name(tournament) do
     date = parse_date(tournament.tournament_date)
     name = tournament.tournament_name
