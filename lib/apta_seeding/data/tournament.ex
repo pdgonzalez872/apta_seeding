@@ -8,6 +8,7 @@ defmodule AptaSeeding.Data.Tournament do
     field :name, :string
     field :name_and_date_unique_name, :string
     field :results_have_been_processed, :boolean, default: false
+    field :raw_results_html, :string
 
     timestamps()
   end
@@ -15,7 +16,7 @@ defmodule AptaSeeding.Data.Tournament do
   @doc false
   def changeset(tournament, attrs) do
     tournament
-    |> cast(attrs, [:name, :name_and_date_unique_name, :date, :results_have_been_processed])
+    |> cast(attrs, [:name, :name_and_date_unique_name, :date, :results_have_been_processed, :raw_results_html])
     |> validate_required([:name, :name_and_date_unique_name, :date, :results_have_been_processed])
     |> unique_constraint(:name_and_date_unique_name)
   end
