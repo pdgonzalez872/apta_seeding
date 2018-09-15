@@ -57,7 +57,6 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, tournaments_data} =
       state.tournaments
       |> Enum.each(fn tournament ->
-
         date = parse_date(tournament.tournament_date)
         name = tournament.tournament_name
 
@@ -65,29 +64,34 @@ defmodule AptaSeeding.ETL.TournamentData do
           date: date,
           name: name,
           name_and_date_unique_name: "#{name}|#{Date.to_string(date)}",
-          results_have_been_processed: false,
+          results_have_been_processed: false
         }
 
-        result = case Data.create_tournament(attrs) do
-          {:ok, tournament_record} ->
-            Logger.info("New tournament -> #{attrs.name_and_date_unique_name}, will fetch tournament results")
+        result =
+          case Data.create_tournament(attrs) do
+            {:ok, tournament_record} ->
+              Logger.info(
+                "New tournament -> #{attrs.name_and_date_unique_name}, will fetch tournament results"
+              )
 
-            {:ok, raw_results_html} = tournament
-                                      |> create_tournament_json_payload()
-                                      |> make_request()
-                                      |> decode_json_response()
+              {:ok, raw_results_html} =
+                tournament
+                |> create_tournament_json_payload()
+                |> make_request()
+                |> decode_json_response()
 
-            tournament_record
-            |> Data.update_tournament(%{raw_results_html: raw_results_html})
+              tournament_record
+              |> Data.update_tournament(%{raw_results_html: raw_results_html})
 
-          {:error, changeset} ->
-            Logger.info("Tournament already created")
+            {:error, changeset} ->
+              Logger.info("Tournament already created")
 
-          _ ->
-            raise "whoa, not new or existing. Interesting! #{IO.inspect(tournament)}"
-        end
+            _ ->
+              raise "whoa, not new or existing. Interesting! #{IO.inspect(tournament)}"
+          end
 
-        require IEx; IEx.pry
+        require IEx
+        IEx.pry()
       end)
 
     state =
@@ -122,7 +126,7 @@ defmodule AptaSeeding.ETL.TournamentData do
     {:ok, state}
   end
 
-  @doc"""
+  @doc """
   We want to mimic the below request:
 
   $.ajax({
@@ -176,7 +180,7 @@ defmodule AptaSeeding.ETL.TournamentData do
   end
 
   def decode_json_response({:ok, json}) do
-    %{"d" => tournament_results_html} = Jason.decode! json
+    %{"d" => tournament_results_html} = Jason.decode!(json)
     {:ok, tournament_results_html}
   end
 
@@ -189,13 +193,21 @@ defmodule AptaSeeding.ETL.TournamentData do
         {_, _, [{_, _, [team_name]}, _, {_, _, [team_points]}]} = tr
         %{team_name: team_name, team_points: team_points}
       end)
+
     {:ok, results}
   end
 
   @spec parse_date(binary()) :: any()
   def parse_date(date) do
     [month, day, incomplete_year] = String.split(date, "/")
-    {:ok, date} = Date.new(String.to_integer("20#{incomplete_year}"), String.to_integer(month), String.to_integer(day))
+
+    {:ok, date} =
+      Date.new(
+        String.to_integer("20#{incomplete_year}"),
+        String.to_integer(month),
+        String.to_integer(day)
+      )
+
     date
   end
 end

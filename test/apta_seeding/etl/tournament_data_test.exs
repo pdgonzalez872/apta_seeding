@@ -17,10 +17,9 @@ defmodule AptaSeeding.ETL.TournamentDataTest do
         "xid" => 0
       }
 
-    result = TournamentData.create_tournament_json_payload(input)
+      result = TournamentData.create_tournament_json_payload(input)
 
-    assert result == "{'stype':2,'rtype':1,'sid':8,'rnum':0,'copt':3,'xid':214}"
-
+      assert result == "{'stype':2,'rtype':1,'sid':8,'rnum':0,'copt':3,'xid':214}"
     end
   end
 end

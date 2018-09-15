@@ -6,9 +6,24 @@ defmodule AptaSeeding.DataTest do
   describe "tournaments" do
     alias AptaSeeding.Data.Tournament
 
-    @valid_attrs %{date: ~D[2010-04-17], name: "some name", name_and_date_unique_name: "some name_and_date_unique_name", results_have_been_processed: true}
-    @update_attrs %{date: ~D[2011-05-18], name: "some updated name", name_and_date_unique_name: "some updated name_and_date_unique_name", results_have_been_processed: false}
-    @invalid_attrs %{date: nil, name: nil, name_and_date_unique_name: nil, results_have_been_processed: nil}
+    @valid_attrs %{
+      date: ~D[2010-04-17],
+      name: "some name",
+      name_and_date_unique_name: "some name_and_date_unique_name",
+      results_have_been_processed: true
+    }
+    @update_attrs %{
+      date: ~D[2011-05-18],
+      name: "some updated name",
+      name_and_date_unique_name: "some updated name_and_date_unique_name",
+      results_have_been_processed: false
+    }
+    @invalid_attrs %{
+      date: nil,
+      name: nil,
+      name_and_date_unique_name: nil,
+      results_have_been_processed: nil
+    }
 
     def tournament_fixture(attrs \\ %{}) do
       {:ok, tournament} =

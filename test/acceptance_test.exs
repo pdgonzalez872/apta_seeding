@@ -14,7 +14,6 @@ defmodule AptaSeeding.AcceptanceTest do
 
   describe "This is where we try things out" do
     test "playground" do
-
       third_party_tournament_data_params = %{
         :tournament_date => "03/06/15",
         :tournament_name => "APTA Men's Nationals",
@@ -34,7 +33,7 @@ defmodule AptaSeeding.AcceptanceTest do
         date: date,
         name: name,
         name_and_date_unique_name: "#{name}|#{Date.to_string(date)}",
-        results_have_been_processed: false,
+        results_have_been_processed: false
       }
 
       change = Tournament.changeset(%Tournament{}, tournament)
@@ -45,7 +44,8 @@ defmodule AptaSeeding.AcceptanceTest do
       new_result = Repo.insert(new_change)
 
       date = TournamentData.parse_date(third_party_tournament_data_params.tournament_date)
-      require IEx; IEx.pry
+      require IEx
+      IEx.pry()
 
       # create a tournament, then see what the check would look like.
 

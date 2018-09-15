@@ -1,5 +1,4 @@
 defmodule AptaSeeding.ETL.SeasonData do
-
   require Logger
 
   @doc """
@@ -54,11 +53,12 @@ defmodule AptaSeeding.ETL.SeasonData do
   put it in a format we like.
   """
   def transform({:ok, state}) do
-    tournaments = state.api_call_response_body
-                  |> parse_html()
-                  |> Enum.map(fn el ->
-                       Map.merge(state.params, el)
-                  end)
+    tournaments =
+      state.api_call_response_body
+      |> parse_html()
+      |> Enum.map(fn el ->
+        Map.merge(state.params, el)
+      end)
 
     state =
       state
@@ -102,7 +102,8 @@ defmodule AptaSeeding.ETL.SeasonData do
 
   # map
   def add_season_params_to_tournaments(el, season_params) do
-    require IEx; IEx.pry
+    require IEx
+    IEx.pry()
     el
   end
 

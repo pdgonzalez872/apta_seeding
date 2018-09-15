@@ -15,7 +15,7 @@ defmodule AptaSeeding.ETL do
     # |> distribute_data()
   end
 
-  @spec handle_season_data(map()) ::tuple()
+  @spec handle_season_data(map()) :: tuple()
   def handle_season_data(season_params) do
     SeasonData.call(season_params)
   end
