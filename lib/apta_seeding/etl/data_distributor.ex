@@ -15,6 +15,7 @@ defmodule AptaSeeding.ETL.DataDistributor do
                 |> Enum.map(fn r ->
                   r
                   |> create_result_data_structure()
+                  |> persist_results()
                   |> Map.put(:tournament_name_and_date_unique_name, tournament.name_and_date_unique_name)
                 end)
               end)

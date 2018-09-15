@@ -113,5 +113,19 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
 
       assert Enum.at(results, 0) == first_result
     end
+
+    test "persist_results/1 - persists records correctly" do
+      raise "persist here"
+
+      input = %{
+                 individual_points: Decimal.new("34.375"),
+                 player_1_name: "Ryan Baxter",
+                 player_2_name: "Ricky Heath",
+                 team_name: "Ryan Baxter - Ricky Heath",
+                 team_points: Decimal.new("68.75"),
+                 tournament_name_and_date_unique_name: "Indi|2018-02-01"
+               }
+
+    end
   end
 end
