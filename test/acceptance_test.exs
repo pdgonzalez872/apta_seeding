@@ -12,6 +12,7 @@ defmodule AptaSeeding.AcceptanceTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
   end
 
+  @tag :skip
   describe "This is where we try things out" do
     test "playground" do
       third_party_tournament_data_params = %{
@@ -44,8 +45,8 @@ defmodule AptaSeeding.AcceptanceTest do
       new_result = Repo.insert(new_change)
 
       date = TournamentData.parse_date(third_party_tournament_data_params.tournament_date)
-      require IEx
-      IEx.pry()
+      # require IEx
+      # IEx.pry()
 
       # create a tournament, then see what the check would look like.
 

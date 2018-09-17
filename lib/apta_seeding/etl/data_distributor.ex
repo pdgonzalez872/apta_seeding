@@ -5,23 +5,25 @@ defmodule AptaSeeding.ETL.DataDistributor do
   """
 
   alias AptaSeeding.Data.{Tournament}
+  alias AptaSeeding.Data
   alias AptaSeeding.Repo
 
   def call(tournaments) do
     results =
       tournaments
       |> Enum.map(fn tournament ->
-        tournament.raw_results_html
-        |> parse_tournament_results()
-        |> Enum.map(fn r ->
-          r
-          |> create_result_data_structure()
-          |> persist_results()
-          |> Map.put(:tournament_name_and_date_unique_name, tournament.name_and_date_unique_name)
-        end)
+        results_structure = tournament.raw_results_html
+                            |> parse_tournament_results()
+                            |> Enum.map(fn r ->
+                              r
+                              |> create_result_data_structure()
+                              |> Map.put(:tournament_name_and_date_unique_name, tournament.name_and_date_unique_name)
+                            end)
+
+        process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure})
       end)
 
-    {:ok, results}
+    :ok
   end
 
   @spec parse_tournament_results(binary()) :: list()
@@ -53,6 +55,17 @@ defmodule AptaSeeding.ETL.DataDistributor do
       team_points: team_points,
       individual_points: individual_points
     }
+  end
+
+  @doc """
+  This is where we will have
+  - tournament
+  - results_structure
+
+  This function will delegate to the Data api and have it do the work.
+  """
+  def process_tournament_and_tournament_results(args) do
+    Data.process_tournament_and_tournament_results(args)
   end
 
   def parse_team_players(team_name) do

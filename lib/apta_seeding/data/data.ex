@@ -101,4 +101,11 @@ defmodule AptaSeeding.Data do
   def change_tournament(%Tournament{} = tournament) do
     Tournament.changeset(tournament, %{})
   end
+
+  def process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure}) do
+    results_structure
+    |> Enum.map(fn r ->
+      # require IEx; IEx.pry
+    end)
+  end
 end

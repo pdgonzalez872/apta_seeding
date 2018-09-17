@@ -10,6 +10,30 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
   end
 
+  def create_indi_tournament() do
+    html =
+      [
+        System.cwd(),
+        "test",
+        "apta_seeding",
+        "etl",
+        "static_files_for_test",
+        "raw_tournament_result_indi_2018.html"
+      ]
+      |> Path.join()
+      |> File.read!()
+
+    attrs = %{
+      date: ~D[2018-02-01],
+      name: "Indi",
+      name_and_date_unique_name: "Indi|2018-02-01",
+      results_have_been_processed: false,
+      raw_results_html: html
+    }
+
+    Data.create_tournament(attrs)
+  end
+
   describe "DataDistributor" do
     test "parse_tournament_results/1 parses the tournament results correctly" do
       html =
@@ -89,45 +113,14 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
     end
 
     test "call/1 - integration test here. Making sure that things fit together" do
-      html =
-        [
-          System.cwd(),
-          "test",
-          "apta_seeding",
-          "etl",
-          "static_files_for_test",
-          "raw_tournament_result_indi_2018.html"
-        ]
-        |> Path.join()
-        |> File.read!()
+      _tournament = create_indi_tournament()
 
-      attrs = %{
-        date: ~D[2018-02-01],
-        name: "Indi",
-        name_and_date_unique_name: "Indi|2018-02-01",
-        results_have_been_processed: false,
-        raw_results_html: html
-      }
+      result = DataDistributor.call(Data.list_tournaments())
 
-      tournament = Data.create_tournament(attrs)
-
-      {:ok, [results]} = DataDistributor.call(Data.list_tournaments())
-
-      first_result = %{
-        individual_points: Decimal.new("34.375"),
-        player_1_name: "Ryan Baxter",
-        player_2_name: "Ricky Heath",
-        team_name: "Ryan Baxter - Ricky Heath",
-        team_points: Decimal.new("68.75"),
-        tournament_name_and_date_unique_name: "Indi|2018-02-01"
-      }
-
-      assert Enum.at(results, 0) == first_result
+      assert result == :ok
     end
 
     test "persist_results/1 - persists records correctly" do
-      raise "persist here"
-
       input = %{
         individual_points: Decimal.new("34.375"),
         player_1_name: "Ryan Baxter",

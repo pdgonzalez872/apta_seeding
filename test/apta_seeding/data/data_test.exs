@@ -83,4 +83,35 @@ defmodule AptaSeeding.DataTest do
       assert %Ecto.Changeset{} = Data.change_tournament(tournament)
     end
   end
+
+  describe "process_tournament_and_tournament_results/1" do
+
+    def create_indi_tournament() do
+      html =
+        [
+          System.cwd(),
+          "test",
+          "apta_seeding",
+          "etl",
+          "static_files_for_test",
+          "raw_tournament_result_indi_2018.html"
+        ]
+        |> Path.join()
+        |> File.read!()
+
+      attrs = %{
+        date: ~D[2018-02-01],
+        name: "Indi",
+        name_and_date_unique_name: "Indi|2018-02-01",
+        results_have_been_processed: false,
+        raw_results_html: html
+      }
+
+      Data.create_tournament(attrs)
+    end
+    test "processes results correctly" do
+      tournament = create_indi_tournament()
+      assert tournament == 1
+    end
+  end
 end
