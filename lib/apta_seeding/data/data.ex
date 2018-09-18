@@ -135,6 +135,8 @@ defmodule AptaSeeding.Data do
       player_1 = find_or_create_player(r.player_1_name)
       player_2 = find_or_create_player(r.player_2_name)
 
+      #team = find_or_create_team(r.team_name)
+
       # continue here: start modeling the database.
       # create the other modules, migrations
     end)
