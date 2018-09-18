@@ -4,6 +4,8 @@ defmodule AptaSeeding.Repo.Migrations.CreateTeam do
   def change do
     create table(:teams) do
       add :name, :string
+      add :player_1_id, :integer
+      add :player_2_id, :integer
 
       timestamps()
     end

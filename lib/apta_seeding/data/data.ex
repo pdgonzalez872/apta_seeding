@@ -153,7 +153,7 @@ defmodule AptaSeeding.Data do
 
   def get_team!(id), do: Repo.get!(Team, id)
 
-  def find_or_create_team(team_name) do
+  def find_or_create_team(%{team_name: team_name, player_1_id: player_1_id, player_2_id: player_2_id}) do
     query =
       from(
         t in "teams",
@@ -165,7 +165,7 @@ defmodule AptaSeeding.Data do
 
     cond do
       Enum.count(result) == 0 ->
-        create_team(%{name: team_name})
+        create_team(%{name: team_name, player_1_id: player_1_id, player_2_id: player_2_id})
 
       true ->
         get_team!(Enum.at(result, 0))
@@ -191,7 +191,7 @@ defmodule AptaSeeding.Data do
       player_2 = find_or_create_player(r.player_2_name)
 
       # Sanitize the input here. Maybe join both names instead.
-      team = find_or_create_team(r.team_name)
+      team = find_or_create_team(%{team_name: r.team_name, player_1_id: player_1.id, player_2_id: player_2.id})
 
       # continue here: start modeling the database.
       # create the other modules, migrations

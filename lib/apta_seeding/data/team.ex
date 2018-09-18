@@ -4,6 +4,8 @@ defmodule AptaSeeding.Data.Team do
 
   schema "teams" do
     field(:name, :string)
+    field(:player_1_id, :integer)
+    field(:player_2_id, :integer)
 
     timestamps()
   end
@@ -12,9 +14,11 @@ defmodule AptaSeeding.Data.Team do
   def changeset(team, attrs) do
     team
     |> cast(attrs, [
-      :name
+      :name,
+      :player_1_id,
+      :player_2_id,
     ])
-    |> validate_required([:name])
+    |> validate_required([:name, :player_1_id, :player_2_id])
     |> unique_constraint(:name)
   end
 end
