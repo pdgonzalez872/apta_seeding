@@ -12,15 +12,22 @@ defmodule AptaSeeding.ETL.DataDistributor do
     results =
       tournaments
       |> Enum.map(fn tournament ->
-        results_structure = tournament.raw_results_html
-                            |> parse_tournament_results()
-                            |> Enum.map(fn r ->
-                              r
-                              |> create_result_data_structure()
-                              |> Map.put(:tournament_name_and_date_unique_name, tournament.name_and_date_unique_name)
-                            end)
+        results_structure =
+          tournament.raw_results_html
+          |> parse_tournament_results()
+          |> Enum.map(fn r ->
+            r
+            |> create_result_data_structure()
+            |> Map.put(
+              :tournament_name_and_date_unique_name,
+              tournament.name_and_date_unique_name
+            )
+          end)
 
-        process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure})
+        process_tournament_and_tournament_results(%{
+          tournament: tournament,
+          results_structure: results_structure
+        })
       end)
 
     :ok

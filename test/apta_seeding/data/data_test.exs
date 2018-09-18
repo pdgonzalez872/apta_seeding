@@ -87,17 +87,18 @@ defmodule AptaSeeding.DataTest do
 
   describe "find_or_create_player/1" do
     test "finds or creates players properly" do
-      pre_player_count = Data.list_players() |> Enum.count
+      pre_player_count = Data.list_players() |> Enum.count()
 
-      cant_find_a_player_that_does_not_exist_so_it_will_create = Data.find_or_create_player("Kasey")
+      cant_find_a_player_that_does_not_exist_so_it_will_create =
+        Data.find_or_create_player("Kasey")
 
-      post_player_create = Data.list_players() |> Enum.count
+      post_player_create = Data.list_players() |> Enum.count()
 
-      assert (post_player_create - pre_player_count) == 1
+      assert post_player_create - pre_player_count == 1
       assert cant_find_a_player_that_does_not_exist_so_it_will_create.name == "Kasey"
 
       will_find_this_player_since_it_exists = Data.find_or_create_player("Kasey")
-      post_player_find = Data.list_players() |> Enum.count
+      post_player_find = Data.list_players() |> Enum.count()
 
       did_not_create_a_new_record = post_player_find - post_player_create
       assert did_not_create_a_new_record == 0
@@ -106,17 +107,18 @@ defmodule AptaSeeding.DataTest do
 
   describe "find_or_create_team/1" do
     test "finds or creates teams properly" do
-      pre_team_count = Data.list_teams() |> Enum.count
+      pre_team_count = Data.list_teams() |> Enum.count()
 
-      cant_find_a_team_that_does_not_exist_so_it_will_create = Data.find_or_create_team("Butler - Kasey")
+      cant_find_a_team_that_does_not_exist_so_it_will_create =
+        Data.find_or_create_team("Butler - Kasey")
 
-      post_team_create = Data.list_teams() |> Enum.count
+      post_team_create = Data.list_teams() |> Enum.count()
 
-      assert (post_team_create - pre_team_count) == 1
+      assert post_team_create - pre_team_count == 1
       assert cant_find_a_team_that_does_not_exist_so_it_will_create.name == "Butler - Kasey"
 
       will_find_this_team_since_it_exists = Data.find_or_create_team("Butler - Kasey")
-      post_team_find = Data.list_teams() |> Enum.count
+      post_team_find = Data.list_teams() |> Enum.count()
 
       did_not_create_a_new_record = post_team_find - post_team_create
       assert did_not_create_a_new_record == 0
@@ -124,7 +126,6 @@ defmodule AptaSeeding.DataTest do
   end
 
   describe "process_tournament_and_tournament_results/1" do
-
     def create_indi_tournament() do
       html =
         [
@@ -149,6 +150,7 @@ defmodule AptaSeeding.DataTest do
       Data.create_tournament(attrs)
     end
 
+    @tag :integration
     test "processes results correctly" do
       # assert changes in:
       # - player count
@@ -156,28 +158,34 @@ defmodule AptaSeeding.DataTest do
       # - TeamResult count
       # - PlayerResult count
 
-      pre_player_count = Data.list_players() |> Enum.count
-      pre_team_count = Data.list_teams() |> Enum.count
+      pre_player_count = Data.list_players() |> Enum.count()
+      pre_team_count = Data.list_teams() |> Enum.count()
 
-      results_structure = [%{
-        individual_points: Decimal.new("34.375"),
-        player_1_name: "Ryan Baxter",
-        player_2_name: "Ricky Heath",
-        team_name: "Ryan Baxter - Ricky Heath",
-        team_points: Decimal.new("68.75"),
-        tournament_name_and_date_unique_name: "Indi|2018-02-01"
-      }]
+      results_structure = [
+        %{
+          individual_points: Decimal.new("34.375"),
+          player_1_name: "Ryan Baxter",
+          player_2_name: "Ricky Heath",
+          team_name: "Ryan Baxter - Ricky Heath",
+          team_points: Decimal.new("68.75"),
+          tournament_name_and_date_unique_name: "Indi|2018-02-01"
+        }
+      ]
 
       tournament = create_indi_tournament()
 
-      output = Data.process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure})
+      output =
+        Data.process_tournament_and_tournament_results(%{
+          tournament: tournament,
+          results_structure: results_structure
+        })
 
-      post_player_count = Data.list_players() |> Enum.count
-      post_team_count = Data.list_teams() |> Enum.count
+      post_player_count = Data.list_players() |> Enum.count()
+      post_team_count = Data.list_teams() |> Enum.count()
 
-      #assert output == 1
-      assert (post_player_count - pre_player_count) == 2
-      assert (post_team_count - pre_team_count) == 1
+      # assert output == 1
+      assert post_player_count - pre_player_count == 2
+      assert post_team_count - pre_team_count == 1
     end
   end
 end

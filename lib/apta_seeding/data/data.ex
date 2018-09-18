@@ -119,14 +119,19 @@ defmodule AptaSeeding.Data do
   def get_player!(id), do: Repo.get!(Player, id)
 
   def find_or_create_player(player_name) do
-    query = from p in "players",
-            where: p.name == ^player_name,
-            select: p.id
+    query =
+      from(
+        p in "players",
+        where: p.name == ^player_name,
+        select: p.id
+      )
+
     result = Repo.all(query)
 
     cond do
       Enum.count(result) == 0 ->
         create_player(%{name: player_name})
+
       true ->
         get_player!(Enum.at(result, 0))
     end
@@ -149,14 +154,19 @@ defmodule AptaSeeding.Data do
   def get_team!(id), do: Repo.get!(Team, id)
 
   def find_or_create_team(team_name) do
-    query = from t in "teams",
-            where: t.name == ^team_name,
-            select: t.id
+    query =
+      from(
+        t in "teams",
+        where: t.name == ^team_name,
+        select: t.id
+      )
+
     result = Repo.all(query)
 
     cond do
       Enum.count(result) == 0 ->
         create_team(%{name: team_name})
+
       true ->
         get_team!(Enum.at(result, 0))
     end
@@ -169,10 +179,12 @@ defmodule AptaSeeding.Data do
   @doc """
   We can trust the names are already sanitized, this happens in DataDistributor
   """
-  def process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure}) do
+  def process_tournament_and_tournament_results(%{
+        tournament: tournament,
+        results_structure: results_structure
+      }) do
     results_structure
     |> Enum.map(fn r ->
-
       # We can trust the names are already sanitized, this happens in DataDistributor
 
       player_1 = find_or_create_player(r.player_1_name)

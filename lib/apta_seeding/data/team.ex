@@ -12,7 +12,7 @@ defmodule AptaSeeding.Data.Team do
   def changeset(team, attrs) do
     team
     |> cast(attrs, [
-      :name,
+      :name
     ])
     |> validate_required([:name])
     |> unique_constraint(:name)
