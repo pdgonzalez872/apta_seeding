@@ -2,6 +2,7 @@ defmodule AptaSeeding.DataTest do
   use AptaSeeding.DataCase
 
   alias AptaSeeding.Data
+  alias AptaSeeding.Repo
 
   describe "tournaments" do
     alias AptaSeeding.Data.Tournament
@@ -110,6 +111,13 @@ defmodule AptaSeeding.DataTest do
       Data.create_tournament(attrs)
     end
     test "processes results correctly" do
+      # assert changes in:
+      # - player count
+      # - Team count
+      # - TeamResult count
+      # - PlayerResult count
+
+      pre_player_count = Data.list_players() |> Enum.count
 
       results_structure = [%{
         individual_points: Decimal.new("34.375"),
@@ -124,7 +132,10 @@ defmodule AptaSeeding.DataTest do
 
       output = Data.process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure})
 
-      assert output == 1
+      post_player_count = Data.list_players() |> Enum.count
+
+      #assert output == 1
+      assert (post_player_count - pre_player_count) == 2
     end
   end
 end
