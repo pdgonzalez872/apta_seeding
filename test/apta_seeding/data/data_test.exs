@@ -189,6 +189,9 @@ defmodule AptaSeeding.DataTest do
       # assert output == 1
       assert post_player_count - pre_player_count == 2
       assert post_team_count - pre_team_count == 1
+
+      updated_tournament = Data.get_tournament!(tournament.id)
+      assert updated_tournament.results_have_been_processed == true
     end
   end
 end

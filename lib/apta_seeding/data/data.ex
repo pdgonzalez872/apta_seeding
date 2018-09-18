@@ -212,6 +212,9 @@ defmodule AptaSeeding.Data do
 
       # update tournament to results_have_been_processed = true
 
+      {:ok, _tournament} = update_tournament(tournament, %{results_have_been_processed: true})
+      #require IEx; IEx.pry
+
     end)
     {:ok, "Tournament was processed"}
   end
