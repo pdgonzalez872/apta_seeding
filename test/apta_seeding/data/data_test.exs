@@ -89,7 +89,7 @@ defmodule AptaSeeding.DataTest do
     test "finds or creates players properly" do
       pre_player_count = Data.list_players() |> Enum.count()
 
-      cant_find_a_player_that_does_not_exist_so_it_will_create =
+      {:ok, cant_find_a_player_that_does_not_exist_so_it_will_create} =
         Data.find_or_create_player("Kasey")
 
       post_player_create = Data.list_players() |> Enum.count()
@@ -97,7 +97,8 @@ defmodule AptaSeeding.DataTest do
       assert post_player_create - pre_player_count == 1
       assert cant_find_a_player_that_does_not_exist_so_it_will_create.name == "Kasey"
 
-      will_find_this_player_since_it_exists = Data.find_or_create_player("Kasey")
+      {:ok, will_find_this_player_since_it_exists} = Data.find_or_create_player("Kasey")
+
       post_player_find = Data.list_players() |> Enum.count()
 
       did_not_create_a_new_record = post_player_find - post_player_create

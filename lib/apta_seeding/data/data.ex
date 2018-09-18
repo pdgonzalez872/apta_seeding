@@ -8,7 +8,7 @@ defmodule AptaSeeding.Data do
   import Ecto.Query, warn: false
   alias AptaSeeding.Repo
 
-  alias AptaSeeding.Data.{Tournament, Player, Team}
+  alias AptaSeeding.Data.{Tournament, Player, Team, IndividualResult}
 
   @doc """
   Returns the list of tournaments.
@@ -132,10 +132,10 @@ defmodule AptaSeeding.Data do
 
     cond do
       Enum.count(result) == 0 ->
-        create_player(%{name: player_name})
+        {:ok, create_player(%{name: player_name})}
 
       true ->
-        get_player!(Enum.at(result, 0))
+        {:ok, get_player!(Enum.at(result, 0))}
     end
   end
 
@@ -201,20 +201,18 @@ defmodule AptaSeeding.Data do
     results_structure
     |> Enum.map(fn r ->
 
-      player_1 = find_or_create_player(r.player_1_name)
-      player_2 = find_or_create_player(r.player_2_name)
+      {:ok, player_1} = find_or_create_player(r.player_1_name)
+      {:ok, player_2} = find_or_create_player(r.player_2_name)
 
       team = find_or_create_team(%{team_name: r.team_name, player_1_id: player_1.id, player_2_id: player_2.id})
 
       # individual_results
+      #create_individual_result()
 
       # team_result
 
       # update tournament to results_have_been_processed = true
-
       {:ok, _tournament} = update_tournament(tournament, %{results_have_been_processed: true})
-      #require IEx; IEx.pry
-
     end)
     {:ok, "Tournament was processed"}
   end
