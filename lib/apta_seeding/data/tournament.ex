@@ -9,6 +9,8 @@ defmodule AptaSeeding.Data.Tournament do
     field(:results_have_been_processed, :boolean, default: false)
     field(:raw_results_html, :string)
 
+    has_many :individual_results, AptaSeeding.Data.IndividualResult
+
     timestamps()
   end
 

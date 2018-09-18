@@ -3,6 +3,8 @@ defmodule AptaSeeding.Data do
   The Data context.
   """
 
+  require Logger
+
   import Ecto.Query, warn: false
   alias AptaSeeding.Repo
 
@@ -173,6 +175,14 @@ defmodule AptaSeeding.Data do
   end
 
   #
+  # IndividualResult
+  #
+
+  def create_individual_result(%{player: player, tournament: tournament}) do
+    nil
+  end
+
+  #
   # Creation logic
   #
 
@@ -181,20 +191,39 @@ defmodule AptaSeeding.Data do
   """
   def process_tournament_and_tournament_results(%{
         tournament: tournament,
-        results_structure: results_structure
+        results_structure: results_structure,
+        tournament_should_be_processed: false
       }) do
+
+    Logger.info("About to process tournament -> #{tournament.name_and_date_unique_name}")
+    #require IEx; IEx.pry
+
     results_structure
     |> Enum.map(fn r ->
-      # We can trust the names are already sanitized, this happens in DataDistributor
 
       player_1 = find_or_create_player(r.player_1_name)
       player_2 = find_or_create_player(r.player_2_name)
 
-      # Sanitize the input here. Maybe join both names instead.
       team = find_or_create_team(%{team_name: r.team_name, player_1_id: player_1.id, player_2_id: player_2.id})
 
-      # continue here: start modeling the database.
-      # create the other modules, migrations
+      # individual_results
+
+      # team_result
+
+      # update tournament to results_have_been_processed = true
+
     end)
+    {:ok, "Tournament was processed"}
+  end
+
+
+  def process_tournament_and_tournament_results(%{
+        tournament: tournament,
+        results_structure: results_structure,
+        tournament_should_be_processed: true
+      }) do
+    message = "Tournament was already processed -> #{tournament.name_and_date_unique_name}"
+    Logger.info(message)
+    {:ok, message}
   end
 end

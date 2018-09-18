@@ -147,7 +147,8 @@ defmodule AptaSeeding.DataTest do
         raw_results_html: html
       }
 
-      Data.create_tournament(attrs)
+      {:ok, tournament} = Data.create_tournament(attrs)
+      tournament
     end
 
     @tag :integration
@@ -173,11 +174,13 @@ defmodule AptaSeeding.DataTest do
       ]
 
       tournament = create_indi_tournament()
+      assert tournament.results_have_been_processed == false
 
       output =
         Data.process_tournament_and_tournament_results(%{
           tournament: tournament,
-          results_structure: results_structure
+          results_structure: results_structure,
+          tournament_should_be_processed: tournament.results_have_been_processed
         })
 
       post_player_count = Data.list_players() |> Enum.count()

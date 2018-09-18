@@ -31,7 +31,8 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
       raw_results_html: html
     }
 
-    Data.create_tournament(attrs)
+    {:ok, tournament} = Data.create_tournament(attrs)
+    tournament
   end
 
   describe "DataDistributor" do
