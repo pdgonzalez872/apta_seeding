@@ -104,6 +104,26 @@ defmodule AptaSeeding.DataTest do
     end
   end
 
+  describe "find_or_create_team/1" do
+    test "finds or creates teams properly" do
+      pre_team_count = Data.list_teams() |> Enum.count
+
+      cant_find_a_team_that_does_not_exist_so_it_will_create = Data.find_or_create_team("Butler - Kasey")
+
+      post_team_create = Data.list_teams() |> Enum.count
+
+      assert (post_team_create - pre_team_count) == 1
+      assert cant_find_a_team_that_does_not_exist_so_it_will_create.name == "Butler - Kasey"
+
+      will_find_this_team_since_it_exists = Data.find_or_create_team("Butler - Kasey")
+      post_team_find = Data.list_teams() |> Enum.count
+
+      did_not_create_a_new_record = post_team_find - post_team_create
+      assert did_not_create_a_new_record == 0
+    end
+  end
+
+
   describe "process_tournament_and_tournament_results/1" do
 
     def create_indi_tournament() do

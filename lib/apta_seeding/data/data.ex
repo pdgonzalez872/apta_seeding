@@ -6,7 +6,7 @@ defmodule AptaSeeding.Data do
   import Ecto.Query, warn: false
   alias AptaSeeding.Repo
 
-  alias AptaSeeding.Data.{Tournament, Player}
+  alias AptaSeeding.Data.{Tournament, Player, Team}
 
   @doc """
   Returns the list of tournaments.
@@ -102,6 +102,10 @@ defmodule AptaSeeding.Data do
     Tournament.changeset(tournament, %{})
   end
 
+  #
+  # Player
+  #
+
   def list_players() do
     Repo.all(Player)
   end
@@ -128,6 +132,40 @@ defmodule AptaSeeding.Data do
     end
   end
 
+  #
+  # Team
+  #
+
+  def list_teams() do
+    Repo.all(Team)
+  end
+
+  def create_team(attrs \\ %{}) do
+    %Team{}
+    |> Team.changeset(attrs)
+    |> Repo.insert!()
+  end
+
+  def get_team!(id), do: Repo.get!(Team, id)
+
+  def find_or_create_team(team_name) do
+    query = from t in "teams",
+            where: t.name == ^team_name,
+            select: t.id
+    result = Repo.all(query)
+
+    cond do
+      Enum.count(result) == 0 ->
+        create_team(%{name: team_name})
+      true ->
+        get_team!(Enum.at(result, 0))
+    end
+  end
+
+  #
+  # Creation logic
+  #
+
   def process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure}) do
     results_structure
     |> Enum.map(fn r ->
@@ -135,7 +173,8 @@ defmodule AptaSeeding.Data do
       player_1 = find_or_create_player(r.player_1_name)
       player_2 = find_or_create_player(r.player_2_name)
 
-      #team = find_or_create_team(r.team_name)
+      # Sanitize the input here. Maybe join both names instead.
+      team = find_or_create_team(r.team_name)
 
       # continue here: start modeling the database.
       # create the other modules, migrations

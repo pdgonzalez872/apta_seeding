@@ -8,6 +8,6 @@ defmodule AptaSeeding.Repo.Migrations.CreatePlayer do
       timestamps()
     end
 
-    create unique_index(:tournaments, [:name])
+    create unique_index(:players, [:name])
   end
 end
