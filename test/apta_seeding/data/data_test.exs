@@ -123,7 +123,6 @@ defmodule AptaSeeding.DataTest do
     end
   end
 
-
   describe "process_tournament_and_tournament_results/1" do
 
     def create_indi_tournament() do
@@ -158,6 +157,7 @@ defmodule AptaSeeding.DataTest do
       # - PlayerResult count
 
       pre_player_count = Data.list_players() |> Enum.count
+      pre_team_count = Data.list_teams() |> Enum.count
 
       results_structure = [%{
         individual_points: Decimal.new("34.375"),
@@ -173,9 +173,11 @@ defmodule AptaSeeding.DataTest do
       output = Data.process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure})
 
       post_player_count = Data.list_players() |> Enum.count
+      post_team_count = Data.list_teams() |> Enum.count
 
       #assert output == 1
       assert (post_player_count - pre_player_count) == 2
+      assert (post_team_count - pre_team_count) == 1
     end
   end
 end

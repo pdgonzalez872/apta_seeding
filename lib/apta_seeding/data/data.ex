@@ -166,9 +166,14 @@ defmodule AptaSeeding.Data do
   # Creation logic
   #
 
+  @doc """
+  We can trust the names are already sanitized, this happens in DataDistributor
+  """
   def process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure}) do
     results_structure
     |> Enum.map(fn r ->
+
+      # We can trust the names are already sanitized, this happens in DataDistributor
 
       player_1 = find_or_create_player(r.player_1_name)
       player_2 = find_or_create_player(r.player_2_name)
