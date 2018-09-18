@@ -105,7 +105,10 @@ defmodule AptaSeeding.Data do
   def process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure}) do
     results_structure
     |> Enum.map(fn r ->
-      # require IEx; IEx.pry
+      :ok
+
+      # continue here: start modeling the database.
+      # create the other modules, migrations
     end)
   end
 end

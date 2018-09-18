@@ -110,8 +110,21 @@ defmodule AptaSeeding.DataTest do
       Data.create_tournament(attrs)
     end
     test "processes results correctly" do
+
+      results_structure = [%{
+        individual_points: Decimal.new("34.375"),
+        player_1_name: "Ryan Baxter",
+        player_2_name: "Ricky Heath",
+        team_name: "Ryan Baxter - Ricky Heath",
+        team_points: Decimal.new("68.75"),
+        tournament_name_and_date_unique_name: "Indi|2018-02-01"
+      }]
+
       tournament = create_indi_tournament()
-      assert tournament == 1
+
+      output = Data.process_tournament_and_tournament_results(%{tournament: tournament, results_structure: results_structure})
+
+      assert output == 1
     end
   end
 end
