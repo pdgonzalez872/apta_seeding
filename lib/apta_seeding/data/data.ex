@@ -8,7 +8,7 @@ defmodule AptaSeeding.Data do
   import Ecto.Query, warn: false
   alias AptaSeeding.Repo
 
-  alias AptaSeeding.Data.{Tournament, Player, Team, IndividualResult}
+  alias AptaSeeding.Data.{Tournament, Player, Team, IndividualResult, TeamResult}
 
   @doc """
   Returns the list of tournaments.
@@ -191,6 +191,22 @@ defmodule AptaSeeding.Data do
   end
 
   #
+  # TeamResult
+  #
+
+  def team_results_count() do
+    TeamResult
+    |> Repo.all()
+    |> Enum.count()
+  end
+
+  def create_team_result(%{team_id: team_id, tournament_id: tournament_id, points: points} = attrs) do
+    %TeamResult{}
+    |> TeamResult.changeset(attrs)
+    |> Repo.insert!()
+  end
+
+  #
   # Creation logic
   #
 
@@ -214,13 +230,11 @@ defmodule AptaSeeding.Data do
 
       team = find_or_create_team(%{team_name: r.team_name, player_1_id: player_1.id, player_2_id: player_2.id})
 
-      # individual_results
       create_individual_result(%{player_id: player_1.id, tournament_id: tournament.id, points: r.individual_points})
       create_individual_result(%{player_id: player_2.id, tournament_id: tournament.id, points: r.individual_points})
 
-      # team_result
+      create_team_result(%{team_id: team.id, tournament_id: tournament.id, points: r.team_points})
 
-      # update tournament to results_have_been_processed = true
       {:ok, _tournament} = update_tournament(tournament, %{results_have_been_processed: true})
     end)
     {:ok, "Tournament was processed"}

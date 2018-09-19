@@ -163,6 +163,7 @@ defmodule AptaSeeding.DataTest do
       pre_player_count = Data.list_players() |> Enum.count()
       pre_team_count = Data.list_teams() |> Enum.count()
       pre_individual_results_count = Data.individual_results_count()
+      pre_team_results_count = Data.team_results_count()
 
       results_structure = [
         %{
@@ -188,11 +189,13 @@ defmodule AptaSeeding.DataTest do
       post_player_count = Data.list_players() |> Enum.count()
       post_team_count = Data.list_teams() |> Enum.count()
       post_individual_result_count = Data.individual_results_count()
+      post_team_results_count = Data.team_results_count()
 
       # assert output == 1
       assert post_player_count - pre_player_count == 2
       assert post_team_count - pre_team_count == 1
       assert post_individual_result_count - pre_individual_results_count == 2
+      assert post_team_results_count - pre_team_results_count == 1
 
       updated_tournament = Data.get_tournament!(tournament.id)
       assert updated_tournament.results_have_been_processed == true
