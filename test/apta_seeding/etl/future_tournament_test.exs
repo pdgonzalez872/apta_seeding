@@ -15,17 +15,15 @@ defmodule AptaSeeding.ETL.FutureTournamentTest do
     end
   end
 
-  @tag :skip
-  describe "make_request/1" do
-    test "makes the request to fetch the data - live request" do
+  @tag :live_request
+  describe "extract/1" do
+    test "extract step works as expected with a live request" do
 
-      {:ok, response_body} = %{eid: 228, tid: 496}
-                             |> FutureTournament.create_url()
-                             |> FutureTournament.make_request()
+      {:ok, html_response} = %{eid: 228, tid: 496}
+      |> FutureTournament.extract()
 
-                             require IEx; IEx.pry
-
-      assert 1 == response_body
+      assert String.contains?(html_response, "Philadelphia Open") == true
+      assert String.contains?(html_response, "Friday, Oct 12 - Sunday, Oct 14, 2018") == true
     end
   end
 

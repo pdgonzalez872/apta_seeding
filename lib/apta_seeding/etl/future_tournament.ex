@@ -19,6 +19,7 @@ defmodule AptaSeeding.ETL.FutureTournament do
   def extract(%{eid: eid, tid: tid} = future_tournament_attrs) do
     html_body_response = future_tournament_attrs
                          |> create_url()
+                         |> make_request()
   end
 
   def transform({:ok, html_response}) do
@@ -173,5 +174,4 @@ defmodule AptaSeeding.ETL.FutureTournament do
     {day, _} = Integer.parse(day)
     {month, day}
   end
-
 end
