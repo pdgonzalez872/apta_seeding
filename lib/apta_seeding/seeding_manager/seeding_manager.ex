@@ -38,4 +38,8 @@ defmodule AptaSeeding.SeedingManager do
   ===
   """
 
+  def call(players) do
+    players
+  end
+
 end
