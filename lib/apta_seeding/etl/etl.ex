@@ -1,5 +1,6 @@
 defmodule AptaSeeding.ETL do
-  alias AptaSeeding.ETL.{SeasonData, TournamentData}
+  alias AptaSeeding.ETL.{SeasonData, TournamentData, DataDistributor}
+  alias AptaSeeding.Data
 
   @doc """
   Get a bunch of the tournaments params, then create a list, and pass it to `.call`
@@ -26,7 +27,7 @@ defmodule AptaSeeding.ETL do
   end
 
   @spec distribute_data(tuple()) :: tuple()
-  def distribute_data({:ok, state}) do
-    # DataDistributor.call(state)
+  def distribute_data({:ok, _state}) do
+    DataDistributor.call(Data.list_tournaments())
   end
 end

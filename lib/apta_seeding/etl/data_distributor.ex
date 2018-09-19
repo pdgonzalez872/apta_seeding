@@ -26,7 +26,8 @@ defmodule AptaSeeding.ETL.DataDistributor do
 
         process_tournament_and_tournament_results(%{
           tournament: tournament,
-          results_structure: results_structure
+          results_structure: results_structure,
+          tournament_should_be_processed: tournament.results_have_been_processed
         })
       end)
 

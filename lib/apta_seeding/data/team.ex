@@ -7,6 +7,8 @@ defmodule AptaSeeding.Data.Team do
     field(:player_1_id, :integer)
     field(:player_2_id, :integer)
 
+    has_many :team_results, AptaSeeding.Data.TeamResult
+
     timestamps()
   end
 

@@ -174,6 +174,25 @@ defmodule AptaSeeding.Data do
     end
   end
 
+  def find_or_create_team(team_name) do
+    query =
+      from(
+        t in "teams",
+        where: t.name == ^team_name,
+        select: t.id
+      )
+
+    result = Repo.all(query)
+
+    cond do
+      Enum.count(result) == 0 ->
+        {:ok, create_team(%{name: team_name})}
+
+      true ->
+        {:ok, get_team!(Enum.at(result, 0))}
+    end
+  end
+
   #
   # IndividualResult
   #
