@@ -22,12 +22,15 @@ defmodule AptaSeeding.ETL.FutureTournament do
   end
 
   def transform({:ok, html_response}) do
-    team_data = create_team_data(html_response)
+    result = %{
+      team_data: get_team_data(html_response),
+      tournament_name: get_tournament_name(html_response),
+      tournament_date: get_tournament_date(html_response)
+    }
 
-    # add tournament
     # tournament_date
 
-    {:ok, %{team_data: team_data}}
+    {:ok, result}
   end
 
   def transform({:error, reason}) do
@@ -68,7 +71,7 @@ defmodule AptaSeeding.ETL.FutureTournament do
 
   end
 
-  def create_team_data(html_response) do
+  def get_team_data(html_response) do
     html_response
     |> Floki.find("table.seed td")
     |> Enum.reduce([], fn team_string, acc ->
@@ -85,4 +88,90 @@ defmodule AptaSeeding.ETL.FutureTournament do
     {_, _, [team_name]} = team_data
     DataDistributor.parse_team_players(team_name)
   end
+
+  def get_tournament_name(html_response) do
+    [{_, _, [tournament_name]}] = html_response
+                                  |> Floki.find("#header h1")
+    tournament_name
+  end
+
+  def get_tournament_date(html_response) do
+    [{_, _, [tournament_date]}] = html_response
+                                  |> Floki.find("#header h2")
+
+    create_date(tournament_date)
+  end
+
+  def create_date(date_string) do
+    {year, _ } = date_string
+                 |> String.split(", ")
+                 |> Enum.at(-1)
+                 |> Integer.parse()
+
+    {month, day} = date_string
+                          |> String.split(" - ")
+                          |> create_month_and_day()
+
+
+    {:ok, date} = Date.new(year, month, day)
+    date
+  end
+
+  @doc"""
+  This happens in all the bigger/serious tournaments.
+  """
+  def create_month_and_day([start_date, end_date]) do
+    [month_abbrev, day] = start_date
+                          |> String.split(", ")
+                          |> Enum.at(-1)
+                          |> String.split(" ")
+
+    months = %{
+               "Jan" => 1,
+               "Feb" => 2,
+               "Mar" => 3,
+               "Apr" => 4,
+               "May" => 5,
+               "Jun" => 6,
+               "Jul" => 7,
+               "Aug" => 8,
+               "Sep" => 9,
+               "Oct" => 10,
+               "Nov" => 11,
+               "Dec" => 12,
+              }
+
+    {:ok, month} = Map.fetch(months, month_abbrev)
+    {day, _} = Integer.parse(day)
+    {month, day}
+  end
+
+  @doc"""
+  This happens when the tournament is only one day:
+  https://platformtennisonline.org/TournamentHome.aspx?eid=180&tid=0
+  """
+  def create_month_and_day([single_date]) do
+    [_, long_date, _] =  single_date |> String.split(", ")
+    [long_month, day] = long_date |> String.split(" ")
+
+    months = %{
+               "January" => 1,
+               "February" => 2,
+               "March" => 3,
+               "April" => 4,
+               "May" => 5,
+               "June" => 6,
+               "July" => 7,
+               "August" => 8,
+               "September" => 9,
+               "October" => 10,
+               "November" => 11,
+               "December" => 12,
+              }
+
+    {:ok, month} = Map.fetch(months, long_month)
+    {day, _} = Integer.parse(day)
+    {month, day}
+  end
+
 end

@@ -46,6 +46,28 @@ defmodule AptaSeeding.ETL.FutureTournamentTest do
       {:ok, result} = FutureTournament.transform({:ok, html})
 
       assert Enum.at(result.team_data, 0) == {"Luke Alicknavitch", "Darren Schwandt", "Luke Alicknavitch - Darren Schwandt"}
+      assert result.tournament_name == "Philadelphia Open"
+      assert result.tournament_date == ~D[2018-10-12] #"Friday, Oct 12 - Sunday, Oct 14, 2018"
+    end
+  end
+
+  describe "create_date/1" do
+    test "creates date correctly - normal two day tournament" do
+      result = FutureTournament.create_date("Friday, Oct 12 - Sunday, Oct 14, 2018")
+
+      assert result == ~D[2018-10-12]
+    end
+
+    test "creates date correctly - one day tournament - 1" do
+      result = FutureTournament.create_date("Saturday, December 9, 2017")
+
+      assert result == ~D[2017-12-09]
+    end
+
+    test "creates date correctly - one day tournament - 2" do
+      result = FutureTournament.create_date("Thursday, March 22, 2018")
+
+      assert result == ~D[2018-03-22]
     end
   end
 end
