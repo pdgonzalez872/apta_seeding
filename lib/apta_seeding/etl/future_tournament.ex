@@ -8,6 +8,7 @@ defmodule AptaSeeding.ETL.FutureTournament do
   """
 
   require Logger
+  alias AptaSeeding.ETL.DataDistributor
 
   def call(%{eid: eid, tid: tid} = future_tournament_attrs) do
     future_tournament_attrs
@@ -21,7 +22,12 @@ defmodule AptaSeeding.ETL.FutureTournament do
   end
 
   def transform({:ok, html_response}) do
-    require IEx; IEx.pry
+    team_data = create_team_data(html_response)
+
+    # add tournament
+    # tournament_date
+
+    {:ok, %{team_data: team_data}}
   end
 
   def transform({:error, reason}) do
@@ -60,5 +66,23 @@ defmodule AptaSeeding.ETL.FutureTournament do
       teams: [%{team_name: "Paulo - Kels", player_1_name: "Paulo", player_2_name: "Kels"}]
     }
 
+  end
+
+  def create_team_data(html_response) do
+    html_response
+    |> Floki.find("table.seed td")
+    |> Enum.reduce([], fn team_string, acc ->
+      acc ++ [handle_team_string(team_string)]
+    end)
+    |> Enum.filter(fn el -> !is_nil(el) end)
+  end
+
+  def handle_team_string({"td", [], ["Teams"]}) do
+    nil
+  end
+
+  def handle_team_string({"td", [], [team_data]}) do
+    {_, _, [team_name]} = team_data
+    DataDistributor.parse_team_players(team_name)
   end
 end

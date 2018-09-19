@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>
+	American Platform Tennis Association Tournament Live Scoring
+</title><meta name="viewport" content="width=device-width" /><link rel='stylesheet' type='text/css' href='scorecss/site.min.css' />
+    
+    
+    <script type="text/javascript">
+        (function (i, s, o, g, r, a, m) { i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () { (i[r].q = i[r].q || []).push(arguments) }, i[r].l = 1 * new Date(); a = s.createElement(o), m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m) })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga'); ga('create', 'UA-54526368-1', 'auto'); ga('send', 'pageview');
+    </script>
+    
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script type="text/javascript">window.jQuery || document.write('<script src="/js/jQuery-1.12.4.min.js">\x3C/script>')</script>
+    <script type="text/javascript" src="js/scoresite.js"></script>
+    <script type="text/javascript">
+        jQuery(window).load(function () {
+            $(".lvl1.nav1expand").click(function (event) { // binding onclick
+                if ($(this).hasClass('selected')) {
+                    $(".nav1expchild").slideUp(100); // hiding menus
+                    $("#nav1bar .selected").removeClass("selected");
+                } else {
+                    $(".nav1expchild").slideUp(100); // hiding menus
+                    $("#nav1bar .selected").removeClass("selected");
+                    if ($(this).children(".subs").length) {
+                        $(this).addClass("selected"); // display menu
+                        $(this).children(".subs").children().slideDown(200);
+                    }
+                }
+                // ie needs this
+                var isMSIE = /*@cc_on!@*/0;
+                if (isMSIE) { window.event.cancelBubble = true; }
+                else { event.stopPropagation(); }
+            });
+            $(".lvl2.nav1expand").click(function (event) { // binding onclick
+                if ($(this).css('float') == 'none') {
+                    if ($(this).hasClass('selected')) {
+                        $('.lvl2.nav1expand').removeClass("selected");
+                        $('.lvl3ul').slideUp(200)
+                    } else {
+                        $('.lvl3ul').slideUp(200)
+                        $('.lvl2.nav1expand').removeClass("selected");
+                        $(this).addClass("selected");
+                        $(this).children("ul").slideDown(200); // display menu
+                    }
+                }
+                // ie needs this
+                var isMSIE = /*@cc_on!@*/0;
+                if (isMSIE) { window.event.cancelBubble = true; }
+                else { event.stopPropagation(); }
+            });
+            // close the main menu if a non-expando, or child of an expando, is clicked
+            $(':not(.nav1expand)').click(function (event) {
+                if (event.target != $('.nav1expand')) {
+                    if ($(this).parents(".nav1expand").length == 0) {
+                        $("#nav1bar .selected").find(".nav1expchild").slideUp(100); // hiding menus
+                        $("#nav1bar .selected").removeClass("selected");
+                        $(".notnav").show()
+                    }
+                }
+            });
+            // open the main menu from the menu button
+            $('#nav1btn').click(function (event) {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass("selected");
+                    $('#nav1').removeClass("showme")
+                    $(".notnav").show();
+                } else {
+                    $(this).addClass("selected");
+                    $('#nav1').addClass("showme")
+                    $(".notnav").hide();
+                }
+                // ie needs this
+                var isMSIE = /*@cc_on!@*/0;
+                if (isMSIE) { window.event.cancelBubble = true; }
+                else { event.stopPropagation(); }
+            });
+        });
+    </script>
+    
+    
+    
+    
+    
+    <script type="text/javascript" src="js/ExpandoNav.js"></script>
+    <script type="text/javascript" src="js/BracketEdit.js"></script>
+    <style type="text/css">
+        div.ddltitle {
+            display: inline-block;
+            margin: 0 0 10px 0;
+        }
+
+        .nav8 {
+            cursor: pointer;
+            overflow: visible;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            /*width: 45%;*/
+        }
+
+            .nav8.one {
+                color: #333;
+                display: inline-block;
+                font-weight: normal;
+                min-width: 300px;
+                width: auto;
+            }
+
+        .nav8list {
+            color: #333;
+            cursor: pointer;
+            display: block;
+            line-height: 2.5em;
+            margin: 0;
+            text-decoration: none;
+        }
+
+            .nav8list:hover {
+                color: #e2bc55;
+            }
+
+        .nav8selected {
+            background-color: #f8eed3;
+            border: solid 1px #e2bc55;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            margin: 10px 0 0 10px;
+            padding: 10px;
+            position: relative;
+        }
+
+        .nav9 {
+            display: inline-block;
+            margin: 10px 0 0 10px;
+            position: relative;
+            vertical-align: top;
+        }
+
+        .pagelink {
+            background-position: bottom center;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            display: inline-block;
+            border: none;
+            color: #333333;
+            margin: 0 5px 0 0;
+            padding: 10px;
+            text-decoration: none;
+            text-align: center;
+            vertical-align: top;
+            width: 120px;
+        }
+
+            .pagelink.available {
+                border: solid 1px #999;
+                -webkit-border-radius: 4px;
+                -moz-border-radius: 4px;
+                border-radius: 4px;
+                color: #333;
+                cursor: pointer;
+                display: inline-block;
+                text-decoration: none;
+            }
+
+                .pagelink.selected, .pagelink.available:hover, .pagelink.available:focus {
+                    border: solid 1px #e2bc55;
+                    -webkit-border-radius: 4px;
+                    -moz-border-radius: 4px;
+                    border-radius: 4px;
+                    background-color: #f8eed3;
+                }
+
+        @media only screen and (max-width: 640px) {
+            .nav8selected, .nav9 {
+                margin: 5px 0 0 5px;
+            }
+        }
+    </style>
+
+
+    
+    
+    <script type="text/javascript">
+        function slideMeDown(arg) { $(arg).slideDown(); }
+    </script>
+
+</head>
+<body>
+    <form method="post" action="TournamentPlayer.aspx?eid=228&amp;tid=496" id="form1">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="/wEPDwULLTIxMjYzMDY3NTUPZBYCZg9kFgJmD2QWAmYPZBYCZg9kFgICAQ9kFgICAQ9kFgICAQ9kFgQCAQ8WAh4Fc3R5bGUFDWRpc3BsYXk6bm9uZTsWAgIBD2QWDGYPDxYEHghDc3NDbGFzcwUEaWRwdx4EXyFTQgICZGQCAQ8PFgQfAQUEaWRwdx8CAgJkZAIDDw8WBB8BBQpncm91cGFsb25lHwICAmQWAgIBDw8WBB8BBQNidG4fAgICZGQCBA8WAh4HVmlzaWJsZWhkAgUPFgIfA2hkAgYPDxYEHwEFCmdyb3VwYWxvbmUfAgICZGQCAg8PFgIeC1Bvc3RCYWNrVXJsBSAvdHYvRGVmYXVsdC5hc3B4P2VpZD0yMjgmdGlkPTQ5NmRkGAEFHl9fQ29udHJvbHNSZXF1aXJlUG9zdEJhY2tLZXlfXxYBBUhjdGwwMCRjdGwwMCRjdGwwMCRjdGwwMCRhYm92ZXRvcGNvbnRlbnQkYWJvdmV0b3Bjb250ZW50JHVjU2lnbkluJGNoa1Nob3ejGZZi8Fpzao4k/jC9xUsvx9hQVYOFlCOqXd0Sw0FxVQ==" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['form1'];
+if (!theForm) {
+    theForm = document.form1;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<script src="/WebResource.axd?d=LyZPMAqv5t6GObxUkCAdd-pmixCoj5ArthPTHH3wLS8exL4LBfy_ShOQm9HxFwGg1F_FLFyOpcDkXJM-XVpwo5Zoy41hFTn8XuPKua0EmkE1&amp;t=635195277660000000" type="text/javascript"></script>
+
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__SCROLLPOSITIONX" id="__SCROLLPOSITIONX" value="0" />
+	<input type="hidden" name="__SCROLLPOSITIONY" id="__SCROLLPOSITIONY" value="0" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAAWxclkadZWEdH34FY2k4Kh0spAJFj+TCGFNjNpNzA3g1Wih94dx1xwjJ5DyagXZ9ckB+gdcR225KqIqqy9VLTSnmHI9UMU/FY/0ZD8epYpRPEL0ndBRszb2eZx9BchBfGHFD8BpBiE3IpczrPszrWT0" />
+</div>
+        <div id="spin">
+        </div>
+        
+        
+        <div id="abovetopbox">
+            
+    
+    <div id="aptamenubox">
+        <a href='http://www.platformtennis.org' class="mediaonly">
+            <img src='images/apta-v40.png' height='40' /></a>
+        <ul id="aptamenu" class="nopr">
+            <li class="menu1 imghome"><a href="http://www.platformtennis.org">APTA Home</a></li>
+            <li class="menu1 imgtv"><a href="http://www.aptanetwork.org">APTA Network</a></li>
+            <li class="menu1 imghof"><a href="http://platformtennishalloffame.org/"><span class="go850">Museum & </span>Hall of Fame</a></li>
+            
+            <li class="menu1 imgsignin">
+                
+                <a href="javascript: slideMeDown(document.getElementById('divAuth'));">Sign In</a>
+                <div id="divAuth" class="dropdownauth" style="display:none;">
+                    <style type='text/css'>input.idpw {vertical-align: top;white-space: normal;background-color: #e8e8e8;border: solid 1px #999;border-radius: 4px;font-size: 1em;height: 2em;margin-bottom: 5px;padding: 2px 5px;width:150px;}.btn {box-shadow: inset 0px 1px 0px 0px #fff;background-color: #DFE2F9;border: solid 1px #999;border-radius: 4px;color: #333;cursor: pointer;font-size: 1em;font-weight: normal;height: 2em;width: 150px;}.inputalone {background-color: #e8e8e8;border: solid 1px #999;border-radius: 4px;color: #333;cursor: pointer;display: inline-block;height: 2em;line-height: 1.5em;margin-bottom: 5px;overflow: hidden;padding: 3px 10px 0 0;}.inputalone input[type=checkbox] {cursor: pointer;margin: 3px 5px 0 10px;vertical-align: top;}p.editlabel {margin: 0;}hr.halfspace {border: none;border-top: solid 1px transparent;margin: 5px 0 0;}hr.doublespace {border: none;border-top: solid 1px transparent;margin: 20px 0 0;}hr.spacer { border: none; border-top: solid 1px transparent; margin: 10px 0 0; }.error {border:none;color:red;line-height:1.2em;margin: 5px 0;-moz-box-shadow: none;-webkit-box-shadow: none;box-shadow: none;font-weight:normal;}#divAuth label.wxl {width:150px;}</style>
+
+<div class="groupalone">
+    <p class="editlabel">User Name</p>
+    <input name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$txtName" type="text" id="txtName" class="idpw" />
+</div>
+<div class="groupalone">
+    <p class="editlabel">Password</p>
+    <input name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$txtPW" type="password" id="txtPW" class="idpw" /><br />
+</div>
+<hr class="halfspace" />
+<div class="groupalone">
+    <label class="inputalone wxl">
+        <input id="chkShow" type="checkbox" name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$chkShow" onclick="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$chkShow\&#39;,\&#39;\&#39;)&#39;, 0)" />
+        Show Password</label>
+</div>
+<div id="divButton" class="groupalone">
+	
+    <span id="lblError"></span>
+    <hr class="spacer" />
+    <input type="submit" name="ctl00$ctl00$ctl00$ctl00$abovetopcontent$abovetopcontent$ucSignIn$btnDropDownSignIn" value="Sign In" id="btnDropDownSignIn" class="btn" />
+    
+</div>
+
+
+<div id="divCancel" class="groupalone">
+	
+    
+    <hr class="spacer" />
+    <input type="button"
+        class="btn"
+        value="Cancel"
+        onclick="javascript: $('#divAuth').slideUp(); $('#btnDropDownSignIn').attr('disabled', 'disabled');" />
+    
+</div>
+
+                </div>
+            </li>
+            
+        </ul>
+    </div>
+
+
+        </div>
+        
+        <div id="topbox">
+            
+    <div id="header">
+        
+        
+        
+        <h1 class='twoline'>Philadelphia Open</h1><h2>Friday, Oct 12 - Sunday, Oct 14, 2018</h2>
+        <div id="logoleft">
+            <a href="/" title="American Platform Tennis Association">
+                <img src="images/logoleft.png" alt="American Platform Tennis Association" /></a>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    </div>
+    
+    
+    <div id='nav1btn'>Menu</div><div id='nav1'><ul id='nav1bar' class='shrink'><li class='lvl1 home tleft radleft'><a href='TournamentHome.aspx?eid=228&tid=496'><img src='images/homewhite.png'/><span>Tournament Home</span></a></li><li class='lvl1 nav1expand tmid'><a href='javascript:void(0);'>Draws</a><div class='subs'><div class='wrap3 nav1expchild'><ul class='lvl2ul'><li class='lvl2 nav1expand'><a href='javascript:void(0);'>Rounds</a><ul class='lvl3ul'><li class='lvl3'><a href='TournamentDraw.aspx?eid=228&tid=495'>Women</a></li><li class='lvl3'><a href='TournamentDraw.aspx?eid=228&tid=496'>Men</a></li></ul></li></ul><p class='sep1'></p><ul class='lvl2ul'><li class='lvl2 nav1expand'><a href='javascript:void(0);'>Full Draws</a><ul class='lvl3ul'><li class='lvl3'><a href='TournamentFull.aspx?eid=228&tid=495'>Women</a></li><li class='lvl3'><a href='TournamentFull.aspx?eid=228&tid=496'>Men</a></li></ul></li></ul><p class='sep2'></p><ul class='lvl2ul'><li class='lvl2 nav1expand'><a href='javascript:void(0);'>All Finals</a><ul class='lvl3ul'><li class='lvl3'><a href='TournamentFinals.aspx?eid=228&tid=495'>Women</a></li><li class='lvl3'><a href='TournamentFinals.aspx?eid=228&tid=496'>Men</a></li></ul></li></ul></div></div></li><li class='lvl1 nav1expand tmid'><a href='javascript:void(0);'>Players</a><div class='subs'><div class='wrap2 nav1expchild'><ul class='lvl2ul'><li class='lvl2 nav1expand'><a href='javascript:void(0);'>Bios & Matches</a><ul class='lvl3ul'><li class='lvl3'><a href='TournamentPlayer.aspx?eid=228&tid=495'>Women</a></li><li class='lvl3'><a href='TournamentPlayer.aspx?eid=228&tid=496'>Men</a></li></ul></li></ul><p class='sep1'></p><ul class='lvl2ul'><li class='lvl2 nav1expand'><a href='javascript:void(0);'>Seeds</a><ul class='lvl3ul'><li class='lvl3'><a href='TournamentSeeds.aspx?eid=228&tid=495'>Women</a></li><li class='lvl3'><a href='TournamentSeeds.aspx?eid=228&tid=496'>Men</a></li></ul></li></ul></div></div></li><li class='lvl1 tmid'><a href='TournamentLocation.aspx?eid=228&tid=496'>Locations</a></li><li class='lvl1 nav1expand'><a href='javascript:void(0);'>Video</a><div class='subs'><div class='wrap1 nav1expchild'><ul class='lvl2ul'><li class='lvl3'><a href='http://www.aptanetwork.org' target='_blank' title='Coverage from Nationals and Grands Prix'>APTA Network</a></li><li class='lvl3'><a href='https://www.youtube.com/channel/UCCW-u4OMlC3mUWSV0-46QUQ' target='_blank' title='Check out our YouTube channel!'>YouTube</a></li><li class='lvl3'><a href='https://www.youtube.com/channel/UCHNhBwRdH327CYutfPjC-XQ' target='_blank' title='Coverage from select NRTs'>Paddle Tennis TV</a></li></ul></li><li class='lvl1 tright radright'><a href='TournamentSchedule.aspx?eid=228&tid=496'>Schedule</a></li><li class='lvl1 nav1expand pmed radleft pnor shrink'><a href='javascript:void(0);'>Tournaments</a><div class='subs'><div class='wrap0 nav1expchild'><ul class='lvl2ul wide'><li class='lvl3'><a href='TournamentHome.aspx?eid=228&tid=0'>Philadelphia Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=224&tid=0'>Sue Watson</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=202&tid=0'>Mixed & H/W Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=217&tid=0'>APTA Men's B Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=200&tid=0'>IL State Championships</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=223&tid=0'>APTA Women's B Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=199&tid=0'>2018 APTA Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=201&tid=0'>IL Married Mixed</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=216&tid=0'>Women 45+/60+, Men 45+/55+/65+</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=198&tid=0'>Indianapolis Open </a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=197&tid=0'>Philadelphia Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=195&tid=0'>Hinsdale Men's Challenge</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=193&tid=0'>Arapahoe Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=188&tid=0'>Peachtree Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=194&tid=0'>Short Hills Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=196&tid=0'>Hinsdale Women's Challenge </a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=192&tid=0'>Detroit Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=204&tid=0'>Boston Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=215&tid=0'>LIPTA Men's A Championship</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=209&tid=0'>CPTC Series Tournaments</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=214&tid=0'>APTA Women's 50+ Nationals</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=203&tid=0'>Lagunitas Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=186&tid=0'>Midwesterns</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=180&tid=0'>Western New England Men</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=187&tid=0'>Brae Burn Men's B</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=162&tid=0'>Long Island Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=178&tid=0'>Kansas City</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=174&tid=0'>West Penn Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=172&tid=0'>The Lake Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=185&tid=0'>Illinois Men's Intermediates</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=173&tid=0'>Sound Shore Invitational</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=167&tid=0'>Delaware State Men</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=165&tid=0'>Cleveland Masters</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=159&tid=0'>Chicago Charities</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=156&tid=0'>Milwaukee Men's Open </a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=157&tid=0'>Lake Forest Women's Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=154&tid=0'>PNC Steel City Open</a></li><li class='lvl3'><a href='TournamentHome.aspx?eid=155&tid=0'>The Patterson Club Open</a></li></ul></div></div></li><li class='lvl1 nav1expand pmed radright shrink'><a href='javascript:void(0);'>Rankings</a><div class='subs'><div class='wrap1 nav1expchild'><ul class='lvl2ul'><li class='lvl3'><a href='Ranking.aspx?rtype=1'>Men</a></li><li class='lvl3'><a href='Ranking.aspx?rtype=2'>Women</a></li></ul></div></div></li><li class='lvl1 mediaonly imghome'><a href='http://www.platformtennis.org'>APTA Home</a></li><li class='lvl1 mediaonly imgtv'><a href='http://dev.enetlive.tv/apta/live-apta-2/' target='_blank'>APTA Network</a></li><li class='lvl1 mediaonly imghof'><a href='http://platformtennishalloffame.org/'>Museum & Hall of Fame</a></li></ul></div>
+    
+    
+
+
+        </div>
+        <div id="midbox" class="notnav">
+            
+    
+    
+    <div class="splitboxmain">
+        
+        
+    <div class="contentwrap">
+        <div class="abovecontent">
+            <p class='contenttitle'>Player Bios & Matches</p><div class='ddltitle'><div class='nav8 one'><div class='expandlist nav8selected closed' divname='listdivC'><span family='c' class='listdivC selectedtext'>Men</span></div><div class='listdiv nav8selected' id='listdivC' style='display:none' display='none'><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=495'>Women</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496'>Men</a></div></div><div class='nav9'><a class='pagelink selected'  href='TournamentSeeds.aspx?eid=228&tid=496'>Seeds</a></div><br/><div class='nav8 one'><div class='expandlist nav8selected closed' divname='listdivA'>Player: <span family='a' class='listdivA selectedtext'>-- Select a Player --</span></div><div class='listdiv nav8selected' id='listdivA' style='display:none' display='none'><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=24139' target='_self' title='View this Player'>Alicknavitch Luke</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=1589' target='_self' title='View this Player'>Anderson Blake</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=673' target='_self' title='View this Player'>Babb Terry</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=628' target='_self' title='View this Player'>Bancila Alex</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2728' target='_self' title='View this Player'>Barry Mark</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=457' target='_self' title='View this Player'>Baxter Ryan</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=6054' target='_self' title='View this Player'>Beirne Jerry</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2231' target='_self' title='View this Player'>Beshore Dale</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=6525' target='_self' title='View this Player'>Bissell David</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=6788' target='_self' title='View this Player'>Bond Chris</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=7422' target='_self' title='View this Player'>Bush J J</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=7674' target='_self' title='View this Player'>Carpenter Pete</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=1842' target='_self' title='View this Player'>Cassas John </a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=24657' target='_self' title='View this Player'>Chiu Christopher</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=3022' target='_self' title='View this Player'>Crick Nathan</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=400' target='_self' title='View this Player'>Czerwinski Marek</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2784' target='_self' title='View this Player'>Devol Carter</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=26539' target='_self' title='View this Player'>Dorfi Lance</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=478' target='_self' title='View this Player'>du Randt Johan</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=480' target='_self' title='View this Player'>Estes Scott</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=885' target='_self' title='View this Player'>Falatek Scott</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=26221' target='_self' title='View this Player'>Ferry Joe</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=1114' target='_self' title='View this Player'>Fraser Tyler</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=4121' target='_self' title='View this Player'>Gottfried Adam</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=494' target='_self' title='View this Player'>Grangeiro Marco</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=892' target='_self' title='View this Player'>Gumport Max</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=499' target='_self' title='View this Player'>Guzik Radek</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=26918' target='_self' title='View this Player'>Hayes Christopher</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=503' target='_self' title='View this Player'>Heil Brian</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=350' target='_self' title='View this Player'>Held Zachary</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=897' target='_self' title='View this Player'>Hersh Danny</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=3500' target='_self' title='View this Player'>Higgins George</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=4210' target='_self' title='View this Player'>Howat Jared</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=1901' target='_self' title='View this Player'>Irdoja Mikk</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=906' target='_self' title='View this Player'>Khurana Ajay</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=4103' target='_self' title='View this Player'>Lambropoulos Alex</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2045' target='_self' title='View this Player'>Lofgren Randy</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2047' target='_self' title='View this Player'>Lyon Jeffrey</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2375' target='_self' title='View this Player'>mcdonald ryan</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=543' target='_self' title='View this Player'>McNerney Graham</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=24285' target='_self' title='View this Player'>Miles Andrew</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=24282' target='_self' title='View this Player'>Mitchell Stephen</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=4126' target='_self' title='View this Player'>Morrow Doug</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=934' target='_self' title='View this Player'>Najdek Vlatko</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=936' target='_self' title='View this Player'>Nichols John</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2407' target='_self' title='View this Player'>Orban Andrew</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2792' target='_self' title='View this Player'>Parisi Anthony</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=701' target='_self' title='View this Player'>Pierce Mackey</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=26988' target='_self' title='View this Player'>Protsenko Anton</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=578' target='_self' title='View this Player'>Rose Paul</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=579' target='_self' title='View this Player'>Rose Peter</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=952' target='_self' title='View this Player'>Rosenow Zachary</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=19109' target='_self' title='View this Player'>Rowe Robert</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=4143' target='_self' title='View this Player'>Safford Scott</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=20396' target='_self' title='View this Player'>Schwandt Darren</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2786' target='_self' title='View this Player'>Seavey Don</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=590' target='_self' title='View this Player'>Seidenberg Noah</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2583' target='_self' title='View this Player'>Shallcross Patrick</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2456' target='_self' title='View this Player'>Soule Andrew</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=602' target='_self' title='View this Player'>Stulac Michael</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2796' target='_self' title='View this Player'>Talbot John</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=964' target='_self' title='View this Player'>Troutman James</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=1694' target='_self' title='View this Player'>Ucko Justin</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=24653' target='_self' title='View this Player'>Valinetz Michael</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2479' target='_self' title='View this Player'>Van Buren Chris</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=2481' target='_self' title='View this Player'>Veale Geoff</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=970' target='_self' title='View this Player'>Wagner Mike</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=613' target='_self' title='View this Player'>Warner Matt</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=4128' target='_self' title='View this Player'>Wiedemann Jeff</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=978' target='_self' title='View this Player'>Wilkinson George</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=26297' target='_self' title='View this Player'>Wright Rod</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&pid=23629' target='_self' title='View this Player'>Yen Jimmy</a></div></div><div class='nav8 one'><div class='expandlist nav8selected closed' divname='listdivB'>Team: <span family='b' class='listdivB selectedtext'>-- Select a Team --</span></div><div class='listdiv nav8selected' id='listdivB' style='display:none' display='none'><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7211' target='_self' title='View this Team'>Alicknavitch - Schwandt</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7200' target='_self' title='View this Team'>Anderson - Irdoja</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=3638' target='_self' title='View this Team'>Babb - Seidenberg</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7216' target='_self' title='View this Team'>Bancila - Fraser</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=3557' target='_self' title='View this Team'>Barry - Heil</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=6748' target='_self' title='View this Team'>Baxter - Held</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7246' target='_self' title='View this Team'>Beirne - Devol</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7243' target='_self' title='View this Team'>Beshore - Howat</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=6065' target='_self' title='View this Team'>Bissell - Miles</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7224' target='_self' title='View this Team'>Bond - Lyon</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=6028' target='_self' title='View this Team'>Bush - Troutman</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7219' target='_self' title='View this Team'>Carpenter - Wiedemann</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=6869' target='_self' title='View this Team'>Cassas - Protsenko</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7208' target='_self' title='View this Team'>Chiu - Orban</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=2370' target='_self' title='View this Team'>Crick - Lofgren</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7210' target='_self' title='View this Team'>Czerwinski - McNerney</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=5843' target='_self' title='View this Team'>Dorfi - Hayes</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=5074' target='_self' title='View this Team'>du Randt - Mitchell</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=4455' target='_self' title='View this Team'>Estes - Stulac</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=622' target='_self' title='View this Team'>Falatek - Najdek</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=5580' target='_self' title='View this Team'>Ferry - Yen</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=4293' target='_self' title='View this Team'>Gottfried - Soule</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=610' target='_self' title='View this Team'>Grangeiro - Wilkinson</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=4231' target='_self' title='View this Team'>Gumport - Ucko</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=1873' target='_self' title='View this Team'>Guzik - Warner</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7260' target='_self' title='View this Team'>Hersh - Nichols</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=6633' target='_self' title='View this Team'>Higgins - Valinetz</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=648' target='_self' title='View this Team'>Khurana - Wagner</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7207' target='_self' title='View this Team'>Lambropoulos - Pierce</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=2628' target='_self' title='View this Team'>mcdonald - Talbot</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=4151' target='_self' title='View this Team'>Morrow - Safford</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=2096' target='_self' title='View this Team'>Parisi - Veale</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=6056' target='_self' title='View this Team'>Rosenow - Shallcross</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=6620' target='_self' title='View this Team'>Rose - Rose</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7247' target='_self' title='View this Team'>Rowe - Van Buren</a><a class='nav8list' href='TournamentPlayer.aspx?eid=228&tid=496&copt=2&mid=7218' target='_self' title='View this Team'>Seavey - Wright</a></div></div></div>
+            
+        </div>
+        <div id="contentarea">
+            <table class='seed'><tr><td>Teams</td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7211' class='indent'>Luke Alicknavitch - Darren Schwandt</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7200' class='indent'>Blake Anderson - Mikk Irdoja</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=3638' class='indent'>Terry Babb - Noah Seidenberg</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7216' class='indent'>Alex Bancila - Tyler Fraser</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=3557' class='indent'>Mark Barry - Brian Heil</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=6748' class='indent'>Ryan Baxter - Zachary Held</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7246' class='indent'>Jerry Beirne - Carter Devol</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7243' class='indent'>Dale Beshore - Jared Howat</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=6065' class='indent'>David Bissell - Andrew Miles</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7224' class='indent'>Chris Bond - Jeffrey Lyon</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=6028' class='indent'>J J Bush - James Troutman</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7219' class='indent'>Pete Carpenter - Jeff Wiedemann</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=6869' class='indent'>John  Cassas - Anton Protsenko</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7208' class='indent'>Christopher Chiu - Andrew Orban</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=2370' class='indent'>Nathan Crick - Randy Lofgren</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7210' class='indent'>Marek Czerwinski - Graham McNerney</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=5843' class='indent'>Lance Dorfi - Christopher Hayes</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=5074' class='indent'>Johan du Randt - Stephen Mitchell</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=4455' class='indent'>Scott Estes - Michael Stulac</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=622' class='indent'>Scott Falatek - Vlatko Najdek</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=5580' class='indent'>Joe Ferry - Jimmy Yen</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=4293' class='indent'>Adam Gottfried - Andrew Soule</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=610' class='indent'>Marco Grangeiro - George Wilkinson</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=4231' class='indent'>Max Gumport - Justin Ucko</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=1873' class='indent'>Radek Guzik - Matt Warner</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7260' class='indent'>Danny Hersh - John Nichols</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=6633' class='indent'>George Higgins - Michael Valinetz</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=648' class='indent'>Ajay Khurana - Mike Wagner</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7207' class='indent'>Alex Lambropoulos - Mackey Pierce</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=2628' class='indent'>ryan mcdonald - John Talbot</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=4151' class='indent'>Doug Morrow - Scott Safford</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=2096' class='indent'>Anthony Parisi - Geoff Veale</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=6056' class='indent'>Zachary Rosenow - Patrick Shallcross</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=6620' class='indent'>Peter Rose - Paul Rose</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7247' class='indent'>Robert Rowe - Chris Van Buren</a></td></tr><tr><td><a href='TournamentPlayer.aspx?eid=228&tid=496&mid=7218' class='indent'>Don Seavey - Rod Wright</a></td></tr></table><input id='hdneid' type='hidden' value='228' /><input id='hdntid' type='hidden' value='496' /><input id='hdnpid' type='hidden' value='0' /><input id='hdnmid' type='hidden' value='0' /><input id='hdncopt' type='hidden' value=2' />
+        </div>
+    </div>
+
+    </div>
+    <div class="splitboxside">
+        <div class='sidebarnews'><div class='eventlogobox'><img src='imagesevents/2018-Philly-200.png' class='eventlogo' /></div><div class='groupfullcenter' style='display:block; width:100%; margin:0 0 10px 0;'><div class='contentwrap'><div class='abovecontent'><p class='contenttitle'>Official Sponsors of the APTA</p></div><div class='contentarea' style='text-align:left;'><img src='imagesevents/2017-Official-Viking.png' alt='Viking Athletics' />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src='imagesevents/2017-Official-ULINE.png' alt='ULINE' /></div></div></div><div class='groupfullcenter' style='display:block; width:100%; margin:0 0 10px 0;'><div class='contentwrap'><div class='abovecontent'><p class='contenttitle'>Social</p></div><div class='contentarea' style='text-align:left;'><div style='display:inline-block;font-size:.7em;text-align:center;'><a href='https://www.facebook.com/AmericanPlatformTennisAssoc' target='_blank' title='Find us on Facebook' ><img src='images/Facebook-44.png' alt='Find us on Facebook' class='socialimage' /></a><br/>Facebook</div><div style='display:inline-block;font-size:.7em;text-align:center;'><a href='https://twitter.com/APTAtournaments' target='_blank' title='Follow us on Twitter' ><img src='images/Twitter-44.png' alt='Join us on Twitter' class='socialimage' /></a><br/>Twitter</div><div style='display:inline-block;font-size:.7em;text-align:center;'><a href='https://www.youtube.com/channel/UCCW-u4OMlC3mUWSV0-46QUQ' target='_blank' title='Check out our YouTube channel!' ><img src='images/YouTube-44.png' alt='Check out our YouTube channel!' class='socialimage' /></a><br/>YouTube</div><div style='display:inline-block;font-size:.7em;text-align:center;'><a href='https://www.flickr.com/photos/31584475@N05/albums' target='_blank' title='Photos on Flickr'><img src='images/Flickr-44.png' alt='Photos on Flickr' class='socialimage' /></a><br/>Flickr</div><div style='display:inline-block;font-size:.7em;text-align:center;'><a href='mailto://scoring@platformtennis.org?subject=Mail from Scoring' target='_blank' title='Send us Feedback and Questions' ><img src='images/Email-44.png' alt='Send us Feedback and Questions' class='socialimage' /></a><br/>Email Us</div><br/></div></div></div></div>
+    </div>
+
+
+
+        </div>
+        <div id="footbox">
+            
+    
+    
+    
+    
+    
+
+    
+
+    
+
+            <div id="footer">
+                Copyright &copy; 2010-2018 American Platform Tennis Association. All rights reserved.
+            </div>
+        </div>
+    
+
+<script type="text/javascript">
+//<![CDATA[
+
+theForm.oldSubmit = theForm.submit;
+theForm.submit = WebForm_SaveScrollPositionSubmit;
+
+theForm.oldOnSubmit = theForm.onsubmit;
+theForm.onsubmit = WebForm_SaveScrollPositionOnSubmit;
+//]]>
+</script>
+</form>
+</body>
+<script type="text/javascript" src='/js/SpinMinScore.js'></script>
+<script type="text/javascript">
+    !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+</script>
+</html>

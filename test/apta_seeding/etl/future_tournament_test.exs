@@ -14,4 +14,38 @@ defmodule AptaSeeding.ETL.FutureTournamentTest do
       assert result == expected
     end
   end
+
+  @tag :skip
+  describe "make_request/1" do
+    test "makes the request to fetch the data - live request" do
+
+      {:ok, response_body} = %{eid: 228, tid: 496}
+                             |> FutureTournament.create_url()
+                             |> FutureTournament.make_request()
+
+                             require IEx; IEx.pry
+
+      assert 1 == response_body
+    end
+  end
+
+  describe "transform/1" do
+    test "transforms the request response in something useful to us - Philly 2018-2019" do
+      html =
+        [
+          System.cwd(),
+          "test",
+          "apta_seeding",
+          "etl",
+          "static_files_for_test",
+          "future_tournament_philly_2018_2019.html"
+        ]
+        |> Path.join()
+        |> File.read!()
+
+      {:ok, result} = FutureTournament.transform({:ok, html})
+
+      assert Enum.at(result.team_data, 0) == {"Luke Alicknavitch", "Darren Schwandt", "Luke Alicknavitch - Darren Schwandt"}
+    end
+  end
 end
