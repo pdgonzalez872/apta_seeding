@@ -178,8 +178,16 @@ defmodule AptaSeeding.Data do
   # IndividualResult
   #
 
-  def create_individual_result(%{player: player, tournament: tournament}) do
-    nil
+  def individual_results_count() do
+    IndividualResult
+    |> Repo.all()
+    |> Enum.count()
+  end
+
+  def create_individual_result(%{player_id: player_id, tournament_id: tournament_id, points: points} = attrs) do
+    %IndividualResult{}
+    |> IndividualResult.changeset(attrs)
+    |> Repo.insert!()
   end
 
   #
@@ -207,7 +215,8 @@ defmodule AptaSeeding.Data do
       team = find_or_create_team(%{team_name: r.team_name, player_1_id: player_1.id, player_2_id: player_2.id})
 
       # individual_results
-      #create_individual_result()
+      create_individual_result(%{player_id: player_1.id, tournament_id: tournament.id, points: r.individual_points})
+      create_individual_result(%{player_id: player_2.id, tournament_id: tournament.id, points: r.individual_points})
 
       # team_result
 
