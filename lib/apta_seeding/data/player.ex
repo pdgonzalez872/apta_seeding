@@ -5,7 +5,7 @@ defmodule AptaSeeding.Data.Player do
   schema "players" do
     field(:name, :string)
 
-    has_many :individual_results, AptaSeeding.Data.IndividualResult
+    has_many(:individual_results, AptaSeeding.Data.IndividualResult)
 
     timestamps()
   end

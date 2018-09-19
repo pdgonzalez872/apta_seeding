@@ -5,8 +5,8 @@ defmodule AptaSeeding.Data.IndividualResult do
   schema "individual_results" do
     field(:points, :decimal)
 
-    belongs_to :player, AptaSeeding.Data.Player
-    belongs_to :tournament, AptaSeeding.Data.Tournament
+    belongs_to(:player, AptaSeeding.Data.Player)
+    belongs_to(:tournament, AptaSeeding.Data.Tournament)
 
     timestamps()
   end

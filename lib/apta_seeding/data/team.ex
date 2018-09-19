@@ -7,7 +7,7 @@ defmodule AptaSeeding.Data.Team do
     field(:player_1_id, :integer)
     field(:player_2_id, :integer)
 
-    has_many :team_results, AptaSeeding.Data.TeamResult
+    has_many(:team_results, AptaSeeding.Data.TeamResult)
 
     timestamps()
   end
@@ -18,7 +18,7 @@ defmodule AptaSeeding.Data.Team do
     |> cast(attrs, [
       :name,
       :player_1_id,
-      :player_2_id,
+      :player_2_id
     ])
     |> validate_required([:name, :player_1_id, :player_2_id])
     |> unique_constraint(:name)

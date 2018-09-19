@@ -155,7 +155,11 @@ defmodule AptaSeeding.Data do
 
   def get_team!(id), do: Repo.get!(Team, id)
 
-  def find_or_create_team(%{team_name: team_name, player_1_id: player_1_id, player_2_id: player_2_id}) do
+  def find_or_create_team(%{
+        team_name: team_name,
+        player_1_id: player_1_id,
+        player_2_id: player_2_id
+      }) do
     query =
       from(
         t in "teams",
@@ -203,7 +207,9 @@ defmodule AptaSeeding.Data do
     |> Enum.count()
   end
 
-  def create_individual_result(%{player_id: player_id, tournament_id: tournament_id, points: points} = attrs) do
+  def create_individual_result(
+        %{player_id: player_id, tournament_id: tournament_id, points: points} = attrs
+      ) do
     %IndividualResult{}
     |> IndividualResult.changeset(attrs)
     |> Repo.insert!()
@@ -219,7 +225,9 @@ defmodule AptaSeeding.Data do
     |> Enum.count()
   end
 
-  def create_team_result(%{team_id: team_id, tournament_id: tournament_id, points: points} = attrs) do
+  def create_team_result(
+        %{team_id: team_id, tournament_id: tournament_id, points: points} = attrs
+      ) do
     %TeamResult{}
     |> TeamResult.changeset(attrs)
     |> Repo.insert!()
@@ -237,28 +245,40 @@ defmodule AptaSeeding.Data do
         results_structure: results_structure,
         tournament_should_be_processed: false
       }) do
-
     Logger.info("About to process tournament -> #{tournament.name_and_date_unique_name}")
-    #require IEx; IEx.pry
+    # require IEx; IEx.pry
 
     results_structure
     |> Enum.map(fn r ->
-
       {:ok, player_1} = find_or_create_player(r.player_1_name)
       {:ok, player_2} = find_or_create_player(r.player_2_name)
 
-      team = find_or_create_team(%{team_name: r.team_name, player_1_id: player_1.id, player_2_id: player_2.id})
+      team =
+        find_or_create_team(%{
+          team_name: r.team_name,
+          player_1_id: player_1.id,
+          player_2_id: player_2.id
+        })
 
-      create_individual_result(%{player_id: player_1.id, tournament_id: tournament.id, points: r.individual_points})
-      create_individual_result(%{player_id: player_2.id, tournament_id: tournament.id, points: r.individual_points})
+      create_individual_result(%{
+        player_id: player_1.id,
+        tournament_id: tournament.id,
+        points: r.individual_points
+      })
+
+      create_individual_result(%{
+        player_id: player_2.id,
+        tournament_id: tournament.id,
+        points: r.individual_points
+      })
 
       create_team_result(%{team_id: team.id, tournament_id: tournament.id, points: r.team_points})
 
       {:ok, _tournament} = update_tournament(tournament, %{results_have_been_processed: true})
     end)
+
     {:ok, "Tournament was processed"}
   end
-
 
   def process_tournament_and_tournament_results(%{
         tournament: tournament,

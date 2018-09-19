@@ -118,7 +118,9 @@ defmodule AptaSeeding.DataTest do
       assert post_team_create - pre_team_count == 1
       assert cant_find_a_team_that_does_not_exist_so_it_will_create.name == "Butler - Kasey"
 
-      will_find_this_team_since_it_exists = Data.find_or_create_team(%{team_name: "Butler - Kasey", player_1_id: 1, player_2_id: 2})
+      will_find_this_team_since_it_exists =
+        Data.find_or_create_team(%{team_name: "Butler - Kasey", player_1_id: 1, player_2_id: 2})
+
       post_team_find = Data.list_teams() |> Enum.count()
 
       did_not_create_a_new_record = post_team_find - post_team_create
