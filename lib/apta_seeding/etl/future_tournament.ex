@@ -30,8 +30,6 @@ defmodule AptaSeeding.ETL.FutureTournament do
       tournament_date: get_tournament_date(html_response)
     }
 
-    # tournament_date
-
     {:ok, result}
   end
 

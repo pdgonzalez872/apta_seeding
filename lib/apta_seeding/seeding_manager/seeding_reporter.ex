@@ -5,6 +5,13 @@ defmodule AptaSeeding.SeedingReporter do
 
   alias AptaSeeding.Data
 
+  @doc"""
+  Usage:
+
+    "Paulo Gonzalez"
+    |> AptaSeeding.SeedingReporter.call()
+
+  """
   def call(name) do
     is_this_a_team = String.contains?(name, "-")
     call(name, is_this_a_team)
