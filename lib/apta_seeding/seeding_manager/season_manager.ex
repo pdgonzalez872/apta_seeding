@@ -1,5 +1,6 @@
 defmodule AptaSeeding.SeedingManager.SeasonManager do
 
+  # TODO: Remove multipliers
   def intervals_and_multipliers() do
     [
      %{interval: Timex.Interval.new(from: ~D[2018-10-01], until: [months: 7]), multiplier: Decimal.new("1.0")},
@@ -10,6 +11,7 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     ]
   end
 
+  # TODO: Remove
   def call() do
     intervals_and_multipliers()
   end

@@ -166,6 +166,11 @@ defmodule AptaSeeding.SeedingManager do
     cond do
       is_current_tournament(tournament, all_tournaments) ->
         %{tournament: tournament, multiplier: Decimal.new("1.0")}
+      SeasonManager.seasons_ago(tournament.date) == 1 ->
+        raise "1"
+
+      SeasonManager.seasons_ago(tournament.date) == 2 ->
+        %{tournament: tournament, multiplier: Decimal.new("1.0")}
 
       true ->
         raise "Was not able to get the multiplier for the tournament #{tournament.name_and_date_unique_name}"
