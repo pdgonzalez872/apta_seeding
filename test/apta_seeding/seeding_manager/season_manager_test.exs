@@ -30,7 +30,13 @@ defmodule AptaSeeding.SeedingManager.SeasonManagerTest do
   end
 
   describe "find_season_attrs/1" do
-    test "returns the data structure for the season- ending in 2017" do
+    test "returns the data structure for the season - current" do
+      result = SeasonManager.find_season_attrs(~D[2018-10-06])
+
+      assert result.multiplier == Decimal.new("1.0")
+    end
+
+    test "returns the data structure for the season - ending in 2017" do
       result = SeasonManager.find_season_attrs(~D[2017-03-06])
 
       assert result.multiplier == Decimal.new("0.5")
