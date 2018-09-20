@@ -20,16 +20,13 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
   describe "integration tests for my sanity" do
     test "team has played 3 in the current season - 1" do
-      # create players
       p1 = %{name: "Tyler Fraser"} |> Data.create_player()
       p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
 
-      # create team
       team =
         %{name: "Tyler Fraser - Paulo Gonzalez", player_1_id: p1.id, player_2_id: p2.id}
         |> Data.create_team()
 
-      # tournament attrs
       [
         %{
           name: "t1",
@@ -91,16 +88,13 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
     end
 
     test "team has played 2 tournaments together and players have played with others" do
-      # create players
       p1 = %{name: "Tyler Fraser"} |> Data.create_player()
       p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
 
-      # create team
       team =
         %{name: "Tyler Fraser - Paulo Gonzalez", player_1_id: p1.id, player_2_id: p2.id}
         |> Data.create_team()
 
-      # tournament attrs
       [
         %{
           name: "t3",
@@ -146,8 +140,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       %{player_id: p2.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
       |> Data.create_individual_result()
 
-
-      # This struct is what will be passed in live requests.
       {:ok, results} =
         {:ok,
          %{
@@ -161,11 +153,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.seeding_criteria == "team has played 2 tournaments, 1 individual"
       assert first_team_result.team_points == Decimal.new("5.0")
       assert first_team_result.total_seeding_points == Decimal.new("455.00")
-
-      # expect(result.first[:team_points]).to eq 5.0
-      # expect(result.first[:player_1_points]).to eq 0.0
-      # expect(result.first[:player_2_points]).to eq 450.0
-      # expect(result.first[:total_seeding_points]).to eq 455.0
     end
 
     test "team has played 2 tournaments together and players have not played with others" do
