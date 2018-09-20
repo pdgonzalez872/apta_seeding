@@ -309,6 +309,11 @@ defmodule AptaSeeding.Data do
     |> Repo.preload(:tournament)
   end
 
+  def preload_player(%IndividualResult{} = individual_result) do
+    individual_result
+    |> Repo.preload(:player)
+  end
+
   def preload_tournament(%TeamResult{} = team_result) do
     team_result
     |> Repo.preload([:tournament, :team])

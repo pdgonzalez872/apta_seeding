@@ -112,12 +112,20 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(:total_seeding_points, team_results_details.total_points)
   end
 
+  def handle_seeding_criteria(tdo, "team has played 2 tournaments, 1 individual" = seeding_criteria) do
+    team_results_details = get_team_points(tdo, seeding_criteria)
+
+    highest_result_for_either_player = get_individual_points(tdo, seeding_criteria)
+
+    tdo
+    |> Map.put(:seeding_criteria, seeding_criteria)
+    |> Map.put(:team_points, team_results_details.total_points)
+    #|> Map.put(:player_1_points) nah...
+    |> Map.put(:total_seeding_points, team_results_details.total_points)
+    # |> Map.put(:total_seeding_points, Decimal.add(team_results_details.total_points, highest_result_for_either_player.total_points))
+  end
+
   @doc """
-  each team will have a seeding_criteria:
-  "team has played 3 tournaments"
-  "team has played 2 tournaments, 1 individual"
-  "team has played 1 tournament, 2 individual"
-   and 0.
   """
   def get_seeding_criteria(team) do
     team_result_count = Enum.count(team.team_results)
@@ -139,6 +147,73 @@ defmodule AptaSeeding.SeedingManager do
         raise "Error in seeding criteria for #{team.name}"
     end
   end
+
+  #
+  # Get Individual Points
+  #
+
+  #TODO seeding_criteria is not used in any of the delegators below
+  def get_individual_points(team_data_object, "team has played 2 tournaments, 1 individual" = seeding_criteria) do
+    get_individual_points(team_data_object, seeding_criteria, 1)
+  end
+
+  @doc"""
+  This is where the logic for getting individual results goes
+  """
+  def get_individual_points(team_data_object, _seeding_criteria, tournaments_to_take) do
+    # get highest individual result for p1
+    # get highest individual result for p2
+
+    player_1_results = get_highest_individual_results_for_player(team_data_object.player_1, tournaments_to_take)
+    player_2_results = get_highest_individual_results_for_player(team_data_object.player_2, tournaments_to_take)
+
+    #require IEx; IEx.pry
+  end
+
+  def get_highest_individual_results_for_player(player, tournaments_to_take) do
+    team_results_objects =
+      player.individual_results
+      |> Enum.sort_by(fn tr ->
+        tr =
+          tr
+          |> Data.preload_tournament()
+
+        tr.tournament.date
+      end)
+      |> Enum.map(fn tr ->
+        tr
+        |> Data.preload_tournament()
+        |> Data.preload_player()
+      end)
+      |> Enum.reverse()
+      |> Enum.take(tournaments_to_take)
+      |> Enum.map(fn tr ->
+        target_tournaments =
+          Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+
+        result = get_tournament_multiplier(tr.tournament, target_tournaments)
+
+        %{
+          tournament_unique_name: tr.tournament.name_and_date_unique_name,
+          player: tr.player.name,
+          multiplier: result.multiplier,
+          points: tr.points,
+          total_points: Decimal.mult(result.multiplier, tr.points)
+        }
+      end)
+
+    total_points =
+      team_results_objects
+      |> Enum.reduce(0, fn obj, acc ->
+        Decimal.add(acc, obj.total_points)
+      end)
+
+    %{total_points: total_points, details: team_results_objects}
+  end
+
+  #
+  # Get Team Points
+  #
 
   def get_team_points(team_data_object, _seeding_criteria, tournaments_to_take) do
     team_results_objects =
@@ -180,6 +255,14 @@ defmodule AptaSeeding.SeedingManager do
   def get_team_points(team_data_object, "team has played 3 tournaments" = seeding_criteria) do
     get_team_points(team_data_object, seeding_criteria, 3)
   end
+
+  def get_team_points(team_data_object, "team has played 2 tournaments, 1 individual" = seeding_criteria) do
+    get_team_points(team_data_object, seeding_criteria, 2)
+  end
+
+  #
+  # Multiplier
+  #
 
   @doc """
   We get the multiplier for each tournament.
