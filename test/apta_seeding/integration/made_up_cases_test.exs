@@ -116,6 +116,10 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       |> Enum.map(fn tournament_attrs -> Data.create_tournament(tournament_attrs) end)
     end
 
+    def create_charities_2018() do
+
+    end
+
     test "charities 2017 and 2016, then create 2018" do
       create_charities_2017_2016()
 

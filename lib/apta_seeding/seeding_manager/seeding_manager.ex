@@ -163,23 +163,11 @@ defmodule AptaSeeding.SeedingManager do
     Charities 2015 was played in Nov 2015. This is not a current tournament, should be 50%, because it was 2 seasons ago. multiplier 0.5
   """
   def get_tournament_multiplier(tournament, all_tournaments) do
-    multiplier = cond do
-      is_current_tournament(tournament, all_tournaments) ->
-        Decimal.new("1.0")
-
-      # Tournament has not happened yet.
-      !is_current_tournament(tournament, all_tournaments) && SeasonManager.seasons_ago(tournament.date) == 1 ->
-        Decimal.new("1.0")
-
-      SeasonManager.seasons_ago(tournament.date) == 2 ->
-        Decimal.new("1.0")
-
-      true ->
-        raise "Was not able to get the multiplier for the tournament #{tournament.name_and_date_unique_name}"
-    end
-
-    %{tournament: tournament}
-    |> Map.put(:multiplier, multiplier)
+    {t, multiplier} = create_tournament_multiplier_matrix(tournament, all_tournaments)
+    |> Enum.find(fn {t, multiplier} ->
+      t.name_and_date_unique_name == tournament.name_and_date_unique_name
+    end)
+    %{tournament: t, multiplier: multiplier}
   end
 
   def create_tournament_multiplier_matrix(tournament, all_tournaments) do
