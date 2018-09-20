@@ -89,7 +89,9 @@ defmodule AptaSeeding.SeedingManager do
       # "team has played 1 tournament, 2 individual"
       #   This is the highest individual possible
 
-      seeding_criteria = "money banks"
+      seeding_criteria = get_seeding_criteria(tdo.team)
+
+      #seeding_criteria = "money banks"
       Map.put(tdo, :seeding_criteria, seeding_criteria)
     end)
 
@@ -97,5 +99,16 @@ defmodule AptaSeeding.SeedingManager do
             |> Map.put(:team_data_objects, team_data_objects)
 
     {:ok, state}
+  end
+
+  def get_seeding_criteria(team) do
+    team_result_count = Enum.count(team.team_results)
+    cond do
+      team_result_count >= 3 ->
+        "team has played 3 tournaments"
+      true ->
+        raise "Error in seeding criteria for #{team.name}"
+    end
+
   end
 end
