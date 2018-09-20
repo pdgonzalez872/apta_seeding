@@ -14,7 +14,7 @@ defmodule AptaSeeding.AcceptanceTest do
     :ok = Ecto.Adapters.SQL.Sandbox.checkout(Repo)
   end
 
-  @tag :live_request
+  @tag :skip
   describe "This is where we try things out" do
     test "pricing Philly" do
       # this is the live stuff, the real stuff.
