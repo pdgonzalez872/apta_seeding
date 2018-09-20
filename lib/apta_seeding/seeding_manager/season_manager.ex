@@ -24,4 +24,10 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     |> Enum.find(fn season -> target_date in season.interval end)
   end
 
+  def current_tournaments() do
+    # Nationals 2018 is current and should be priced at 1.0
+    # currently, it is 1 season ago.
+    # tournaments_with_same_name. If there are, then get the most recent one.
+
+  end
 end
