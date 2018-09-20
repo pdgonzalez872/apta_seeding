@@ -330,8 +330,5 @@ defmodule AptaSeeding.Data do
       team_acc ++ [team.team_results]
     end)
     |> List.flatten()
-    # |> Enum.map(fn team_result ->
-    #   Repo.preload(team_result, [:team, :tournament])
-    # end)
   end
 end
