@@ -140,7 +140,7 @@ defmodule AptaSeeding.SeedingManager do
     end
   end
 
-  def get_team_points(team_data_object, "team has played 3 tournaments") do
+  def get_team_points(team_data_object, _seeding_criteria, tournaments_to_take) do
     team_results_objects =
       team_data_object.team.team_results
       |> Enum.sort_by(fn tr ->
@@ -152,7 +152,7 @@ defmodule AptaSeeding.SeedingManager do
       end)
       |> Enum.map(fn tr -> Data.preload_tournament(tr) end)
       |> Enum.reverse()
-      |> Enum.take(3)
+      |> Enum.take(tournaments_to_take)
       |> Enum.map(fn tr ->
         target_tournaments =
           Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
@@ -175,6 +175,10 @@ defmodule AptaSeeding.SeedingManager do
       end)
 
     %{total_points: total_points, details: team_results_objects}
+  end
+
+  def get_team_points(team_data_object, "team has played 3 tournaments" = seeding_criteria) do
+    get_team_points(team_data_object, seeding_criteria, 3)
   end
 
   @doc """
