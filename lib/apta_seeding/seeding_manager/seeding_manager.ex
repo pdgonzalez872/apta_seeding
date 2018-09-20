@@ -38,21 +38,45 @@ defmodule AptaSeeding.SeedingManager do
   ===
   """
 
+  alias AptaSeeding.Data
+
   def call(
         {:ok,
          %{
            team_data: team_data,
            tournament_name: tournament_name,
            tournament_date: tournament_date
-         }} = attrs
+         } = state}
       ) do
 
-    # require IEx; IEx.pry()
+    state = {:ok, state}
+             |> get_players_and_teams()
+
+    {:ok, state}
   end
 
-  # must get player_1, player_2 and team
-  # must get individual results for each player, team results for team
-  # must diferentiate from seasons
+  def get_players_and_teams({:ok, state}) do
+    result = state.team_data
+             |> Enum.map(fn td ->
+               {p1_name, p2_name, team_name} = td
 
+               p1 = p1_name
+                    |> Data.find_or_create_player()
+                    |> Data.preload_results()
+
+               p2 = p2_name
+                    |> Data.find_or_create_player()
+                    |> Data.preload_results()
+
+               team = team_name
+               |> Data.find_or_create_team()
+               |> Data.preload_results()
+             end)
+
+    state = state
+            |> Map.put(:team_data_objects, result)
+
+    {:ok, state}
+  end
 
 end
