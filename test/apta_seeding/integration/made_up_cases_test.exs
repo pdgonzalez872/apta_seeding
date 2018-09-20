@@ -166,6 +166,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
   end
 
+  # TODO: move this to SeedingManager
   describe "get_tournament_multiplier/2" do
     test "Gets the correct multiplier - Current tournament" do
       create_charities_2017_2016()
