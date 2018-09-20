@@ -46,7 +46,13 @@ defmodule AptaSeeding.SeedingManager do
            tournament_date: tournament_date
          }} = attrs
       ) do
-    require IEx
-    IEx.pry()
+
+    # require IEx; IEx.pry()
   end
+
+  # must get player_1, player_2 and team
+  # must get individual results for each player, team results for team
+  # must diferentiate from seasons
+
+
 end
