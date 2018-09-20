@@ -33,11 +33,12 @@ defmodule AptaSeeding.SeedingReporter do
     team_results = player
                    |> Data.get_teams_for_player()
                    |> Data.get_team_results_for_teams()
+                   |> handle_results()
+
 
     EEx.eval_file(path, assigns: [player_name: player.name, individual_results: individual_results, team_results: team_results])
   end
 
-  # TODO REMOVE
   def handle_results(results) do
     results
     |> Enum.map(fn r -> Data.preload_tournament(r) end)

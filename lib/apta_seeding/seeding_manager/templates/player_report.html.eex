@@ -38,10 +38,10 @@
     <th>Points</th>
   </tr>
 
-  <%= for ir <- @individual_results do %>
+  <%= for ir <- @team_results do %>
     <tr>
       <td>
-        <%= @player_name %>
+        <%= ir.team.name %>
       </td>
 
       <td>

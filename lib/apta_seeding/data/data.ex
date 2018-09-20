@@ -306,7 +306,7 @@ defmodule AptaSeeding.Data do
 
   def preload_tournament(%TeamResult{} = team_result) do
     team_result
-    |> Repo.preload(:tournament)
+    |> Repo.preload([:tournament, :team])
   end
 
   def get_teams_for_player(%Player{} = player) do
@@ -329,6 +329,9 @@ defmodule AptaSeeding.Data do
     |> Enum.reduce([], fn team, team_acc ->
       team_acc ++ [team.team_results]
     end)
-    |> Enum.map(fn team_result -> Repo.preload(team_result, [:team, :tournament]) end)
+    |> List.flatten()
+    # |> Enum.map(fn team_result ->
+    #   Repo.preload(team_result, [:team, :tournament])
+    # end)
   end
 end
