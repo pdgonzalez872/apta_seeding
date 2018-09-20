@@ -88,6 +88,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       first_team_result = Enum.at(results.team_data_objects, 0)
       assert first_team_result.seeding_criteria == "team has played 3 tournaments"
       assert first_team_result.team_points == Decimal.new("29.0")
+      assert first_team_result.total_seeding_points == Decimal.new("29.0")
 
       # expect(result.first[:team_points]).to eq 29.0
       # expect(result.first[:total_seeding_points]).to eq 29.0
@@ -122,6 +123,14 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         raw_results_html: "html"
       }
       |> Data.create_tournament()
+    end
+
+    test "team has played 2 tournaments together and players have played with others" do
+
+    end
+
+    test "team has played 2 tournaments together and players have not played with others" do
+
     end
 
     test "charities 2017 and 2016, then create 2018" do
