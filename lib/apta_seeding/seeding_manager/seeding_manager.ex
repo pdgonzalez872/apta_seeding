@@ -38,8 +38,8 @@ defmodule AptaSeeding.SeedingManager do
   ===
   """
 
-  def call(players) do
-    players
+  def call({:ok, %{team_data: team_data, tournament_name: tournament_name, tournament_date: tournament_date}} = attrs) do
+    require IEx; IEx.pry
   end
 
 end

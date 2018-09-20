@@ -289,4 +289,46 @@ defmodule AptaSeeding.Data do
     Logger.info(message)
     {:ok, message}
   end
+
+  #
+  # Reporter
+  #
+
+  def preload_results({:ok, %Player{} = player}) do
+    player
+    |> Repo.preload(:individual_results)
+  end
+
+  def preload_tournament(%IndividualResult{} = individual_result) do
+    individual_result
+    |> Repo.preload(:tournament)
+  end
+
+  def preload_tournament(%TeamResult{} = team_result) do
+    team_result
+    |> Repo.preload(:tournament)
+  end
+
+  def get_teams_for_player(%Player{} = player) do
+    query =
+      from(
+        t in "teams",
+        where: t.player_1_id == ^player.id,
+        or_where: t.player_2_id == ^player.id,
+        select: t.id
+      )
+
+    query
+    |> Repo.all()
+    |> Enum.map(fn t -> get_team!(t) end)
+    |> Enum.map(fn team -> Repo.preload(team, :team_results) end)
+  end
+
+  def get_team_results_for_teams(teams) do
+    teams
+    |> Enum.reduce([], fn team, team_acc ->
+      team_acc ++ [team.team_results]
+    end)
+    |> Enum.map(fn team_result -> Repo.preload(team_result, [:team, :tournament]) end)
+  end
 end

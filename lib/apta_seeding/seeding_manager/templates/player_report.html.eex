@@ -1,0 +1,60 @@
+<%= @player_name %>
+
+<table style="width:100%">
+  <tr>
+    <th>Player</th>
+    <th>Tournament Name</th>
+    <th>Date</th>
+    <th>Points</th>
+  </tr>
+
+  <%= for ir <- @individual_results do %>
+    <tr>
+      <td>
+        <%= @player_name %>
+      </td>
+
+      <td>
+        <%= ir.tournament.name %>
+      </td>
+
+      <td>
+        <%= ir.tournament.date %>
+      </td>
+
+      <td>
+        <%= ir.points %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+
+
+<table style="width:100%">
+  <tr>
+    <th>Team</th>
+    <th>Tournament Name</th>
+    <th>Date</th>
+    <th>Points</th>
+  </tr>
+
+  <%= for ir <- @individual_results do %>
+    <tr>
+      <td>
+        <%= @player_name %>
+      </td>
+
+      <td>
+        <%= ir.tournament.name %>
+      </td>
+
+      <td>
+        <%= ir.tournament.date %>
+      </td>
+
+      <td>
+        <%= ir.points %>
+      </td>
+    </tr>
+  <% end %>
+</table>
