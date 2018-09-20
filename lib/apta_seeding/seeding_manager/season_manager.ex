@@ -45,7 +45,11 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
   end
 
   @doc"""
-  Here we create a matrix for given tournaments of a same name and their pricing.
+  Here we create a matrix for given tournaments of a same name and their
+  pricing.
+
+  This seems to be a lot better than the previous solution: logic/ifs. Maybe
+  this will suffice.
   """
   def create_tournament_multiplier_matrix(tournament, all_tournaments) do
     multipliers =
