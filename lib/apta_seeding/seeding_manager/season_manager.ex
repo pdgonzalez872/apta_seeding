@@ -19,4 +19,9 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     |> Enum.find_index(fn season -> target_date in season.interval end)
   end
 
+  def find_season_attrs(target_date) do
+    intervals_and_multipliers
+    |> Enum.find(fn season -> target_date in season.interval end)
+  end
+
 end
