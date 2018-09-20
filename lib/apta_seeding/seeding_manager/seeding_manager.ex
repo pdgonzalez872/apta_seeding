@@ -137,8 +137,9 @@ defmodule AptaSeeding.SeedingManager do
     |> Enum.reverse()
     |> Enum.take(3)
     |> Enum.map(fn tr ->
-         # TODO: optimization: pass only the tournaments with the same name instead of all
-         result = get_tournament_multiplier(tr.tournament, Data.list_tournaments())
+         target_tournaments = Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+
+         result = get_tournament_multiplier(tr.tournament, target_tournaments)
          %{
            tournament_unique_name: tr.tournament.name_and_date_unique_name,
            team: tr.team.name,
