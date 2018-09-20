@@ -77,7 +77,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
 
       # This struct is what will be passed in live requests.
-      results = {:ok,
+      {:ok, results} = {:ok,
         %{
           tournament_name: "Dummy Tournament",
           tournament_date: ~D[2018-12-24],
@@ -86,9 +86,11 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       }
       |> SeedingManager.call()
 
-      assert results == 1
+      #require IEx; IEx.pry
 
-      require IEx; IEx.pry
+      first_team_result = Enum.at(results.team_data_objects, 0)
+      assert first_team_result.seeding_criteria == "team has played 3 tournaments"
+
 
       # expect(result.size).to eq 1
       # expect(result.first[:chosen_tournament_criteria]).to eq("team has played 3 tournaments")

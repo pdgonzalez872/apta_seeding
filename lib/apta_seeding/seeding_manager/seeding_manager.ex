@@ -49,10 +49,9 @@ defmodule AptaSeeding.SeedingManager do
          } = state}
       ) do
 
-    state = {:ok, state}
-             |> get_players_and_teams()
-
     {:ok, state}
+    |> get_players_and_teams()
+    |> analyse_each_team()
   end
 
   def get_players_and_teams({:ok, state}) do
@@ -71,6 +70,8 @@ defmodule AptaSeeding.SeedingManager do
                team = team_name
                |> Data.find_or_create_team()
                |> Data.preload_results()
+
+               %{player_1: p1, player_2: p2, team: team}
              end)
 
     state = state
@@ -79,4 +80,22 @@ defmodule AptaSeeding.SeedingManager do
     {:ok, state}
   end
 
+  def analyse_each_team({:ok, state}) do
+    team_data_objects = state.team_data_objects
+    |> Enum.map(fn tdo ->
+      # each team will have a seeding_criteria:
+      # "team has played 3 tournaments"
+      # "team has played 2 tournaments, 1 individual"
+      # "team has played 1 tournament, 2 individual"
+      #   This is the highest individual possible
+
+      seeding_criteria = "money banks"
+      Map.put(tdo, :seeding_criteria, seeding_criteria)
+    end)
+
+    state = state
+            |> Map.put(:team_data_objects, team_data_objects)
+
+    {:ok, state}
+  end
 end
