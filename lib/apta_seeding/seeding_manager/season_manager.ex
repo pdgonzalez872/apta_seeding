@@ -87,14 +87,7 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
   end
 
   def create_tournament_multiplier_matrix(tournament, all_tournaments, :individual) do
-    multipliers = individual_multiplier()
-
-    all_tournaments
-    |> Enum.filter(fn t -> t.name == tournament.name end)
-    |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
-    |> Enum.reverse()
-    |> Enum.take(4)
-    |> Enum.zip(multipliers)
+    create_multiplier_matrix(tournament, all_tournaments, individual_multiplier())
   end
 
   def create_multiplier_matrix(tournament, all_tournaments, multipliers) do

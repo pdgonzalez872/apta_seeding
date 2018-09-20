@@ -143,7 +143,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         }
         |> Data.create_tournament()
 
-      %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
+      %{player_id: p2.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
       |> Data.create_individual_result()
 
 
@@ -160,7 +160,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       first_team_result = Enum.at(results.team_data_objects, 0)
       assert first_team_result.seeding_criteria == "team has played 2 tournaments, 1 individual"
       assert first_team_result.team_points == Decimal.new("5.0")
-      assert first_team_result.total_seeding_points == Decimal.new("455.0")
+      assert first_team_result.total_seeding_points == Decimal.new("455.00")
 
       # expect(result.first[:team_points]).to eq 5.0
       # expect(result.first[:player_1_points]).to eq 0.0
