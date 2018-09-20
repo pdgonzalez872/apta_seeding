@@ -95,7 +95,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       # expect(result.first[:total_seeding_points]).to eq 29.0
     end
 
-    test "charities 2017 and 2016, then create 2018" do
+    def create_charities_2017_2016() do
       [
         %{
           name: "Chicago Charities Men",
@@ -114,6 +114,10 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         }
       ]
       |> Enum.map(fn tournament_attrs -> Data.create_tournament(tournament_attrs) end)
+    end
+
+    test "charities 2017 and 2016, then create 2018" do
+      create_charities_2017_2016()
 
       charities_2017 = Data.list_tournaments()
                        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
@@ -145,24 +149,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
   describe "get_tournament_multiplier/2" do
     test "Gets the correct multiplier - Current tournament" do
-      [
-        %{
-          name: "Chicago Charities Men",
-          name_and_date_unique_name: "Chicago Charities Men|2017-11-04",
-          date: ~D[2017-11-04],
-          results_have_been_processed: true,
-          raw_results_html: "html"
-        },
-
-        %{
-          name: "Chicago Charities Men",
-          name_and_date_unique_name: "Chicago Charities Men|2016-11-05",
-          date: ~D[2016-11-05],
-          results_have_been_processed: true,
-          raw_results_html: "html"
-        }
-      ]
-      |> Enum.map(fn tournament_attrs -> Data.create_tournament(tournament_attrs) end)
+      create_charities_2017_2016()
 
       charities_2017 = Data.list_tournaments()
                        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
