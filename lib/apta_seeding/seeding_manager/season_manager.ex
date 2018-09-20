@@ -30,4 +30,15 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     # tournaments_with_same_name. If there are, then get the most recent one.
 
   end
+
+  def is_current_tournament(tournament, all_tournaments) do
+    [most_recent_tournament_with_same_name] =
+      all_tournaments
+        |> Enum.filter(fn t -> t.name == tournament.name end)
+        |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
+        |> Enum.reverse()
+        |> Enum.take(1)
+
+    tournament.id == most_recent_tournament_with_same_name.id
+  end
 end

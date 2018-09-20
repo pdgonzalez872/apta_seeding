@@ -95,7 +95,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       # expect(result.first[:total_seeding_points]).to eq 29.0
     end
 
-    test "charities 2017 and 2016" do
+    test "charities 2017 and 2016, then create 2018" do
       [
         %{
           name: "Chicago Charities Men",
@@ -121,14 +121,25 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       charities_2016 = Data.list_tournaments()
                        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2016-11-05" end)
 
-
       assert SeedingManager.is_current_tournament(charities_2017, Data.list_tournaments()) == true
       assert SeedingManager.is_current_tournament(charities_2016, Data.list_tournaments()) == false
 
-      require IEx; IEx.pry
+      # Create 2018
+      %{
+        name: "Chicago Charities Men",
+        name_and_date_unique_name: "Chicago Charities Men|2018-11-04",
+        date: ~D[2017-11-04],
+        results_have_been_processed: true,
+        raw_results_html: "html"
+      }
+      |> Data.create_tournament()
 
-      # get tournament, then see if it is current, true or false
+      charities_2018 = Data.list_tournaments()
+                       |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2018-11-04" end)
 
+      assert SeedingManager.is_current_tournament(charities_2018, Data.list_tournaments()) == true
+      assert SeedingManager.is_current_tournament(charities_2017, Data.list_tournaments()) == false
+      assert SeedingManager.is_current_tournament(charities_2016, Data.list_tournaments()) == false
     end
   end
 end
