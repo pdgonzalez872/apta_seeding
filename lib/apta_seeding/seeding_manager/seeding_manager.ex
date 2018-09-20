@@ -89,7 +89,7 @@ defmodule AptaSeeding.SeedingManager do
 
       tdo
       |> Map.put(:seeding_criteria, seeding_criteria)
-      # |> Map.put(:team_points, get_seeding_criteria(tdo.team))
+      |> Map.put(:team_points, team_points.total_points)
     end)
 
     state = state
@@ -126,8 +126,7 @@ defmodule AptaSeeding.SeedingManager do
   end
 
   def get_team_points(team_data_object, "team has played 3 tournaments") do
-
-    team_results = team_data_object.team.team_results
+    team_results_objects = team_data_object.team.team_results
     |> Enum.sort_by(fn tr ->
       tr = tr
            |> Data.preload_tournament()
@@ -136,17 +135,24 @@ defmodule AptaSeeding.SeedingManager do
     |> Enum.map(fn tr -> Data.preload_tournament(tr) end)
     |> Enum.reverse()
     |> Enum.take(3)
+    |> Enum.map(fn tr ->
+         # TODO: optimization: pass only the tournaments with the same name instead of all
+         result = get_tournament_multiplier(tr.tournament, Data.list_tournaments())
+         %{
+           tournament_unique_name: tr.tournament.name_and_date_unique_name,
+           team: tr.team.name,
+           multiplier: result.multiplier,
+           points: tr.points,
+           total_points: Decimal.mult(result.multiplier, tr.points)
+         }
+    end)
 
-    # add details tournament_long_name, team_name, multiplier, points, total_points
-    # All i care is a structure with the above
-    # |> Enum.map(fn tr ->
-    #   %{tournament_unique_name: , team_name: , multiplier:, points: total_points:}
-    # end)
+    total_points = team_results_objects
+    |> Enum.reduce(0, fn obj, acc ->
+      Decimal.add(acc, obj.total_points)
+    end)
 
-    # require IEx; IEx.pry
-
-    # use 3 and handicap each tournament
-
+    %{total_points: total_points, details: team_results_objects}
   end
 
   @doc"""

@@ -75,7 +75,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
            |> Data.create_team_result()
       end)
 
-
       # This struct is what will be passed in live requests.
       {:ok, results} = {:ok,
         %{
@@ -88,9 +87,8 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       first_team_result = Enum.at(results.team_data_objects, 0)
       assert first_team_result.seeding_criteria == "team has played 3 tournaments"
+      assert first_team_result.team_points == Decimal.new("29.0")
 
-
-      # expect(result.first[:chosen_tournament_criteria]).to eq("team has played 3 tournaments")
       # expect(result.first[:team_points]).to eq 29.0
       # expect(result.first[:total_seeding_points]).to eq 29.0
     end
@@ -195,5 +193,9 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert second_most_recent_tournament.name_and_date_unique_name == "Chicago Charities Men|2016-11-05"
       assert second_most_recent_multiplier == Decimal.new(0.9)
     end
+  end
+
+  describe "get_team_points/2" do
+
   end
 end
