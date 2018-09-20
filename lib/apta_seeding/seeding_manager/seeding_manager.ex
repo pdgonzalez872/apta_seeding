@@ -167,7 +167,7 @@ defmodule AptaSeeding.SeedingManager do
     player_1_results = get_highest_individual_results_for_player(team_data_object.player_1, tournaments_to_take)
     player_2_results = get_highest_individual_results_for_player(team_data_object.player_2, tournaments_to_take)
 
-    #require IEx; IEx.pry
+    require IEx; IEx.pry
   end
 
   def get_highest_individual_results_for_player(player, tournaments_to_take) do
@@ -191,7 +191,7 @@ defmodule AptaSeeding.SeedingManager do
         target_tournaments =
           Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
 
-        result = get_tournament_multiplier(tr.tournament, target_tournaments)
+        result = get_tournament_multiplier(tr.tournament, target_tournaments, :individual)
 
         %{
           tournament_unique_name: tr.tournament.name_and_date_unique_name,
@@ -232,7 +232,7 @@ defmodule AptaSeeding.SeedingManager do
         target_tournaments =
           Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
 
-        result = get_tournament_multiplier(tr.tournament, target_tournaments)
+        result = get_tournament_multiplier(tr.tournament, target_tournaments, :team)
 
         %{
           tournament_unique_name: tr.tournament.name_and_date_unique_name,
@@ -277,9 +277,9 @@ defmodule AptaSeeding.SeedingManager do
     Charities 2016 was played in Nov 2016. This is not a current tournament, should be 90%, because it was 1 season ago. multiplier 0.9
     Charities 2015 was played in Nov 2015. This is not a current tournament, should be 50%, because it was 2 seasons ago. multiplier 0.5
   """
-  def get_tournament_multiplier(tournament, all_tournaments) do
+  def get_tournament_multiplier(tournament, all_tournaments, type) do
     {t, multiplier} =
-      create_tournament_multiplier_matrix(tournament, all_tournaments)
+      create_tournament_multiplier_matrix(tournament, all_tournaments, type)
       |> Enum.find(fn {t, multiplier} ->
         t.name_and_date_unique_name == tournament.name_and_date_unique_name
       end)
@@ -287,8 +287,8 @@ defmodule AptaSeeding.SeedingManager do
     %{tournament: t, multiplier: multiplier}
   end
 
-  def create_tournament_multiplier_matrix(tournament, all_tournaments) do
-    SeasonManager.create_tournament_multiplier_matrix(tournament, all_tournaments)
+  def create_tournament_multiplier_matrix(tournament, all_tournaments, type) do
+    SeasonManager.create_tournament_multiplier_matrix(tournament, all_tournaments, type)
   end
 
   def is_current_tournament(tournament, all_tournaments) do
