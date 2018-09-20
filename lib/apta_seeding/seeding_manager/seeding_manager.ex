@@ -1,5 +1,5 @@
 defmodule AptaSeeding.SeedingManager do
-  @moduledoc"""
+  @moduledoc """
   This module is responsible for calculating the seeds. It follows a procedure
   that is somewhere online on the APTA website.  The gist of it is below, was
   sent via email by Eric Miller.
@@ -38,8 +38,15 @@ defmodule AptaSeeding.SeedingManager do
   ===
   """
 
-  def call({:ok, %{team_data: team_data, tournament_name: tournament_name, tournament_date: tournament_date}} = attrs) do
-    require IEx; IEx.pry
+  def call(
+        {:ok,
+         %{
+           team_data: team_data,
+           tournament_name: tournament_name,
+           tournament_date: tournament_date
+         }} = attrs
+      ) do
+    require IEx
+    IEx.pry()
   end
-
 end

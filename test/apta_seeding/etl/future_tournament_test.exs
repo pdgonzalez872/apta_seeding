@@ -5,9 +5,9 @@ defmodule AptaSeeding.ETL.FutureTournamentTest do
 
   describe "create_url/1" do
     test "create_season_url/1 returns the correct url - Philly 2018-2019" do
-
-      result = %{eid: 228, tid: 496}
-      |> FutureTournament.create_url()
+      result =
+        %{eid: 228, tid: 496}
+        |> FutureTournament.create_url()
 
       expected = "https://platformtennisonline.org/TournamentPlayer.aspx?eid=228&tid=496"
 
@@ -18,9 +18,9 @@ defmodule AptaSeeding.ETL.FutureTournamentTest do
   @tag :live_request
   describe "extract/1" do
     test "extract step works as expected with a live request" do
-
-      {:ok, html_response} = %{eid: 228, tid: 496}
-      |> FutureTournament.extract()
+      {:ok, html_response} =
+        %{eid: 228, tid: 496}
+        |> FutureTournament.extract()
 
       assert String.contains?(html_response, "Philadelphia Open") == true
       assert String.contains?(html_response, "Friday, Oct 12 - Sunday, Oct 14, 2018") == true
@@ -43,9 +43,12 @@ defmodule AptaSeeding.ETL.FutureTournamentTest do
 
       {:ok, result} = FutureTournament.transform({:ok, html})
 
-      assert Enum.at(result.team_data, 0) == {"Luke Alicknavitch", "Darren Schwandt", "Luke Alicknavitch - Darren Schwandt"}
+      assert Enum.at(result.team_data, 0) ==
+               {"Luke Alicknavitch", "Darren Schwandt", "Luke Alicknavitch - Darren Schwandt"}
+
       assert result.tournament_name == "Philadelphia Open"
-      assert result.tournament_date == ~D[2018-10-12] #"Friday, Oct 12 - Sunday, Oct 14, 2018"
+      # "Friday, Oct 12 - Sunday, Oct 14, 2018"
+      assert result.tournament_date == ~D[2018-10-12]
     end
   end
 

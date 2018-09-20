@@ -19,10 +19,11 @@ defmodule AptaSeeding.AcceptanceTest do
       # |> FutureTournament.call()
       # |> SeedingManager.call()
 
-      result = "Paulo Gonzalez"
-               |> AptaSeeding.SeedingReporter.call()
+      result =
+        "Paulo Gonzalez"
+        |> AptaSeeding.SeedingReporter.call()
 
-      IO.puts result
+      IO.puts(result)
     end
   end
 end
