@@ -43,4 +43,24 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
 
     tournament.id == most_recent_tournament_with_same_name.id
   end
+
+  @doc"""
+  Here we create a matrix for given tournaments of a same name and their pricing.
+  """
+  def create_tournament_multiplier_matrix(tournament, all_tournaments) do
+    multipliers =
+      [
+        Decimal.new("1.0"),
+        Decimal.new("0.9"),
+        Decimal.new("0.5"),
+        Decimal.new("0.3")
+      ]
+
+    all_tournaments
+    |> Enum.filter(fn t -> t.name == tournament.name end)
+    |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
+    |> Enum.reverse()
+    |> Enum.take(4)
+    |> Enum.zip(multipliers)
+  end
 end

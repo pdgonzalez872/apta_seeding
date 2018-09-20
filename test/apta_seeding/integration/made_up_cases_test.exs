@@ -161,7 +161,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert charities_2017_results.multiplier == Decimal.new("1.0")
 
       charities_2016_results = SeedingManager.get_tournament_multiplier(charities_2016, Data.list_tournaments())
-      #assert charities_2016_results.multiplier == Decimal.new("0.9")
+      assert charities_2016_results.multiplier == Decimal.new("0.9")
     end
 
     test "Gets the correct multiplier - last season" do
@@ -170,6 +170,27 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
     test "Gets the correct multiplier - two seasons ago" do
 
+    end
+  end
+
+  describe "create_tournament_multiplier_matrix/2" do
+    test "returns a matrix with the correct multipliers" do
+      create_charities_2017_2016()
+
+      charities_2017 = Data.list_tournaments()
+                       |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
+
+      result = SeedingManager.create_tournament_multiplier_matrix(charities_2017, Data.list_tournaments())
+
+      {most_recent_tournament, most_recent_multiplier} = Enum.at(result, 0)
+
+      assert most_recent_tournament.name_and_date_unique_name == "Chicago Charities Men|2017-11-04"
+      assert most_recent_multiplier == Decimal.new(1.0)
+
+      {second_most_recent_tournament, second_most_recent_multiplier} = Enum.at(result, 1)
+
+      assert second_most_recent_tournament.name_and_date_unique_name == "Chicago Charities Men|2016-11-05"
+      assert second_most_recent_multiplier == Decimal.new(0.9)
     end
   end
 end
