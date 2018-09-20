@@ -162,7 +162,14 @@ defmodule AptaSeeding.SeedingManager do
     Charities 2016 was played in Nov 2016. This is not a current tournament, should be 90%, because it was 1 season ago. multiplier 0.9
     Charities 2015 was played in Nov 2015. This is not a current tournament, should be 50%, because it was 2 seasons ago. multiplier 0.5
   """
-  def price_tournament(tournament, all_tournaments) do
+  def get_tournament_multiplier(tournament, all_tournaments) do
+    cond do
+      is_current_tournament(tournament, all_tournaments) ->
+        %{tournament: tournament, multiplier: Decimal.new("1.0")}
+
+      true ->
+        raise "Was not able to get the multiplier for the tournament #{tournament.name_and_date_unique_name}"
+    end
   end
 
   def is_current_tournament(tournament, all_tournaments) do

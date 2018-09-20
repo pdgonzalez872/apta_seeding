@@ -142,4 +142,44 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert SeedingManager.is_current_tournament(charities_2016, Data.list_tournaments()) == false
     end
   end
+
+  describe "get_tournament_multiplier/2" do
+    test "Gets the correct multiplier - Current tournament" do
+      [
+        %{
+          name: "Chicago Charities Men",
+          name_and_date_unique_name: "Chicago Charities Men|2017-11-04",
+          date: ~D[2017-11-04],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        },
+
+        %{
+          name: "Chicago Charities Men",
+          name_and_date_unique_name: "Chicago Charities Men|2016-11-05",
+          date: ~D[2016-11-05],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+      ]
+      |> Enum.map(fn tournament_attrs -> Data.create_tournament(tournament_attrs) end)
+
+      charities_2017 = Data.list_tournaments()
+                       |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
+
+      charities_2016 = Data.list_tournaments()
+                       |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2016-11-05" end)
+
+      assert SeedingManager.get_tournament_multiplier(charities_2017, Data.list_tournaments()) == true
+      assert SeedingManager.get_tournament_multiplier(charities_2016, Data.list_tournaments()) == false
+    end
+
+    test "Gets the correct multiplier - last season" do
+
+    end
+
+    test "Gets the correct multiplier - two seasons ago" do
+
+    end
+  end
 end
