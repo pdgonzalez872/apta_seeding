@@ -85,11 +85,12 @@ defmodule AptaSeeding.SeedingManager do
     team_data_objects = state.team_data_objects
     |> Enum.map(fn tdo ->
       seeding_criteria = get_seeding_criteria(tdo.team)
-      team_points = get_team_points(tdo, seeding_criteria)
+      team_results_details = get_team_points(tdo, seeding_criteria)
+      details = get_details_for_calculations(team_results_details)
 
       tdo
       |> Map.put(:seeding_criteria, seeding_criteria)
-      |> Map.put(:team_points, team_points.total_points)
+      |> Map.put(:team_points, team_results_details.total_points)
     end)
 
     state = state
@@ -153,6 +154,11 @@ defmodule AptaSeeding.SeedingManager do
     end)
 
     %{total_points: total_points, details: team_results_objects}
+  end
+
+  def get_details_for_calculations(team_results_details) do
+    # TODO: Remove this. We have the data already, this
+    # will be shown in the view.
   end
 
   @doc"""
