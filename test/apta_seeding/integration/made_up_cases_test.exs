@@ -156,7 +156,57 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
     end
 
     test "team has played 2 tournaments together and players have not played with others" do
+      p1 = %{name: "Tyler Fraser"} |> Data.create_player()
+      p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
 
+      team =
+        %{name: "Tyler Fraser - Paulo Gonzalez", player_1_id: p1.id, player_2_id: p2.id}
+        |> Data.create_team()
+
+      [
+        %{
+          name: "t3",
+          name_and_date_unique_name: "t3",
+          date: ~D[2018-10-20],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        },
+        %{
+          name: "t4",
+          name_and_date_unique_name: "t4",
+          date: ~D[2018-11-20],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+      ]
+      |> Enum.with_index()
+      |> Enum.map(fn {tournament_attrs, index} ->
+        {:ok, tournament} =
+          tournament_attrs
+          |> Data.create_tournament()
+
+        {tournament, index}
+      end)
+      |> Enum.map(fn {tournament, index} ->
+        points = Decimal.new((index + 1) * (index + 1))
+
+        %{team_id: team.id, tournament_id: tournament.id, points: points}
+        |> Data.create_team_result()
+      end)
+
+      {:ok, results} =
+        {:ok,
+         %{
+           tournament_name: "Dummy Tournament",
+           tournament_date: ~D[2018-12-24],
+           team_data: [{"Tyler Fraser", "Paulo Gonzalez", "Tyler Fraser - Paulo Gonzalez"}]
+         }}
+        |> SeedingManager.call()
+
+      first_team_result = Enum.at(results.team_data_objects, 0)
+      assert first_team_result.seeding_criteria == "team has played 2 tournaments, 1 individual"
+      assert first_team_result.team_points == Decimal.new("5.0")
+      assert first_team_result.total_seeding_points == Decimal.new("5.0")
     end
   end
 
