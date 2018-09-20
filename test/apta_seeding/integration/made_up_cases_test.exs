@@ -86,16 +86,49 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       }
       |> SeedingManager.call()
 
-      #require IEx; IEx.pry
-
       first_team_result = Enum.at(results.team_data_objects, 0)
       assert first_team_result.seeding_criteria == "team has played 3 tournaments"
 
 
-      # expect(result.size).to eq 1
       # expect(result.first[:chosen_tournament_criteria]).to eq("team has played 3 tournaments")
       # expect(result.first[:team_points]).to eq 29.0
       # expect(result.first[:total_seeding_points]).to eq 29.0
+    end
+
+    test "charities 2017 and 2016" do
+      [
+        %{
+          name: "Chicago Charities Men",
+          name_and_date_unique_name: "Chicago Charities Men|2017-11-04",
+          date: ~D[2017-11-04],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        },
+
+        %{
+          name: "Chicago Charities Men",
+          name_and_date_unique_name: "Chicago Charities Men|2016-11-05",
+          date: ~D[2016-11-05],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+      ]
+      |> Enum.map(fn tournament_attrs -> Data.create_tournament(tournament_attrs) end)
+
+      charities_2017 = Data.list_tournaments()
+                       |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
+
+      charities_2016 = Data.list_tournaments()
+                       |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2016-11-05" end)
+
+
+      assert SeedingManager.is_current_tournament(charities_2017, Data.list_tournaments()) == true
+      assert SeedingManager.is_current_tournament(charities_2016, Data.list_tournaments()) == false
+
+      require IEx; IEx.pry
+
+      # get tournament, then see if it is current, true or false
+
     end
   end
 end

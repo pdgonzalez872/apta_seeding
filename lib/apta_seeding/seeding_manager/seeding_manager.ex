@@ -83,16 +83,12 @@ defmodule AptaSeeding.SeedingManager do
   def analyse_each_team({:ok, state}) do
     team_data_objects = state.team_data_objects
     |> Enum.map(fn tdo ->
-      # each team will have a seeding_criteria:
-      # "team has played 3 tournaments"
-      # "team has played 2 tournaments, 1 individual"
-      # "team has played 1 tournament, 2 individual"
-      #   This is the highest individual possible
-
       seeding_criteria = get_seeding_criteria(tdo.team)
+      team_points = get_team_points(tdo, seeding_criteria)
 
-      #seeding_criteria = "money banks"
-      Map.put(tdo, :seeding_criteria, seeding_criteria)
+      tdo
+      |> Map.put(:seeding_criteria, seeding_criteria)
+      # |> Map.put(:team_points, get_seeding_criteria(tdo.team))
     end)
 
     state = state
@@ -101,14 +97,82 @@ defmodule AptaSeeding.SeedingManager do
     {:ok, state}
   end
 
+  @doc"""
+  each team will have a seeding_criteria:
+  "team has played 3 tournaments"
+  "team has played 2 tournaments, 1 individual"
+  "team has played 1 tournament, 2 individual"
+   and 0.
+  """
   def get_seeding_criteria(team) do
     team_result_count = Enum.count(team.team_results)
     cond do
       team_result_count >= 3 ->
         "team has played 3 tournaments"
+
+      team_result_count == 2 ->
+        "team has played 2 tournaments, 1 individual"
+
+      team_result_count == 1 ->
+        "team has played 1 tournament, 2 individual"
+
+      team_result_count == 0 ->
+        "team has not played together, 3 individual"
+
       true ->
         raise "Error in seeding criteria for #{team.name}"
     end
+  end
+
+  def get_team_points(team_data_object, "team has played 3 tournaments") do
+
+    team_results = team_data_object.team.team_results
+    |> Enum.sort_by(fn tr ->
+      tr = tr
+           |> Data.preload_tournament()
+      tr.tournament.date
+    end)
+    |> Enum.map(fn tr -> Data.preload_tournament(tr) end)
+    |> Enum.reverse()
+    |> Enum.take(3)
+
+    # add details tournament_long_name, team_name, multiplier, points, total_points
+    # All i care is a structure with the above
+    # |> Enum.map(fn tr ->
+    #   %{tournament_unique_name: , team_name: , multiplier:, points: total_points:}
+    # end)
+
+    # require IEx; IEx.pry
+
+    # use 3 and handicap each tournament
 
   end
+
+  @doc"""
+  We get the multiplier for each tournament.
+  The trick is to know what a "current tournament" is, which not even the APTA seems
+  to know exactly, at least not how they state on their rules. From our side, a
+  current tournament is a tournament that has not been played in the current season.
+
+  Ex:
+  We are currently in Sep 2018.
+    Charities 2017 was played in Nov 2017. This is a "current tournament", should be 100% of points, multiplier 1
+      (Note that Charities 2018 will happen in Nov 2018, so not yet in this example.)
+    Charities 2016 was played in Nov 2016. This is not a current tournament, should be 90%, because it was 1 season ago. multiplier 0.9
+    Charities 2015 was played in Nov 2015. This is not a current tournament, should be 50%, because it was 2 seasons ago. multiplier 0.5
+  """
+  def price_tournament(tournament, all_tournaments) do
+  end
+
+  def is_current_tournament(tournament, all_tournaments) do
+    [most_recent_tournament_with_same_name] =
+      all_tournaments
+        |> Enum.filter(fn t -> t.name == tournament.name end)
+        |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
+        |> Enum.reverse()
+        |> Enum.take(1)
+
+    tournament.id == most_recent_tournament_with_same_name.id
+  end
+
 end
