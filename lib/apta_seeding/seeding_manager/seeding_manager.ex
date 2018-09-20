@@ -49,57 +49,63 @@ defmodule AptaSeeding.SeedingManager do
            tournament_date: tournament_date
          } = state}
       ) do
-
     {:ok, state}
     |> get_players_and_teams()
     |> analyse_each_team()
   end
 
   def get_players_and_teams({:ok, state}) do
-    result = state.team_data
-             |> Enum.map(fn td ->
-               {p1_name, p2_name, team_name} = td
+    result =
+      state.team_data
+      |> Enum.map(fn td ->
+        {p1_name, p2_name, team_name} = td
 
-               p1 = p1_name
-                    |> Data.find_or_create_player()
-                    |> Data.preload_results()
+        p1 =
+          p1_name
+          |> Data.find_or_create_player()
+          |> Data.preload_results()
 
-               p2 = p2_name
-                    |> Data.find_or_create_player()
-                    |> Data.preload_results()
+        p2 =
+          p2_name
+          |> Data.find_or_create_player()
+          |> Data.preload_results()
 
-               team = team_name
-               |> Data.find_or_create_team()
-               |> Data.preload_results()
+        team =
+          team_name
+          |> Data.find_or_create_team()
+          |> Data.preload_results()
 
-               %{player_1: p1, player_2: p2, team: team}
-             end)
+        %{player_1: p1, player_2: p2, team: team}
+      end)
 
-    state = state
-            |> Map.put(:team_data_objects, result)
+    state =
+      state
+      |> Map.put(:team_data_objects, result)
 
     {:ok, state}
   end
 
   def analyse_each_team({:ok, state}) do
-    team_data_objects = state.team_data_objects
-    |> Enum.map(fn tdo ->
-      seeding_criteria = get_seeding_criteria(tdo.team)
-      team_results_details = get_team_points(tdo, seeding_criteria)
-      details = get_details_for_calculations(team_results_details)
+    team_data_objects =
+      state.team_data_objects
+      |> Enum.map(fn tdo ->
+        seeding_criteria = get_seeding_criteria(tdo.team)
+        team_results_details = get_team_points(tdo, seeding_criteria)
+        details = get_details_for_calculations(team_results_details)
 
-      tdo
-      |> Map.put(:seeding_criteria, seeding_criteria)
-      |> Map.put(:team_points, team_results_details.total_points)
-    end)
+        tdo
+        |> Map.put(:seeding_criteria, seeding_criteria)
+        |> Map.put(:team_points, team_results_details.total_points)
+      end)
 
-    state = state
-            |> Map.put(:team_data_objects, team_data_objects)
+    state =
+      state
+      |> Map.put(:team_data_objects, team_data_objects)
 
     {:ok, state}
   end
 
-  @doc"""
+  @doc """
   each team will have a seeding_criteria:
   "team has played 3 tournaments"
   "team has played 2 tournaments, 1 individual"
@@ -108,6 +114,7 @@ defmodule AptaSeeding.SeedingManager do
   """
   def get_seeding_criteria(team) do
     team_result_count = Enum.count(team.team_results)
+
     cond do
       team_result_count >= 3 ->
         "team has played 3 tournaments"
@@ -127,32 +134,38 @@ defmodule AptaSeeding.SeedingManager do
   end
 
   def get_team_points(team_data_object, "team has played 3 tournaments") do
-    team_results_objects = team_data_object.team.team_results
-    |> Enum.sort_by(fn tr ->
-      tr = tr
-           |> Data.preload_tournament()
-      tr.tournament.date
-    end)
-    |> Enum.map(fn tr -> Data.preload_tournament(tr) end)
-    |> Enum.reverse()
-    |> Enum.take(3)
-    |> Enum.map(fn tr ->
-         target_tournaments = Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+    team_results_objects =
+      team_data_object.team.team_results
+      |> Enum.sort_by(fn tr ->
+        tr =
+          tr
+          |> Data.preload_tournament()
 
-         result = get_tournament_multiplier(tr.tournament, target_tournaments)
-         %{
-           tournament_unique_name: tr.tournament.name_and_date_unique_name,
-           team: tr.team.name,
-           multiplier: result.multiplier,
-           points: tr.points,
-           total_points: Decimal.mult(result.multiplier, tr.points)
-         }
-    end)
+        tr.tournament.date
+      end)
+      |> Enum.map(fn tr -> Data.preload_tournament(tr) end)
+      |> Enum.reverse()
+      |> Enum.take(3)
+      |> Enum.map(fn tr ->
+        target_tournaments =
+          Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
 
-    total_points = team_results_objects
-    |> Enum.reduce(0, fn obj, acc ->
-      Decimal.add(acc, obj.total_points)
-    end)
+        result = get_tournament_multiplier(tr.tournament, target_tournaments)
+
+        %{
+          tournament_unique_name: tr.tournament.name_and_date_unique_name,
+          team: tr.team.name,
+          multiplier: result.multiplier,
+          points: tr.points,
+          total_points: Decimal.mult(result.multiplier, tr.points)
+        }
+      end)
+
+    total_points =
+      team_results_objects
+      |> Enum.reduce(0, fn obj, acc ->
+        Decimal.add(acc, obj.total_points)
+      end)
 
     %{total_points: total_points, details: team_results_objects}
   end
@@ -162,7 +175,7 @@ defmodule AptaSeeding.SeedingManager do
     # will be shown in the view.
   end
 
-  @doc"""
+  @doc """
   We get the multiplier for each tournament.
   The trick is to know what a "current tournament" is, which not even the APTA seems
   to know exactly, at least not how they state on their rules. From our side, a
@@ -176,10 +189,12 @@ defmodule AptaSeeding.SeedingManager do
     Charities 2015 was played in Nov 2015. This is not a current tournament, should be 50%, because it was 2 seasons ago. multiplier 0.5
   """
   def get_tournament_multiplier(tournament, all_tournaments) do
-    {t, multiplier} = create_tournament_multiplier_matrix(tournament, all_tournaments)
-    |> Enum.find(fn {t, multiplier} ->
-      t.name_and_date_unique_name == tournament.name_and_date_unique_name
-    end)
+    {t, multiplier} =
+      create_tournament_multiplier_matrix(tournament, all_tournaments)
+      |> Enum.find(fn {t, multiplier} ->
+        t.name_and_date_unique_name == tournament.name_and_date_unique_name
+      end)
+
     %{tournament: t, multiplier: multiplier}
   end
 

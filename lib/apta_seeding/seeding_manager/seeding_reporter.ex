@@ -5,7 +5,7 @@ defmodule AptaSeeding.SeedingReporter do
 
   alias AptaSeeding.Data
 
-  @doc"""
+  @doc """
   Usage:
 
     "Paulo Gonzalez"

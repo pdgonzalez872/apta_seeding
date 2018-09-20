@@ -1,13 +1,27 @@
 defmodule AptaSeeding.SeedingManager.SeasonManager do
-
   # TODO: Remove multipliers
   def intervals_and_multipliers() do
     [
-     %{interval: Timex.Interval.new(from: ~D[2018-10-01], until: [months: 7]), multiplier: Decimal.new("1.0")},
-     %{interval: Timex.Interval.new(from: ~D[2017-10-01], until: [months: 7]), multiplier: Decimal.new("0.9")},
-     %{interval: Timex.Interval.new(from: ~D[2016-10-01], until: [months: 7]), multiplier: Decimal.new("0.5")},
-     %{interval: Timex.Interval.new(from: ~D[2015-10-01], until: [months: 7]), multiplier: Decimal.new("0.5")},
-     %{interval: Timex.Interval.new(from: ~D[2014-10-01], until: [months: 7]), multiplier: Decimal.new("0.5")},
+      %{
+        interval: Timex.Interval.new(from: ~D[2018-10-01], until: [months: 7]),
+        multiplier: Decimal.new("1.0")
+      },
+      %{
+        interval: Timex.Interval.new(from: ~D[2017-10-01], until: [months: 7]),
+        multiplier: Decimal.new("0.9")
+      },
+      %{
+        interval: Timex.Interval.new(from: ~D[2016-10-01], until: [months: 7]),
+        multiplier: Decimal.new("0.5")
+      },
+      %{
+        interval: Timex.Interval.new(from: ~D[2015-10-01], until: [months: 7]),
+        multiplier: Decimal.new("0.5")
+      },
+      %{
+        interval: Timex.Interval.new(from: ~D[2014-10-01], until: [months: 7]),
+        multiplier: Decimal.new("0.5")
+      }
     ]
   end
 
@@ -30,21 +44,20 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     # Nationals 2018 is current and should be priced at 1.0
     # currently, it is 1 season ago.
     # tournaments_with_same_name. If there are, then get the most recent one.
-
   end
 
   def is_current_tournament(tournament, all_tournaments) do
     [most_recent_tournament_with_same_name] =
       all_tournaments
-        |> Enum.filter(fn t -> t.name == tournament.name end)
-        |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
-        |> Enum.reverse()
-        |> Enum.take(1)
+      |> Enum.filter(fn t -> t.name == tournament.name end)
+      |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
+      |> Enum.reverse()
+      |> Enum.take(1)
 
     tournament.id == most_recent_tournament_with_same_name.id
   end
 
-  @doc"""
+  @doc """
   Here we create a matrix for given tournaments of a same name and their
   pricing.
 
@@ -52,13 +65,12 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
   this will suffice.
   """
   def create_tournament_multiplier_matrix(tournament, all_tournaments) do
-    multipliers =
-      [
-        Decimal.new("1.0"),
-        Decimal.new("0.9"),
-        Decimal.new("0.5"),
-        Decimal.new("0.3")
-      ]
+    multipliers = [
+      Decimal.new("1.0"),
+      Decimal.new("0.9"),
+      Decimal.new("0.5"),
+      Decimal.new("0.3")
+    ]
 
     all_tournaments
     |> Enum.filter(fn t -> t.name == tournament.name end)
