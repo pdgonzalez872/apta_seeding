@@ -136,6 +136,17 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(:total_seeding_points, Decimal.add(team_results_details.total_points, individual_total_points))
   end
 
+  def handle_seeding_criteria(tdo, "team has not played together, 3 best individual" = seeding_criteria) do
+    individual_total_points = get_individual_points(tdo, seeding_criteria)
+                              |> Enum.reduce(Decimal.new("0"), fn el, acc ->
+                                Decimal.add(acc, el.total_points)
+                              end)
+    tdo
+    |> Map.put(:seeding_criteria, seeding_criteria)
+    |> Map.put(:team_points, Decimal.new("0"))
+    |> Map.put(:total_seeding_points, individual_total_points)
+  end
+
   @doc """
   """
   def get_seeding_criteria(team) do
@@ -170,6 +181,10 @@ defmodule AptaSeeding.SeedingManager do
 
   def get_individual_points(team_data_object, "team has played 1 tournament, 2 best individual" = seeding_criteria) do
     get_individual_points(team_data_object, seeding_criteria, 2)
+  end
+
+  def get_individual_points(team_data_object, "team has not played together, 3 best individual" = seeding_criteria) do
+    get_individual_points(team_data_object, seeding_criteria, 3)
   end
 
   @doc"""
