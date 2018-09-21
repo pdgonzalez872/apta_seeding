@@ -109,7 +109,13 @@ defmodule AptaSeeding.SeedingManager do
       ) do
     team_results_details = get_team_points(tdo, seeding_criteria)
 
-    [highest_result_for_either_player] = get_individual_points(tdo, seeding_criteria)
+    individual_results_details = get_individual_points(tdo, seeding_criteria)
+
+    individual_total_points =
+      individual_results_details
+      |> Enum.reduce(Decimal.new("0"), fn el, acc ->
+        Decimal.add(acc, el.total_points)
+      end)
 
     tdo
     |> Map.put(:seeding_criteria, seeding_criteria)
@@ -118,8 +124,12 @@ defmodule AptaSeeding.SeedingManager do
       :total_seeding_points,
       Decimal.add(
         team_results_details.total_points,
-        highest_result_for_either_player.total_points
+        individual_total_points
       )
+    )
+    |> Map.put(
+      :calculation_details,
+      create_calculation_details([team_results_details] ++ individual_results_details, seeding_criteria)
     )
   end
 
@@ -377,14 +387,28 @@ defmodule AptaSeeding.SeedingManager do
   # Calculation details
   #
 
-  def create_calculation_details(results, "team has played 1 tournament, 2 best individual") do
+  def create_calculation_details(results, "team has played 3 tournaments") do
     results
-    |> Enum.map(fn r ->
-      [details] = r.details
-      create_details(details)
-    end)
+    |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
+    |> Enum.map(fn r -> create_details(r) end)
   end
 
+  def create_calculation_details(results, "team has played 2 tournaments, 1 best individual") do
+    results
+    |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
+    |> Enum.map(fn r -> create_details(r) end)
+  end
+
+  # TODO remove
+  # These became the same. nice.
+  def create_calculation_details(results, "team has played 1 tournament, 2 best individual") do
+    results
+    |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
+    |> Enum.map(fn r -> create_details(r) end)
+  end
+
+  # TODO remove
+  # These became the same. nice.
   def create_calculation_details(results, "team has not played together, 3 best individual") do
     results
     |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
