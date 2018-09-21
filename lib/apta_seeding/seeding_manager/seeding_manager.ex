@@ -133,7 +133,10 @@ defmodule AptaSeeding.SeedingManager do
     )
     |> Map.put(
       :calculation_details,
-      create_calculation_details([team_results_details] ++ individual_results_details, seeding_criteria)
+      create_calculation_details(
+        [team_results_details] ++ individual_results_details,
+        seeding_criteria
+      )
     )
   end
 
@@ -160,7 +163,10 @@ defmodule AptaSeeding.SeedingManager do
     )
     |> Map.put(
       :calculation_details,
-      create_calculation_details([team_results_details] ++ individual_results_details, seeding_criteria)
+      create_calculation_details(
+        [team_results_details] ++ individual_results_details,
+        seeding_criteria
+      )
     )
   end
 
@@ -168,7 +174,6 @@ defmodule AptaSeeding.SeedingManager do
         tdo,
         "team has not played together, 3 best individual" = seeding_criteria
       ) do
-
     individual_results_details = get_individual_points(tdo, seeding_criteria)
 
     individual_total_points =

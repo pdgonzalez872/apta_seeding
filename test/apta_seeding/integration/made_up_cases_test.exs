@@ -86,30 +86,29 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.team_points == Decimal.new("29.0")
       assert first_team_result.total_seeding_points == Decimal.new("29.0")
 
-      expected_details =
-             [
-              %{
-                direct_object: "Tyler Fraser - Paulo Gonzalez",
-                multiplier: Decimal.new("1.0"),
-                points: Decimal.new("16"),
-                total_points: Decimal.new("16.0"),
-                tournament_unique_name: "t4"
-              },
-              %{
-                direct_object: "Tyler Fraser - Paulo Gonzalez",
-                multiplier: Decimal.new("1.0"),
-                points: Decimal.new("9"),
-                total_points: Decimal.new("9.0"),
-                tournament_unique_name: "t3"
-              },
-              %{
-                direct_object: "Tyler Fraser - Paulo Gonzalez",
-                multiplier: Decimal.new("1.0"),
-                points: Decimal.new("4"),
-                total_points: Decimal.new("4.0"),
-                tournament_unique_name: "t2"
-              }
-            ]
+      expected_details = [
+        %{
+          direct_object: "Tyler Fraser - Paulo Gonzalez",
+          multiplier: Decimal.new("1.0"),
+          points: Decimal.new("16"),
+          total_points: Decimal.new("16.0"),
+          tournament_unique_name: "t4"
+        },
+        %{
+          direct_object: "Tyler Fraser - Paulo Gonzalez",
+          multiplier: Decimal.new("1.0"),
+          points: Decimal.new("9"),
+          total_points: Decimal.new("9.0"),
+          tournament_unique_name: "t3"
+        },
+        %{
+          direct_object: "Tyler Fraser - Paulo Gonzalez",
+          multiplier: Decimal.new("1.0"),
+          points: Decimal.new("4"),
+          total_points: Decimal.new("4.0"),
+          tournament_unique_name: "t2"
+        }
+      ]
 
       assert first_team_result.calculation_details == expected_details
     end
@@ -185,30 +184,29 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.team_points == Decimal.new("5.0")
       assert first_team_result.total_seeding_points == Decimal.new("455.00")
 
-      expected_details =
-        [
-          %{
-            direct_object: "Tyler Fraser - Paulo Gonzalez",
-            multiplier: Decimal.new("1.0"),
-            points: Decimal.new("4"),
-            total_points: Decimal.new("4.0"),
-            tournament_unique_name: "t4"
-          },
-          %{
-            direct_object: "Tyler Fraser - Paulo Gonzalez",
-            multiplier: Decimal.new("1.0"),
-            points: Decimal.new("1"),
-            total_points: Decimal.new("1.0"),
-            tournament_unique_name: "t3"
-          },
-          %{
-            direct_object: "Paulo Gonzalez",
-            multiplier: Decimal.new("0.9"),
-            points: Decimal.new("500.0"),
-            total_points: Decimal.new("450.00"),
-            tournament_unique_name: "t5"
-          }
-        ]
+      expected_details = [
+        %{
+          direct_object: "Tyler Fraser - Paulo Gonzalez",
+          multiplier: Decimal.new("1.0"),
+          points: Decimal.new("4"),
+          total_points: Decimal.new("4.0"),
+          tournament_unique_name: "t4"
+        },
+        %{
+          direct_object: "Tyler Fraser - Paulo Gonzalez",
+          multiplier: Decimal.new("1.0"),
+          points: Decimal.new("1"),
+          total_points: Decimal.new("1.0"),
+          tournament_unique_name: "t3"
+        },
+        %{
+          direct_object: "Paulo Gonzalez",
+          multiplier: Decimal.new("0.9"),
+          points: Decimal.new("500.0"),
+          total_points: Decimal.new("450.00"),
+          tournament_unique_name: "t5"
+        }
+      ]
 
       assert first_team_result.calculation_details == expected_details
     end
@@ -326,30 +324,30 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.team_points == Decimal.new("500.00")
       assert first_team_result.total_seeding_points == Decimal.new("1400.00")
 
-      expected_details =
-        [
-          %{
-            multiplier: Decimal.new("1.0"),
-            points: Decimal.new("500.0"),
-            direct_object: "Tyler Fraser - Paulo Gonzalez",
-            total_points: Decimal.new("500.00"),
-            tournament_unique_name: "t1"
-          },
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Paulo Gonzalez",
-            points: Decimal.new("500.0"),
-            total_points: Decimal.new("450.00"),
-            tournament_unique_name: "t5"
-          },
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Tyler Fraser",
-            points: Decimal.new("500.0"),
-            total_points: Decimal.new("450.00"),
-            tournament_unique_name: "t5"
-          }
-        ]
+      expected_details = [
+        %{
+          multiplier: Decimal.new("1.0"),
+          points: Decimal.new("500.0"),
+          direct_object: "Tyler Fraser - Paulo Gonzalez",
+          total_points: Decimal.new("500.00"),
+          tournament_unique_name: "t1"
+        },
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Paulo Gonzalez",
+          points: Decimal.new("500.0"),
+          total_points: Decimal.new("450.00"),
+          tournament_unique_name: "t5"
+        },
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Tyler Fraser",
+          points: Decimal.new("500.0"),
+          total_points: Decimal.new("450.00"),
+          tournament_unique_name: "t5"
+        }
+      ]
+
       assert first_team_result.calculation_details == expected_details
     end
 
@@ -410,37 +408,36 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("2160.00")
 
-      expected_details =
-        [
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Paulo Gonzalez",
-            points: Decimal.new("700.0"),
-            total_points: Decimal.new("630.00"),
-            tournament_unique_name: "t6"
-          },
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Paulo Gonzalez",
-            points: Decimal.new("500.0"),
-            total_points: Decimal.new("450.00"),
-            tournament_unique_name: "t5"
-          },
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Tyler Fraser",
-            points: Decimal.new("700.0"),
-            total_points: Decimal.new("630.00"),
-            tournament_unique_name: "t6"
-          },
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Tyler Fraser",
-            points: Decimal.new("500.0"),
-            total_points: Decimal.new("450.00"),
-            tournament_unique_name: "t5"
-          }
-        ]
+      expected_details = [
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Paulo Gonzalez",
+          points: Decimal.new("700.0"),
+          total_points: Decimal.new("630.00"),
+          tournament_unique_name: "t6"
+        },
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Paulo Gonzalez",
+          points: Decimal.new("500.0"),
+          total_points: Decimal.new("450.00"),
+          tournament_unique_name: "t5"
+        },
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Tyler Fraser",
+          points: Decimal.new("700.0"),
+          total_points: Decimal.new("630.00"),
+          tournament_unique_name: "t6"
+        },
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Tyler Fraser",
+          points: Decimal.new("500.0"),
+          total_points: Decimal.new("450.00"),
+          tournament_unique_name: "t5"
+        }
+      ]
 
       assert first_team_result.calculation_details == expected_details
     end
@@ -495,7 +492,9 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
          %{
            tournament_name: "Dummy Tournament",
            tournament_date: ~D[2018-12-24],
-           team_data: [{"Anthony McPherson", "Paulo Gonzalez", "Anthony McPherson - Paulo Gonzalez"}]
+           team_data: [
+             {"Anthony McPherson", "Paulo Gonzalez", "Anthony McPherson - Paulo Gonzalez"}
+           ]
          }}
         |> SeedingManager.call()
 
@@ -507,30 +506,29 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("21.1265625")
 
-      expected_details =
-        [
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Anthony McPherson",
-            points: Decimal.new("7.703125"),
-            total_points: Decimal.new("6.9328125"),
-            tournament_unique_name: "milwa_2017"
-          },
-          %{
-            multiplier: Decimal.new("0.5"),
-            direct_object: "Anthony McPherson",
-            points: Decimal.new("9.375"),
-            total_points: Decimal.new("4.6875"),
-            tournament_unique_name: "chicago_charities_2016"
-          },
-          %{
-            multiplier: Decimal.new("0.9"),
-            direct_object: "Anthony McPherson",
-            points: Decimal.new("10.5625"),
-            total_points: Decimal.new("9.50625"),
-            tournament_unique_name: "chicago_charities_2017"
-          }
-        ]
+      expected_details = [
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Anthony McPherson",
+          points: Decimal.new("7.703125"),
+          total_points: Decimal.new("6.9328125"),
+          tournament_unique_name: "milwa_2017"
+        },
+        %{
+          multiplier: Decimal.new("0.5"),
+          direct_object: "Anthony McPherson",
+          points: Decimal.new("9.375"),
+          total_points: Decimal.new("4.6875"),
+          tournament_unique_name: "chicago_charities_2016"
+        },
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Anthony McPherson",
+          points: Decimal.new("10.5625"),
+          total_points: Decimal.new("9.50625"),
+          tournament_unique_name: "chicago_charities_2017"
+        }
+      ]
 
       assert first_team_result.calculation_details == expected_details
     end
@@ -605,7 +603,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
     end
 
     test "kahler/grangeiro" do
-
     end
   end
 
