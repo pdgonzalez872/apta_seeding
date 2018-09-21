@@ -10,17 +10,16 @@ defmodule AptaSeeding.ETL.FutureTournament do
   require Logger
   alias AptaSeeding.ETL.DataDistributor
 
-  def call(%{eid: eid, tid: tid} = future_tournament_attrs) do
+  def call(%{eid: _eid, tid: _tid} = future_tournament_attrs) do
     future_tournament_attrs
     |> extract()
     |> transform()
   end
 
-  def extract(%{eid: eid, tid: tid} = future_tournament_attrs) do
-    html_body_response =
-      future_tournament_attrs
-      |> create_url()
-      |> make_request()
+  def extract(%{eid: _eid, tid: _tid} = future_tournament_attrs) do
+    future_tournament_attrs
+    |> create_url()
+    |> make_request()
   end
 
   def transform({:ok, html_response}) do
@@ -49,25 +48,6 @@ defmodule AptaSeeding.ETL.FutureTournament do
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
     end
-  end
-
-  @doc """
-  We put the html response in a structure so we can manipulate it from there.
-
-  I want to know:
-    - tournament_name
-    - tournament_start_date
-    - teams
-      - team_name
-      - player_1_name
-      - player_2_name
-  """
-  def create_future_tournament_structure(html_response) do
-    %{
-      tournament_name: "ha",
-      tournament_start_date: "2018/10/12",
-      teams: [%{team_name: "Paulo - Kels", player_1_name: "Paulo", player_2_name: "Kels"}]
-    }
   end
 
   def get_team_data(html_response) do

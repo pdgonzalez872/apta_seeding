@@ -4,32 +4,29 @@ defmodule AptaSeeding.ETL.DataDistributor do
 
   """
 
-  alias AptaSeeding.Data.{Tournament}
   alias AptaSeeding.Data
-  alias AptaSeeding.Repo
 
   def call(tournaments) do
-    results =
-      tournaments
-      |> Enum.map(fn tournament ->
-        results_structure =
-          tournament.raw_results_html
-          |> parse_tournament_results()
-          |> Enum.map(fn r ->
-            r
-            |> create_result_data_structure()
-            |> Map.put(
-              :tournament_name_and_date_unique_name,
-              tournament.name_and_date_unique_name
-            )
-          end)
+    tournaments
+    |> Enum.map(fn tournament ->
+      results_structure =
+        tournament.raw_results_html
+        |> parse_tournament_results()
+        |> Enum.map(fn r ->
+          r
+          |> create_result_data_structure()
+          |> Map.put(
+            :tournament_name_and_date_unique_name,
+            tournament.name_and_date_unique_name
+          )
+        end)
 
-        process_tournament_and_tournament_results(%{
-          tournament: tournament,
-          results_structure: results_structure,
-          tournament_should_be_processed: tournament.results_have_been_processed
-        })
-      end)
+      process_tournament_and_tournament_results(%{
+        tournament: tournament,
+        results_structure: results_structure,
+        tournament_should_be_processed: tournament.results_have_been_processed
+      })
+    end)
 
     :ok
   end
