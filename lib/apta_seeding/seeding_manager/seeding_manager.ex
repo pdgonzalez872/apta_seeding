@@ -101,6 +101,10 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(:seeding_criteria, seeding_criteria)
     |> Map.put(:team_points, team_results_details.total_points)
     |> Map.put(:total_seeding_points, team_results_details.total_points)
+    |> Map.put(
+      :calculation_details,
+      create_calculation_details([team_results_details], seeding_criteria)
+    )
   end
 
   def handle_seeding_criteria(

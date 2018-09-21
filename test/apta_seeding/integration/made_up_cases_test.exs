@@ -85,6 +85,33 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.seeding_criteria == "team has played 3 tournaments"
       assert first_team_result.team_points == Decimal.new("29.0")
       assert first_team_result.total_seeding_points == Decimal.new("29.0")
+
+      expected_details =
+             [
+              %{
+                direct_object: "Tyler Fraser - Paulo Gonzalez",
+                multiplier: Decimal.new("1.0"),
+                points: Decimal.new("16"),
+                total_points: Decimal.new("16.0"),
+                tournament_unique_name: "t4"
+              },
+              %{
+                direct_object: "Tyler Fraser - Paulo Gonzalez",
+                multiplier: Decimal.new("1.0"),
+                points: Decimal.new("9"),
+                total_points: Decimal.new("9.0"),
+                tournament_unique_name: "t3"
+              },
+              %{
+                direct_object: "Tyler Fraser - Paulo Gonzalez",
+                multiplier: Decimal.new("1.0"),
+                points: Decimal.new("4"),
+                total_points: Decimal.new("4.0"),
+                tournament_unique_name: "t2"
+              }
+            ]
+
+      assert first_team_result.calculation_details == expected_details
     end
 
     test "team has played 2 tournaments together and players have played with others" do
