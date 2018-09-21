@@ -274,10 +274,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
     end
 
     test "team has never played together" do
-      # This test case is interesting because we simulate not having a player
-      # in the db. A new one. This causes issues with not being able to tie
-      # the player to a team. This could be a problem. Good to add this test.
-
       p1 = %{name: "Tyler Fraser"} |> Data.create_player()
       p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
 
@@ -333,6 +329,82 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("2160.00")
+    end
+  end
+
+  describe "These test cases try to be real" do
+    test "Anthony McPhearson - this was a bug previously" do
+      p1 = %{name: "Anthony McPherson"} |> Data.create_player()
+      p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
+
+      # IndividualResult.create!(player_id: anthony.id, tournament_id: Tournament.create!(name: "Chicago Charities", full_name: "charities2017", date:  Date.new(2017, 11, 4)).id, points: 10.5625)
+
+      {:ok, tournament} =
+        %{
+          name: "Chicago Charities Men",
+          name_and_date_unique_name: "chicago_charities_2017",
+          date: ~D[2017-11-04],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+        |> Data.create_tournament()
+
+      %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("10.5625")}
+      |> Data.create_individual_result()
+
+      # IndividualResult.create!(player_id: anthony.id, tournament_id: Tournament.create!(name: "Test2", full_name: "milwaukee_2017", date: Date.new(2017, 10, 21)).id, points: 7.703125)
+
+      {:ok, tournament} =
+        %{
+          name: "Milwaukee Men",
+          name_and_date_unique_name: "milwa_2017",
+          date: ~D[2017-10-21],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+        |> Data.create_tournament()
+
+      %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("7.703125")}
+      |> Data.create_individual_result()
+
+      # IndividualResult.create!(player_id: anthony.id, tournament_id: Tournament.create!(name: "Chicago Charities", full_name: "charities_2016", date: Date.new(2016, 11, 5)).id, points: 9.375)
+
+      {:ok, tournament} =
+        %{
+          name: "Chicago Charities Men",
+          name_and_date_unique_name: "chicago_charities_2016",
+          date: ~D[2016-11-05],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+        |> Data.create_tournament()
+
+      %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("9.375")}
+      |> Data.create_individual_result()
+
+      {:ok, results} =
+        {:ok,
+         %{
+           tournament_name: "Dummy Tournament",
+           tournament_date: ~D[2018-12-24],
+           team_data: [{"Anthony McPherson", "Paulo Gonzalez", "Anthony McPherson - Paulo Gonzalez"}]
+         }}
+        |> SeedingManager.call()
+
+      first_team_result = Enum.at(results.team_data_objects, 0)
+
+      assert first_team_result.seeding_criteria ==
+               "team has not played together, 3 best individual"
+
+      assert first_team_result.team_points == Decimal.new("0")
+      assert first_team_result.total_seeding_points == Decimal.new("21.1265625")
+
+      # expect(result.first[:chosen_tournament_criteria]).to eq("team has not played, 3 best individual")
+      # expect(result.first[:team_points]).to eq 0.0
+      # expect(result.first[:player_1_points]).to eq 0.0
+      # expect(result.first[:player_2_points]).to eq 21.126562500000002
+      # expect(result.first[:total_seeding_points]).to eq 21.126562500000002
+
     end
   end
 
@@ -401,7 +473,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
     end
   end
 
-  # TODO: move this to SeedingManager
+  # TODO: delete this
   describe "get_tournament_multiplier/3" do
     test "Gets the correct multiplier - Current tournament" do
       create_charities_2017_2016()
@@ -423,12 +495,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         SeedingManager.get_tournament_multiplier(charities_2016, Data.list_tournaments(), :team)
 
       assert charities_2016_results.multiplier == Decimal.new("0.9")
-    end
-
-    test "Gets the correct multiplier - last season" do
-    end
-
-    test "Gets the correct multiplier - two seasons ago" do
     end
   end
 
