@@ -129,8 +129,10 @@ defmodule AptaSeeding.SeedingManager do
       ) do
     team_results_details = get_team_points(tdo, seeding_criteria)
 
+    individual_results_details = get_individual_points(tdo, seeding_criteria)
+
     individual_total_points =
-      get_individual_points(tdo, seeding_criteria)
+      individual_results_details
       |> Enum.reduce(Decimal.new("0"), fn el, acc ->
         Decimal.add(acc, el.total_points)
       end)
@@ -141,6 +143,10 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(
       :total_seeding_points,
       Decimal.add(team_results_details.total_points, individual_total_points)
+    )
+    |> Map.put(
+      :calculation_details,
+      create_calculation_details([team_results_details] ++ individual_results_details)
     )
   end
 
@@ -358,5 +364,25 @@ defmodule AptaSeeding.SeedingManager do
 
   def is_current_tournament(tournament, all_tournaments) do
     SeasonManager.is_current_tournament(tournament, all_tournaments)
+  end
+
+  #
+  # Calculation details
+  #
+
+  def create_calculation_details(results) do
+    results
+    |> Enum.map(fn r ->
+      [details] = r.details
+      create_details(details)
+    end)
+  end
+
+  def create_details(%{team: team} = attrs) do
+    attrs
+  end
+
+  def create_details(%{player: player} = attrs) do
+    attrs
   end
 end

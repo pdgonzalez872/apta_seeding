@@ -271,6 +271,32 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       assert first_team_result.team_points == Decimal.new("500.00")
       assert first_team_result.total_seeding_points == Decimal.new("1400.00")
+
+      expected_details =
+        [
+          %{
+            multiplier: Decimal.new("1.0"),
+            points: Decimal.new("500.0"),
+            team: "Tyler Fraser - Paulo Gonzalez",
+            total_points: Decimal.new("500.00"),
+            tournament_unique_name: "t1"
+          },
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Paulo Gonzalez",
+            points: Decimal.new("500.0"),
+            total_points: Decimal.new("450.00"),
+            tournament_unique_name: "t5"
+          },
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Tyler Fraser",
+            points: Decimal.new("500.0"),
+            total_points: Decimal.new("450.00"),
+            tournament_unique_name: "t5"
+          }
+        ]
+      assert first_team_result.calculation_details == expected_details
     end
 
     test "team has never played together" do
@@ -337,8 +363,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       p1 = %{name: "Anthony McPherson"} |> Data.create_player()
       p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
 
-      # IndividualResult.create!(player_id: anthony.id, tournament_id: Tournament.create!(name: "Chicago Charities", full_name: "charities2017", date:  Date.new(2017, 11, 4)).id, points: 10.5625)
-
       {:ok, tournament} =
         %{
           name: "Chicago Charities Men",
@@ -352,8 +376,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("10.5625")}
       |> Data.create_individual_result()
 
-      # IndividualResult.create!(player_id: anthony.id, tournament_id: Tournament.create!(name: "Test2", full_name: "milwaukee_2017", date: Date.new(2017, 10, 21)).id, points: 7.703125)
-
       {:ok, tournament} =
         %{
           name: "Milwaukee Men",
@@ -366,8 +388,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("7.703125")}
       |> Data.create_individual_result()
-
-      # IndividualResult.create!(player_id: anthony.id, tournament_id: Tournament.create!(name: "Chicago Charities", full_name: "charities_2016", date: Date.new(2016, 11, 5)).id, points: 9.375)
 
       {:ok, tournament} =
         %{
@@ -398,12 +418,78 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("21.1265625")
+    end
 
-      # expect(result.first[:chosen_tournament_criteria]).to eq("team has not played, 3 best individual")
-      # expect(result.first[:team_points]).to eq 0.0
-      # expect(result.first[:player_1_points]).to eq 0.0
-      # expect(result.first[:player_2_points]).to eq 21.126562500000002
-      # expect(result.first[:total_seeding_points]).to eq 21.126562500000002
+    test "" do
+      # # This is what has to happen:
+      # #
+      # # Jeff McMaster - Tom Wiese, criteria: team has played 1 tournament, 2 best individual
+      # #   Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25
+      # #   Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125
+      # #   Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875
+      # #   Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25
+      # #   Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25
+
+      # jm = Player.create!(name: "Jeff McMaster")
+      # tw = Player.create!(name: "Tom Wiese")
+      # team = Team.create!(combined_name: "Jeff McMaster - Tom Wiese")
+
+      # # They play a tournament together
+      # #   Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25
+      # #   Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25
+      # west_penn_2015 = Tournament.create!(name: "West Penn Men",
+      #                                     full_name: "12/05/15 West Penn Men",
+      #                                     date: Date.new(2015, 12, 5))
+      # west_penn_2015_points = 40.5
+      # TeamResult.create!(team_id: team.id, tournament_id: west_penn_2015.id, points: west_penn_2015_points)
+      # IndividualResult.create!(player_id: jm.id, tournament_id: west_penn_2015.id, points: west_penn_2015_points / 2.0)
+      # IndividualResult.create!(player_id: tw.id, tournament_id: west_penn_2015.id, points: west_penn_2015_points / 2.0)
+
+      # # They play a tournament together, Cleveland 2015
+      # #   Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125
+      # #   Note that despite playing, this won't count for Tom Wiese
+      # cleveland_2015 = Tournament.create!(name: "Cleveland Masters Men",
+      #                                     full_name: "11/14/15 Cleveland Masters Men",
+      #                                     date: Date.new(2015, 11, 14))
+      # cleveland_2015_points = 38.25
+      # TeamResult.create!(team_id: team.id, tournament_id: cleveland_2015.id, points: cleveland_2015_points)
+      # IndividualResult.create!(player_id: jm.id, tournament_id: cleveland_2015.id, points: cleveland_2015_points / 2.0)
+      # IndividualResult.create!(player_id: tw.id, tournament_id: cleveland_2015.id, points: cleveland_2015_points / 2.0)
+
+      # # Cleveland 2016 happens, they don't play in it
+      # cleveland_2016 = Tournament.create!(name: "Cleveland Masters Men",
+      #                                     full_name: "11/14/16 Cleveland Masters Men",
+      #                                     date: Date.new(2016, 11, 14))
+
+      # #   Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875
+      # steel_2017 = Tournament.create!(name: "Steel City Open Men",
+      #                                  full_name: "10/14/17 Steel City Open Men",
+      #                                  date: Date.new(2017, 10, 14))
+      # IndividualResult.create!(player_id: tw.id, tournament_id: steel_2017.id, points: 12.1875)
+
+      # #   Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25
+      # cleveland_2017 = Tournament.create!(name: "Cleveland Masters Men",
+      #                                     full_name: "11/11/17 Cleveland Masters Men",
+      #                                     date: Date.new(2017, 11, 11))
+      # IndividualResult.create!(player_id: tw.id, tournament_id: cleveland_2017.id, points: 5.25)
+
+      # # May need to create more  data to mimic prod
+
+      # # We should be at the correct state now
+      # seed_manager = described_class.new(combined_names_input: ["Jeff McMaster - Tom Wiese"],
+      #                                    tournament_object: Tournament.new(name: "West Penn", date: Date.new(2017, 11, 30)))
+      # result = seed_manager.calculate_seeds_for_tournament
+
+      # calculation_details = ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
+      #                        "Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125",
+      #                        "Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875",
+      #                        "Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25",
+      #                        "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
+
+      # expect(result.first[:calculation_details]).to eq calculation_details
+    end
+
+    test "kahler/grangeiro" do
 
     end
   end
