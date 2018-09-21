@@ -128,7 +128,8 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       # Paulo plays another tournament with Kasey
 
-       {:ok, tournament} = %{
+      {:ok, tournament} =
+        %{
           name: "t5",
           name_and_date_unique_name: "t5",
           date: ~D[2018-09-20],
@@ -150,7 +151,10 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> SeedingManager.call()
 
       first_team_result = Enum.at(results.team_data_objects, 0)
-      assert first_team_result.seeding_criteria == "team has played 2 tournaments, 1 best individual"
+
+      assert first_team_result.seeding_criteria ==
+               "team has played 2 tournaments, 1 best individual"
+
       assert first_team_result.team_points == Decimal.new("5.0")
       assert first_team_result.total_seeding_points == Decimal.new("455.00")
     end
@@ -204,7 +208,10 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> SeedingManager.call()
 
       first_team_result = Enum.at(results.team_data_objects, 0)
-      assert first_team_result.seeding_criteria == "team has played 2 tournaments, 1 best individual"
+
+      assert first_team_result.seeding_criteria ==
+               "team has played 2 tournaments, 1 best individual"
+
       assert first_team_result.team_points == Decimal.new("5.0")
       assert first_team_result.total_seeding_points == Decimal.new("5.0")
     end
@@ -217,20 +224,22 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         %{name: "Tyler Fraser - Paulo Gonzalez", player_1_id: p1.id, player_2_id: p2.id}
         |> Data.create_team()
 
-      {:ok, tournament} = %{
-        name: "t1",
-        name_and_date_unique_name: "t1",
-        date: ~D[2018-11-20],
-        results_have_been_processed: true,
-        raw_results_html: "html"
-      }
-      |> Data.create_tournament()
+      {:ok, tournament} =
+        %{
+          name: "t1",
+          name_and_date_unique_name: "t1",
+          date: ~D[2018-11-20],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+        |> Data.create_tournament()
 
-       %{team_id: team.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
-       |> Data.create_team_result()
+      %{team_id: team.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
+      |> Data.create_team_result()
 
       # Paulo plays another tournament with Kasey
-       {:ok, tournament} = %{
+      {:ok, tournament} =
+        %{
           name: "t5",
           name_and_date_unique_name: "t5",
           date: ~D[2018-09-20],
@@ -246,7 +255,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
       |> Data.create_individual_result()
 
-
       {:ok, results} =
         {:ok,
          %{
@@ -257,7 +265,10 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> SeedingManager.call()
 
       first_team_result = Enum.at(results.team_data_objects, 0)
-      assert first_team_result.seeding_criteria == "team has played 1 tournament, 2 best individual"
+
+      assert first_team_result.seeding_criteria ==
+               "team has played 1 tournament, 2 best individual"
+
       assert first_team_result.team_points == Decimal.new("500.00")
       assert first_team_result.total_seeding_points == Decimal.new("1400.00")
     end
@@ -271,7 +282,8 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
 
       # Paulo plays another tournament with Kasey
-       {:ok, tournament} = %{
+      {:ok, tournament} =
+        %{
           name: "t5",
           name_and_date_unique_name: "t5",
           date: ~D[2018-09-20],
@@ -288,7 +300,8 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       |> Data.create_individual_result()
 
       # Paulo plays another tournament with Kasey
-       {:ok, tournament} = %{
+      {:ok, tournament} =
+        %{
           name: "t6",
           name_and_date_unique_name: "t6",
           date: ~D[2018-10-20],
@@ -314,7 +327,10 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> SeedingManager.call()
 
       first_team_result = Enum.at(results.team_data_objects, 0)
-      assert first_team_result.seeding_criteria == "team has not played together, 3 best individual"
+
+      assert first_team_result.seeding_criteria ==
+               "team has not played together, 3 best individual"
+
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("2160.00")
     end
