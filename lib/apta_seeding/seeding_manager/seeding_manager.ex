@@ -42,6 +42,7 @@ defmodule AptaSeeding.SeedingManager do
 
   alias AptaSeeding.Data
   alias AptaSeeding.SeedingManager.SeasonManager
+  alias AptaSeeding.SeedingReporter
 
   def call({:ok, state}) do
     {:ok, state}
@@ -269,11 +270,16 @@ defmodule AptaSeeding.SeedingManager do
 
     [player_1_results, player_2_results]
     |> Enum.sort_by(fn r -> r.total_points end)
-    |> Enum.reverse()
+    #|> Enum.reverse()
+    # Maybe don't need to take it again,
+    # the get_highest_individual_results_for_player already `takes`
     |> Enum.take(tournaments_to_take)
   end
 
   def get_highest_individual_results_for_player(player, tournaments_to_take) do
+
+    # We are not sorting by most points...
+
     team_results_objects =
       player.individual_results
       |> Enum.sort_by(fn tr ->
@@ -288,8 +294,6 @@ defmodule AptaSeeding.SeedingManager do
         |> Data.preload_tournament()
         |> Data.preload_player()
       end)
-      |> Enum.reverse()
-      |> Enum.take(tournaments_to_take)
       |> Enum.map(fn tr ->
         target_tournaments =
           Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
@@ -304,6 +308,9 @@ defmodule AptaSeeding.SeedingManager do
           total_points: Decimal.mult(result.multiplier, tr.points)
         }
       end)
+      |> Enum.sort(&(Decimal.cmp(&1.total_points, &2.total_points) != :gt))
+      |> Enum.reverse()
+      |> Enum.take(tournaments_to_take)
 
     total_points =
       team_results_objects

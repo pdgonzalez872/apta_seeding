@@ -3,6 +3,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
   alias AptaSeeding.SeedingManager.SeasonManager
   alias AptaSeeding.SeedingManager
+  alias AptaSeeding.SeedingReporter
   alias AptaSeeding.Data
   alias AptaSeeding.Data.{Tournament, IndividualResult, TeamResult, Player, Team}
   alias AptaSeeding.Repo
@@ -644,7 +645,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       #                        "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
     end
 
-    @tag :awesome
     test "kahler/grangeiro - this is a great test" do
       # # This is what we observed:
       # #
@@ -873,6 +873,32 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           tournament_unique_name: "10/14/17 Steel City Open Men"
         },
       ]
+
+      f = first_team_result.calculation_details
+      e = expected_details
+      mg_report = SeedingReporter.call(mg.name)
+      sk_report = SeedingReporter.call(sk.name)
+
+      # write to file
+
+      {:ok, file} =
+        [
+          System.cwd(),
+          "mg.html"
+        ]
+        |> Path.join()
+        |> File.open([:write])
+
+      IO.binwrite file, mg_report
+
+      {:ok, file} =
+        [
+          System.cwd(),
+          "sk.html"
+        ]
+        |> Path.join()
+        |> File.open([:write])
+      IO.binwrite file, sk_report
 
       assert first_team_result.calculation_details == expected_details
 
