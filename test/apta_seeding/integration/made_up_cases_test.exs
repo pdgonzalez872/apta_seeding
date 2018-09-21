@@ -82,7 +82,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> SeedingManager.call()
 
       first_team_result = Enum.at(results.team_data_objects, 0)
-      assert first_team_result.seeding_criteria == "team has played 3 tournaments"
+      assert first_team_result.seeding_criteria == :team_has_played_3_tournaments
       assert first_team_result.team_points == Decimal.new("29.0")
       assert first_team_result.total_seeding_points == Decimal.new("29.0")
 
@@ -533,6 +533,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.calculation_details == expected_details
     end
 
+    @tag :awesome
     test "Jeff McMaster - Tom Wiese - this was an edge case we found as well" do
       jm = %{name: "Jeff McMaster"} |> Data.create_player()
       tw = %{name: "Tom Wiese"} |> Data.create_player()
@@ -643,6 +644,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       #                        "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
     end
 
+    @tag :awesome
     test "kahler/grangeiro - this is a great test" do
       # # This is what we observed:
       # #
@@ -669,10 +671,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       # sound_shore_2016 = Tournament.create!(name: "Sound Shore Men",
       #                                       full_name: "11/19/16 Sound Shore Men",
       #                                       date: Date.new(2016, 11, 19))
-      # sound_shore_2016_points = 56.25
-      # TeamResult.create!(team_id: team.id, tournament_id: sound_shore_2016.id, points: sound_shore_2016_points)
-      # IndividualResult.create!(player_id: sk.id, tournament_id: sound_shore_2016.id, points: sound_shore_2016_points / 2.0)
-      # IndividualResult.create!(player_id: mg.id, tournament_id: sound_shore_2016.id, points: sound_shore_2016_points / 2.0)
 
       # # They play a tournament together 1 season ago, Sound Shore
       {:ok, tournament} =
@@ -709,11 +707,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       %{player_id: sk.id, tournament_id: tournament.id, points: Decimal.new("36")}
       |> Data.create_individual_result()
-
-      # cinci_2017 = Tournament.create!(name: "Midwesterns Men",
-      #                                  full_name: "01/14/17 Midwesterns Men",
-      #                                  date: Date.new(2017, 1, 14))
-      # IndividualResult.create!(player_id: sk.id, tournament_id: cinci_2017.id, points: 34.875)
 
       # #SK plays Midwesterns
       # #   Scott Kahler, 01/14/17 Midwesterns Men, 0.9, 34.875
@@ -817,9 +810,6 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> Data.create_tournament()
 
       # # We should be at the correct state now
-      # seed_manager = described_class.new(combined_names_input: ["Marco Grangeiro - Scott Kahler"],
-      #                                    tournament_object: Tournament.new(name: "Cinci 2018", date: Date.new(2018, 1, 13)))
-      # result = seed_manager.calculate_seeds_for_tournament
 
       {:ok, results} =
         {:ok,
@@ -832,9 +822,57 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       first_team_result = Enum.at(results.team_data_objects, 0)
 
-      expected_details =
-        ~S[The rule is: have you played 3 together THIS SEASON. If not, go fishing for individual results. This is how you can
-        I'm just trying to get as many team results as possible. I must filter for the given season]
+      expected_details = [
+
+      # ["Marco Grangeiro, 11/04/17 Chicago Charities Men, 0.9, 34.125",
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Marco Grangeiro",
+          points: Decimal.new("34.125"),
+          total_points: Decimal.new("34.125"),
+          tournament_unique_name: "11/04/17 Chicago Charities Men"
+        },
+      #  "Marco Grangeiro, 12/02/17 Duane L. Hayden Invitational Men, 0.9, 33.75",
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Marco Grangeiro",
+          points: Decimal.new("33.75"),
+          total_points: Decimal.new("33.75"),
+          tournament_unique_name: "12/02/17 Duane L. Hayden Invitational Men"
+        },
+      #  "Marco Grangeiro, 11/18/17 Sound Shore Men, 0.9, 30.1875",
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Marco Grangeiro",
+          points: Decimal.new("30.1875"),
+          total_points: Decimal.new("30.1875"),
+          tournament_unique_name: "11/18/17 Sound Shore Men"
+        },
+      #  "Scott Kahler, 01/28/17 Boston Open Men, 0.9, 36.0",
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Scott Kahler",
+          points: Decimal.new("36.0"),
+          total_points: Decimal.new("36.0"),
+          tournament_unique_name: "01/28/17 Boston Open Men"
+        },
+      #  "Scott Kahler, 01/14/17 Midwesterns Men, 0.9, 34.875",
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Scott Kahler",
+          points: Decimal.new("34.875"),
+          total_points: Decimal.new("34.875"),
+          tournament_unique_name: "01/14/17 Midwesterns Men"
+        },
+      #  "Scott Kahler, 10/14/17 Steel City Open Men, 0.9, 33.75"]
+        %{
+          multiplier: Decimal.new("0.9"),
+          direct_object: "Scott Kahler",
+          points: Decimal.new("33.75"),
+          total_points: Decimal.new("33.75"),
+          tournament_unique_name: "10/14/17 Steel City Open Men"
+        },
+      ]
 
       assert first_team_result.calculation_details == expected_details
 

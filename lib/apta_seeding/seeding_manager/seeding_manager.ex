@@ -96,7 +96,7 @@ defmodule AptaSeeding.SeedingManager do
     {:ok, state}
   end
 
-  def handle_seeding_criteria(tdo, "team has played 3 tournaments" = seeding_criteria) do
+  def handle_seeding_criteria(tdo, :team_has_played_3_tournaments = seeding_criteria) do
     team_results_details = get_team_points(tdo, seeding_criteria)
 
     tdo
@@ -201,7 +201,7 @@ defmodule AptaSeeding.SeedingManager do
 
     cond do
       team_result_count >= 3 ->
-        "team has played 3 tournaments"
+        :team_has_played_3_tournaments
 
       team_result_count == 2 ->
         "team has played 2 tournaments, 1 best individual"
@@ -341,7 +341,7 @@ defmodule AptaSeeding.SeedingManager do
     %{total_points: total_points, details: team_results_objects}
   end
 
-  def get_team_points(team_data_object, "team has played 3 tournaments" = seeding_criteria) do
+  def get_team_points(team_data_object, :team_has_played_3_tournaments = seeding_criteria) do
     get_team_points(team_data_object, seeding_criteria, 3)
   end
 
