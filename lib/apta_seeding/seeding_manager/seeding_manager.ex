@@ -41,14 +41,7 @@ defmodule AptaSeeding.SeedingManager do
   alias AptaSeeding.Data
   alias AptaSeeding.SeedingManager.SeasonManager
 
-  def call(
-        {:ok,
-         %{
-           team_data: team_data,
-           tournament_name: tournament_name,
-           tournament_date: tournament_date
-         } = state}
-      ) do
+  def call({:ok, state}) do
     {:ok, state}
     |> get_players_and_teams()
     |> analyse_each_team()
@@ -352,7 +345,7 @@ defmodule AptaSeeding.SeedingManager do
   def get_tournament_multiplier(tournament, all_tournaments, type) do
     {t, multiplier} =
       create_tournament_multiplier_matrix(tournament, all_tournaments, type)
-      |> Enum.find(fn {t, multiplier} ->
+      |> Enum.find(fn {t, _multiplier} ->
         t.name_and_date_unique_name == tournament.name_and_date_unique_name
       end)
 

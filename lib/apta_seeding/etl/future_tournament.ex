@@ -10,13 +10,13 @@ defmodule AptaSeeding.ETL.FutureTournament do
   require Logger
   alias AptaSeeding.ETL.DataDistributor
 
-  def call(%{eid: _eid, tid: _tid} = future_tournament_attrs) do
+  def call(future_tournament_attrs) do
     future_tournament_attrs
     |> extract()
     |> transform()
   end
 
-  def extract(%{eid: _eid, tid: _tid} = future_tournament_attrs) do
+  def extract(future_tournament_attrs) do
     future_tournament_attrs
     |> create_url()
     |> make_request()
