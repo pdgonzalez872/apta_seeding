@@ -71,7 +71,7 @@ defmodule AptaSeeding.SeedingManager do
           |> Data.preload_results()
 
         team =
-          team_name
+          %{team_name: team_name, player_1_id: p1.id, player_2_id: p2.id}
           |> Data.find_or_create_team()
           |> Data.preload_results()
 

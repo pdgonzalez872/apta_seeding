@@ -171,10 +171,10 @@ defmodule AptaSeeding.Data do
 
     cond do
       Enum.count(result) == 0 ->
-        create_team(%{name: team_name, player_1_id: player_1_id, player_2_id: player_2_id})
+        {:ok, create_team(%{name: team_name, player_1_id: player_1_id, player_2_id: player_2_id})}
 
       true ->
-        get_team!(Enum.at(result, 0))
+        {:ok, get_team!(Enum.at(result, 0))}
     end
   end
 

@@ -260,15 +260,64 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.seeding_criteria == "team has played 1 tournament, 2 best individual"
       assert first_team_result.team_points == Decimal.new("500.00")
       assert first_team_result.total_seeding_points == Decimal.new("1400.00")
-
-      # expect(result.first[:chosen_tournament_criteria]).to eq("team has played 1 tournament, 2 best individual")
-      # expect(result.first[:team_points]).to eq 500.0
-      # expect(result.first[:player_1_points]).to eq 450.0
-      # expect(result.first[:player_2_points]).to eq 450.0
-      # expect(result.first[:total_seeding_points]).to eq 1400.0
-      # expect(result.first[:team_name]).to eq "Tyler Fraser - Paulo Gonzalez"
     end
 
+    test "team has never played together" do
+      # This test case is interesting because we simulate not having a player
+      # in the db. A new one. This causes issues with not being able to tie
+      # the player to a team. This could be a problem. Good to add this test.
+
+      p1 = %{name: "Tyler Fraser"} |> Data.create_player()
+      p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
+
+      # Paulo plays another tournament with Kasey
+       {:ok, tournament} = %{
+          name: "t5",
+          name_and_date_unique_name: "t5",
+          date: ~D[2018-09-20],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+        |> Data.create_tournament()
+
+      %{player_id: p2.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
+      |> Data.create_individual_result()
+
+      # Tyler with Butler
+      %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("500.0")}
+      |> Data.create_individual_result()
+
+      # Paulo plays another tournament with Kasey
+       {:ok, tournament} = %{
+          name: "t6",
+          name_and_date_unique_name: "t6",
+          date: ~D[2018-10-20],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+        |> Data.create_tournament()
+
+      %{player_id: p2.id, tournament_id: tournament.id, points: Decimal.new("700.0")}
+      |> Data.create_individual_result()
+
+      # Tyler with Butler
+      %{player_id: p1.id, tournament_id: tournament.id, points: Decimal.new("700.0")}
+      |> Data.create_individual_result()
+
+      {:ok, results} =
+        {:ok,
+         %{
+           tournament_name: "Dummy Tournament",
+           tournament_date: ~D[2018-12-24],
+           team_data: [{"Tyler Fraser", "Paulo Gonzalez", "Tyler Fraser - Paulo Gonzalez"}]
+         }}
+        |> SeedingManager.call()
+
+      first_team_result = Enum.at(results.team_data_objects, 0)
+      assert first_team_result.seeding_criteria == "team has not played together, 3 best individual"
+      assert first_team_result.team_points == Decimal.new("500.00")
+      assert first_team_result.total_seeding_points == Decimal.new("1400.00")
+    end
   end
 
   # TODO: Deprecate
