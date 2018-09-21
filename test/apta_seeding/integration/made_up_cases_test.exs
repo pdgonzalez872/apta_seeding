@@ -829,7 +829,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           multiplier: Decimal.new("0.9"),
           direct_object: "Marco Grangeiro",
           points: Decimal.new("34.125"),
-          total_points: Decimal.new("34.125"),
+          total_points: Decimal.new("30.7125"),
           tournament_unique_name: "11/04/17 Chicago Charities Men"
         },
       #  "Marco Grangeiro, 12/02/17 Duane L. Hayden Invitational Men, 0.9, 33.75",
@@ -837,7 +837,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           multiplier: Decimal.new("0.9"),
           direct_object: "Marco Grangeiro",
           points: Decimal.new("33.75"),
-          total_points: Decimal.new("33.75"),
+          total_points: Decimal.new("30.375"),
           tournament_unique_name: "12/02/17 Duane L. Hayden Invitational Men"
         },
       #  "Marco Grangeiro, 11/18/17 Sound Shore Men, 0.9, 30.1875",
@@ -845,15 +845,15 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           multiplier: Decimal.new("0.9"),
           direct_object: "Marco Grangeiro",
           points: Decimal.new("30.1875"),
-          total_points: Decimal.new("30.1875"),
+          total_points: Decimal.new("27.16875"),
           tournament_unique_name: "11/18/17 Sound Shore Men"
         },
       #  "Scott Kahler, 01/28/17 Boston Open Men, 0.9, 36.0",
         %{
           multiplier: Decimal.new("0.9"),
           direct_object: "Scott Kahler",
-          points: Decimal.new("36.0"),
-          total_points: Decimal.new("36.0"),
+          points: Decimal.new("36"),
+          total_points: Decimal.new("32.4"),
           tournament_unique_name: "01/28/17 Boston Open Men"
         },
       #  "Scott Kahler, 01/14/17 Midwesterns Men, 0.9, 34.875",
@@ -861,7 +861,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           multiplier: Decimal.new("0.9"),
           direct_object: "Scott Kahler",
           points: Decimal.new("34.875"),
-          total_points: Decimal.new("34.875"),
+          total_points: Decimal.new("31.3875"),
           tournament_unique_name: "01/14/17 Midwesterns Men"
         },
       #  "Scott Kahler, 10/14/17 Steel City Open Men, 0.9, 33.75"]
@@ -869,38 +869,15 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           multiplier: Decimal.new("0.9"),
           direct_object: "Scott Kahler",
           points: Decimal.new("33.75"),
-          total_points: Decimal.new("33.75"),
+          total_points: Decimal.new("30.375"),
           tournament_unique_name: "10/14/17 Steel City Open Men"
         },
       ]
 
-      f = first_team_result.calculation_details
-      e = expected_details
-      mg_report = SeedingReporter.call(mg.name)
-      sk_report = SeedingReporter.call(sk.name)
+      sorted_results = Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
+      sorted_expected = Enum.sort_by(expected_details, fn r -> r.tournament_unique_name end)
 
-      # write to file
-
-      {:ok, file} =
-        [
-          System.cwd(),
-          "mg.html"
-        ]
-        |> Path.join()
-        |> File.open([:write])
-
-      IO.binwrite file, mg_report
-
-      {:ok, file} =
-        [
-          System.cwd(),
-          "sk.html"
-        ]
-        |> Path.join()
-        |> File.open([:write])
-      IO.binwrite file, sk_report
-
-      assert first_team_result.calculation_details == expected_details
+      assert sorted_results == sorted_expected
 
       # calculation_details = ["Marco Grangeiro, 11/04/17 Chicago Charities Men, 0.9, 34.125",
       #                        "Marco Grangeiro, 12/02/17 Duane L. Hayden Invitational Men, 0.9, 33.75",
