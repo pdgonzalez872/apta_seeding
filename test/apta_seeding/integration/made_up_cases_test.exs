@@ -403,7 +403,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       first_team_result = Enum.at(results.team_data_objects, 0)
 
       assert first_team_result.seeding_criteria ==
-               "team has not played together, 3 best individual"
+               :team_has_not_played_together_3_best_individual
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("2160.00")
@@ -501,7 +501,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       first_team_result = Enum.at(results.team_data_objects, 0)
 
       assert first_team_result.seeding_criteria ==
-               "team has not played together, 3 best individual"
+               :team_has_not_played_together_3_best_individual
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("21.1265625")

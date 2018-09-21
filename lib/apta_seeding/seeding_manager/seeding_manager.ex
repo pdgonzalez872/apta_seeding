@@ -174,7 +174,7 @@ defmodule AptaSeeding.SeedingManager do
 
   def handle_seeding_criteria(
         tdo,
-        "team has not played together, 3 best individual" = seeding_criteria
+        :team_has_not_played_together_3_best_individual = seeding_criteria
       ) do
     individual_results_details = get_individual_points(tdo, seeding_criteria)
 
@@ -210,7 +210,7 @@ defmodule AptaSeeding.SeedingManager do
         :team_has_played_1_tournament_2_best_individual
 
       team_result_count == 0 ->
-        "team has not played together, 3 best individual"
+        :team_has_not_played_together_3_best_individual
 
       true ->
         raise "Error in seeding criteria for #{team.name}"
@@ -238,7 +238,7 @@ defmodule AptaSeeding.SeedingManager do
 
   def get_individual_points(
         team_data_object,
-        "team has not played together, 3 best individual" = seeding_criteria
+        :team_has_not_played_together_3_best_individual = seeding_criteria
       ) do
     get_individual_points(team_data_object, seeding_criteria, 3)
   end
