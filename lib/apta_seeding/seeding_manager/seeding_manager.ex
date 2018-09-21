@@ -84,7 +84,7 @@ defmodule AptaSeeding.SeedingManager do
     team_data_objects =
       state.team_data_objects
       |> Enum.map(fn tdo ->
-        seeding_criteria = get_seeding_criteria(tdo.team)
+        seeding_criteria = get_seeding_criteria(tdo)
 
         handle_seeding_criteria(tdo, seeding_criteria)
       end)
@@ -196,8 +196,21 @@ defmodule AptaSeeding.SeedingManager do
 
   @doc """
   """
-  def get_seeding_criteria(team) do
-    team_result_count = Enum.count(team.team_results)
+  def get_seeding_criteria(state) do
+    # this has to be a little more intelligent.
+    # the tournaments must all be "current"
+    #   go through the momst recent team results
+    #
+
+    #team_result_count = 0
+     team_result_count = Enum.count(state.team.team_results)
+
+    tournaments_played_this_season_aka_current_tournaments =
+      state.team.team_results
+      |> Enum.map(fn tr ->
+        # check if this tournament is a current one.
+        #require IEx; IEx.pry
+      end)
 
     cond do
       team_result_count >= 3 ->
@@ -213,7 +226,7 @@ defmodule AptaSeeding.SeedingManager do
         :team_has_not_played_together_3_best_individual
 
       true ->
-        raise "Error in seeding criteria for #{team.name}"
+        raise "Error in seeding criteria for #{state.team.name}"
     end
   end
 
