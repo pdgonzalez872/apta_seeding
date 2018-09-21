@@ -531,10 +531,12 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         }
       ]
 
-      assert first_team_result.calculation_details == expected_details
+      sorted_results = Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
+      sorted_expected = Enum.sort_by(expected_details, fn r -> r.tournament_unique_name end)
+
+      assert sorted_results == sorted_expected
     end
 
-    @tag :awesome
     test "Jeff McMaster - Tom Wiese - this was an edge case we found as well" do
       jm = %{name: "Jeff McMaster"} |> Data.create_player()
       tw = %{name: "Tom Wiese"} |> Data.create_player()
@@ -632,8 +634,42 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       first_team_result = Enum.at(results.team_data_objects, 0)
 
       expected_details =
-        ~S[The rule is: have you played 3 together THIS SEASON. If not, go fishing for individual results. This is how you can
-        I'm just trying to get as many team results as possible. I must filter for the given season]
+              [%{
+                direct_object: "Jeff McMaster - Tom Wiese",
+                multiplier: Decimal.new("0.5"),
+                points: Decimal.new("38.25"),
+                total_points: Decimal.new("19.125"),
+                tournament_unique_name: "11/14/15 Cleveland Masters Men"
+              },
+              %{
+                direct_object: "Tom Wiese",
+                multiplier: Decimal.new("0.9"),
+                points: Decimal.new("20.25"),
+                total_points: Decimal.new("18.225"),
+                tournament_unique_name: "12/05/15 West Penn Men"
+              },
+              %{
+                direct_object: "Tom Wiese",
+                multiplier: Decimal.new("0.9"),
+                points: Decimal.new("12.1875"),
+                total_points: Decimal.new("10.96875"),
+                tournament_unique_name: "10/14/17 Steel City Open Men"
+              },
+              %{
+                direct_object: "Jeff McMaster",
+                multiplier: Decimal.new("0.9"),
+                points: Decimal.new("20.25"),
+                total_points: Decimal.new("18.225"),
+                tournament_unique_name: "12/05/15 West Penn Men"
+              },
+              %{
+                direct_object: "Jeff McMaster",
+                multiplier: Decimal.new("0.3"),
+                points: Decimal.new("19.125"),
+                total_points: Decimal.new("5.7375"),
+                tournament_unique_name: "11/14/15 Cleveland Masters Men"
+              }
+            ]
 
       assert first_team_result.calculation_details == expected_details
 
