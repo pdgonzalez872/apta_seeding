@@ -110,7 +110,7 @@ defmodule AptaSeeding.DataTest do
     test "finds or creates teams properly" do
       pre_team_count = Data.list_teams() |> Enum.count()
 
-      cant_find_a_team_that_does_not_exist_so_it_will_create =
+      {:ok, cant_find_a_team_that_does_not_exist_so_it_will_create} =
         Data.find_or_create_team(%{team_name: "Butler - Kasey", player_1_id: 1, player_2_id: 2})
 
       post_team_create = Data.list_teams() |> Enum.count()

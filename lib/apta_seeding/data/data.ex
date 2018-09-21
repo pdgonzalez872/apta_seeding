@@ -253,7 +253,7 @@ defmodule AptaSeeding.Data do
       {:ok, player_1} = find_or_create_player(r.player_1_name)
       {:ok, player_2} = find_or_create_player(r.player_2_name)
 
-      team =
+      {:ok, team} =
         find_or_create_team(%{
           team_name: r.team_name,
           player_1_id: player_1.id,
