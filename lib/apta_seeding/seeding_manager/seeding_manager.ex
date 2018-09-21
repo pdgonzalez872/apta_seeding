@@ -391,29 +391,7 @@ defmodule AptaSeeding.SeedingManager do
   # Calculation details
   #
 
-  def create_calculation_details(results, "team has played 3 tournaments") do
-    results
-    |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
-    |> Enum.map(fn r -> create_details(r) end)
-  end
-
-  def create_calculation_details(results, "team has played 2 tournaments, 1 best individual") do
-    results
-    |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
-    |> Enum.map(fn r -> create_details(r) end)
-  end
-
-  # TODO remove
-  # These became the same. nice.
-  def create_calculation_details(results, "team has played 1 tournament, 2 best individual") do
-    results
-    |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
-    |> Enum.map(fn r -> create_details(r) end)
-  end
-
-  # TODO remove
-  # These became the same. nice.
-  def create_calculation_details(results, "team has not played together, 3 best individual") do
+  def create_calculation_details(results, _seeding_criteria) do
     results
     |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
     |> Enum.map(fn r -> create_details(r) end)
