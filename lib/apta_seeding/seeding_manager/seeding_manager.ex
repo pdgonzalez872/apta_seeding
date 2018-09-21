@@ -111,7 +111,7 @@ defmodule AptaSeeding.SeedingManager do
 
   def handle_seeding_criteria(
         tdo,
-        "team has played 2 tournaments, 1 best individual" = seeding_criteria
+        :team_has_played_2_tournaments_1_best_individual = seeding_criteria
       ) do
     team_results_details = get_team_points(tdo, seeding_criteria)
 
@@ -204,7 +204,7 @@ defmodule AptaSeeding.SeedingManager do
         :team_has_played_3_tournaments
 
       team_result_count == 2 ->
-        "team has played 2 tournaments, 1 best individual"
+        :team_has_played_2_tournaments_1_best_individual
 
       team_result_count == 1 ->
         "team has played 1 tournament, 2 best individual"
@@ -224,7 +224,7 @@ defmodule AptaSeeding.SeedingManager do
   # TODO seeding_criteria is not used in any of the delegators below
   def get_individual_points(
         team_data_object,
-        "team has played 2 tournaments, 1 best individual" = seeding_criteria
+        :team_has_played_2_tournaments_1_best_individual = seeding_criteria
       ) do
     get_individual_points(team_data_object, seeding_criteria, 1)
   end
@@ -347,7 +347,7 @@ defmodule AptaSeeding.SeedingManager do
 
   def get_team_points(
         team_data_object,
-        "team has played 2 tournaments, 1 best individual" = seeding_criteria
+        :team_has_played_2_tournaments_1_best_individual = seeding_criteria
       ) do
     get_team_points(team_data_object, seeding_criteria, 2)
   end
