@@ -393,9 +393,13 @@ defmodule AptaSeeding.SeedingManager do
 
   def create_details(%{team: team} = attrs) do
     attrs
+    |> Map.delete(:team)
+    |> Map.put(:direct_object, team)
   end
 
   def create_details(%{player: player} = attrs) do
     attrs
+    |> Map.delete(:player)
+    |> Map.put(:direct_object, player)
   end
 end

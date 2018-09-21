@@ -277,20 +277,20 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           %{
             multiplier: Decimal.new("1.0"),
             points: Decimal.new("500.0"),
-            team: "Tyler Fraser - Paulo Gonzalez",
+            direct_object: "Tyler Fraser - Paulo Gonzalez",
             total_points: Decimal.new("500.00"),
             tournament_unique_name: "t1"
           },
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Paulo Gonzalez",
+            direct_object: "Paulo Gonzalez",
             points: Decimal.new("500.0"),
             total_points: Decimal.new("450.00"),
             tournament_unique_name: "t5"
           },
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Tyler Fraser",
+            direct_object: "Tyler Fraser",
             points: Decimal.new("500.0"),
             total_points: Decimal.new("450.00"),
             tournament_unique_name: "t5"
@@ -360,28 +360,28 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         [
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Paulo Gonzalez",
+            direct_object: "Paulo Gonzalez",
             points: Decimal.new("700.0"),
             total_points: Decimal.new("630.00"),
             tournament_unique_name: "t6"
           },
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Paulo Gonzalez",
+            direct_object: "Paulo Gonzalez",
             points: Decimal.new("500.0"),
             total_points: Decimal.new("450.00"),
             tournament_unique_name: "t5"
           },
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Tyler Fraser",
+            direct_object: "Tyler Fraser",
             points: Decimal.new("700.0"),
             total_points: Decimal.new("630.00"),
             tournament_unique_name: "t6"
           },
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Tyler Fraser",
+            direct_object: "Tyler Fraser",
             points: Decimal.new("500.0"),
             total_points: Decimal.new("450.00"),
             tournament_unique_name: "t5"
@@ -457,21 +457,21 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         [
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Anthony McPherson",
+            direct_object: "Anthony McPherson",
             points: Decimal.new("7.703125"),
             total_points: Decimal.new("6.9328125"),
             tournament_unique_name: "milwa_2017"
           },
           %{
             multiplier: Decimal.new("0.5"),
-            player: "Anthony McPherson",
+            direct_object: "Anthony McPherson",
             points: Decimal.new("9.375"),
             total_points: Decimal.new("4.6875"),
             tournament_unique_name: "chicago_charities_2016"
           },
           %{
             multiplier: Decimal.new("0.9"),
-            player: "Anthony McPherson",
+            direct_object: "Anthony McPherson",
             points: Decimal.new("10.5625"),
             total_points: Decimal.new("9.50625"),
             tournament_unique_name: "chicago_charities_2017"
