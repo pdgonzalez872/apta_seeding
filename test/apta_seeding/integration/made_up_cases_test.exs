@@ -355,6 +355,40 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("2160.00")
+
+      expected_details =
+        [
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Paulo Gonzalez",
+            points: Decimal.new("700.0"),
+            total_points: Decimal.new("630.00"),
+            tournament_unique_name: "t6"
+          },
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Paulo Gonzalez",
+            points: Decimal.new("500.0"),
+            total_points: Decimal.new("450.00"),
+            tournament_unique_name: "t5"
+          },
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Tyler Fraser",
+            points: Decimal.new("700.0"),
+            total_points: Decimal.new("630.00"),
+            tournament_unique_name: "t6"
+          },
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Tyler Fraser",
+            points: Decimal.new("500.0"),
+            total_points: Decimal.new("450.00"),
+            tournament_unique_name: "t5"
+          }
+        ]
+
+      assert first_team_result.calculation_details == expected_details
     end
   end
 
@@ -418,6 +452,33 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("21.1265625")
+
+      expected_details =
+        [
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Anthony McPherson",
+            points: Decimal.new("7.703125"),
+            total_points: Decimal.new("6.9328125"),
+            tournament_unique_name: "milwa_2017"
+          },
+          %{
+            multiplier: Decimal.new("0.5"),
+            player: "Anthony McPherson",
+            points: Decimal.new("9.375"),
+            total_points: Decimal.new("4.6875"),
+            tournament_unique_name: "chicago_charities_2016"
+          },
+          %{
+            multiplier: Decimal.new("0.9"),
+            player: "Anthony McPherson",
+            points: Decimal.new("10.5625"),
+            total_points: Decimal.new("9.50625"),
+            tournament_unique_name: "chicago_charities_2017"
+          }
+        ]
+
+      assert first_team_result.calculation_details == expected_details
     end
 
     test "" do

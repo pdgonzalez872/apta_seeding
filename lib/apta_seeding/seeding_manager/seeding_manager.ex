@@ -146,7 +146,7 @@ defmodule AptaSeeding.SeedingManager do
     )
     |> Map.put(
       :calculation_details,
-      create_calculation_details([team_results_details] ++ individual_results_details)
+      create_calculation_details([team_results_details] ++ individual_results_details, seeding_criteria)
     )
   end
 
@@ -154,8 +154,11 @@ defmodule AptaSeeding.SeedingManager do
         tdo,
         "team has not played together, 3 best individual" = seeding_criteria
       ) do
+
+    individual_results_details = get_individual_points(tdo, seeding_criteria)
+
     individual_total_points =
-      get_individual_points(tdo, seeding_criteria)
+      individual_results_details
       |> Enum.reduce(Decimal.new("0"), fn el, acc ->
         Decimal.add(acc, el.total_points)
       end)
@@ -164,6 +167,10 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(:seeding_criteria, seeding_criteria)
     |> Map.put(:team_points, Decimal.new("0"))
     |> Map.put(:total_seeding_points, individual_total_points)
+    |> Map.put(
+      :calculation_details,
+      create_calculation_details(individual_results_details, seeding_criteria)
+    )
   end
 
   @doc """
@@ -370,12 +377,18 @@ defmodule AptaSeeding.SeedingManager do
   # Calculation details
   #
 
-  def create_calculation_details(results) do
+  def create_calculation_details(results, "team has played 1 tournament, 2 best individual") do
     results
     |> Enum.map(fn r ->
       [details] = r.details
       create_details(details)
     end)
+  end
+
+  def create_calculation_details(results, "team has not played together, 3 best individual") do
+    results
+    |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
+    |> Enum.map(fn r -> create_details(r) end)
   end
 
   def create_details(%{team: team} = attrs) do
