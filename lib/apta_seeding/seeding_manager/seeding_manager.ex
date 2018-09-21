@@ -200,16 +200,16 @@ defmodule AptaSeeding.SeedingManager do
     team_result_count = Enum.count(state.team.team_results)
 
     cond do
-      played_3_current_tournaments(state) ->
+      current_tournaments_played(state) >= 3 ->
         :team_has_played_3_tournaments
 
-      team_result_count == 2 ->
+      current_tournaments_played(state) == 2 ->
         :team_has_played_2_tournaments_1_best_individual
 
-      team_result_count == 1 ->
+      current_tournaments_played(state) == 1 ->
         :team_has_played_1_tournament_2_best_individual
 
-      team_result_count == 0 ->
+      current_tournaments_played(state) == 0 ->
         :team_has_not_played_together_3_best_individual
 
       true ->
@@ -217,20 +217,18 @@ defmodule AptaSeeding.SeedingManager do
     end
   end
 
-  def played_3_current_tournaments(state) do
-    result =
-      state.team.team_results
-      |> Enum.filter(fn tr ->
-        tr = Data.preload_tournament(tr)
-        tournament = tr.tournament
+  def current_tournaments_played(state) do
+    state.team.team_results
+    |> Enum.filter(fn tr ->
+      tr = Data.preload_tournament(tr)
+      tournament = tr.tournament
 
-        target_tournaments =
-          Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+      target_tournaments =
+        Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
 
-        result = is_current_tournament(tournament, target_tournaments)
-      end)
-
-    result >= 3
+      result = is_current_tournament(tournament, target_tournaments)
+    end)
+    |> Enum.count()
   end
 
   #
