@@ -198,8 +198,6 @@ defmodule AptaSeeding.SeedingManager do
   @doc """
   """
   def get_seeding_criteria(state) do
-    team_result_count = Enum.count(state.team.team_results)
-
     cond do
       current_tournaments_played(state) >= 3 ->
         :team_has_played_3_tournaments
@@ -236,7 +234,6 @@ defmodule AptaSeeding.SeedingManager do
   # Get Individual Points
   #
 
-  # TODO seeding_criteria is not used in any of the delegators below
   def get_individual_points(
         team_data_object,
         :team_has_played_2_tournaments_1_best_individual = seeding_criteria
