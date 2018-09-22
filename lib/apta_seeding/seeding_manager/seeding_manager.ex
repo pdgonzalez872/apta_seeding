@@ -268,9 +268,6 @@ defmodule AptaSeeding.SeedingManager do
     [player_1_results, player_2_results]
     |> Enum.sort_by(fn r -> r.total_points end)
     |> Enum.reverse()
-    # Maybe don't need to take it again,
-    # the get_highest_individual_results_for_player already `takes`
-    #|> Enum.take(tournaments_to_take)
   end
 
   def get_highest_individual_results_for_player(player, tournaments_to_take) do
