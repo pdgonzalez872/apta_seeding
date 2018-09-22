@@ -656,33 +656,15 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       assert first_team_result.seeding_criteria == :team_has_not_played_together_3_best_individual
 
       expected_details =
-      #1  "Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125",
-              [%{
-                direct_object: "Jeff McMaster",
-                multiplier: Decimal.new("0.5"),
-                points: Decimal.new("19.125"),
-                total_points: Decimal.new("9.5625"),
-                tournament_unique_name: "11/14/15 Cleveland Masters Men"
-              },
-
-      #2 ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
-              %{
-                direct_object: "Jeff McMaster",
-                multiplier: Decimal.new("0.5"),
-                points: Decimal.new("20.25"),
-                total_points: Decimal.new("10.125"),
-                tournament_unique_name: "12/05/15 West Penn Men"
-              },
-
-      #3  "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
+              [
+      #5  "Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25",
               %{
                 direct_object: "Tom Wiese",
-                multiplier: Decimal.new("0.5"),
-                points: Decimal.new("20.25"),
-                total_points: Decimal.new("10.125"),
-                tournament_unique_name: "12/05/15 West Penn Men"
+                multiplier: Decimal.new("0.9"),
+                points: Decimal.new("5.25"),
+                total_points: Decimal.new("4.725"),
+                tournament_unique_name: "11/11/17 Cleveland Masters Men"
               },
-
       #4  "Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875",
               %{
                 direct_object: "Tom Wiese",
@@ -691,29 +673,37 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
                 total_points: Decimal.new("10.96875"),
                 tournament_unique_name: "10/14/17 Steel City Open Men"
               },
-
-      #5  "Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25",
+      #3  "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
               %{
                 direct_object: "Tom Wiese",
-                multiplier: Decimal.new("0.9"),
-                points: Decimal.new("5.25"),
-                total_points: Decimal.new("4.725"),
-                tournament_unique_name: "11/11/17 Cleveland Masters Men"
-              }
+                multiplier: Decimal.new("0.5"),
+                points: Decimal.new("20.25"),
+                total_points: Decimal.new("10.125"),
+                tournament_unique_name: "12/05/15 West Penn Men"
+              },
+      #2 ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
+              %{
+                direct_object: "Jeff McMaster",
+                multiplier: Decimal.new("0.5"),
+                points: Decimal.new("20.25"),
+                total_points: Decimal.new("10.125"),
+                tournament_unique_name: "12/05/15 West Penn Men"
+              },
+      #1  "Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125",
+              %{
+                direct_object: "Jeff McMaster",
+                multiplier: Decimal.new("0.5"),
+                points: Decimal.new("19.125"),
+                total_points: Decimal.new("9.5625"),
+                tournament_unique_name: "11/14/15 Cleveland Masters Men"
+              },
             ]
 
-      sorted_results = Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
-      sorted_expected = Enum.sort_by(expected_details, fn r -> r.tournament_unique_name end)
-
-      _r = [sorted_results, sorted_expected]
+      [first_team_result.calculation_details, expected_details]
       |> Enum.zip()
-      |> Enum.map(fn {_result, _expected} ->
-        nil
-        # require IEx; IEx.pry
-        # assert result == expected
-      end)
+      |> Enum.each(fn {result, expected} -> assert result == expected end)
 
-      assert sorted_results == sorted_expected
+      assert first_team_result.calculation_details == expected_details
 
       # This is the output we want:
       # calculation_details = ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
