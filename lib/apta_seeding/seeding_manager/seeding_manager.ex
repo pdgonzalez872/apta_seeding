@@ -48,6 +48,13 @@ defmodule AptaSeeding.SeedingManager do
     {:ok, state}
     |> get_players_and_teams()
     |> analyse_each_team()
+    #|> sort_by_results()
+  end
+
+  def sort_by_results({:ok, state}) do
+    sorted =
+      state.team_data_objects
+      |> Enum.sort_by(fn e -> e end)
   end
 
   def get_players_and_teams({:ok, state}) do
@@ -273,43 +280,51 @@ defmodule AptaSeeding.SeedingManager do
   def get_highest_individual_results_for_player(player, tournaments_to_take) do
     team_results_objects =
       player.individual_results
-      |> Enum.sort_by(fn tr ->
-        tr =
-          tr
+      |> Enum.sort_by(fn id ->
+        id =
+          id
           |> Data.preload_tournament()
 
-        tr.tournament.date
+        d = id.tournament.date
+        {d.year, d.month, d.day}
       end)
-      |> Enum.map(fn tr ->
-        tr
+      |> Enum.map(fn id ->
+        id
         |> Data.preload_tournament()
         |> Data.preload_player()
       end)
-      |> Enum.map(fn tr ->
-        target_tournaments =
-          Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
-
-        result = get_tournament_multiplier(tr.tournament, target_tournaments, :individual)
-
-        %{
-          tournament_unique_name: tr.tournament.name_and_date_unique_name,
-          player: tr.player.name,
-          multiplier: result.multiplier,
-          points: tr.points,
-          total_points: Decimal.mult(result.multiplier, tr.points)
-        }
-      end)
-      |> Enum.sort(&(Decimal.cmp(&1.total_points, &2.total_points) != :gt))
       |> Enum.reverse()
+      |> Enum.map(fn id ->
+        create_result_data_structure(id, :individual)
+      end)
       |> Enum.take(tournaments_to_take)
 
-    total_points =
-      team_results_objects
-      |> Enum.reduce(0, fn obj, acc ->
-        Decimal.add(acc, obj.total_points)
-      end)
+    total_points = calculate_total_points(team_results_objects)
 
     %{total_points: total_points, details: team_results_objects}
+  end
+
+  def create_result_data_structure(tr, result_type) do
+    target_tournaments =
+      Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+
+    # get the multiplier for a tournament
+    result = get_tournament_multiplier(tr.tournament, target_tournaments, result_type)
+
+    %{
+      tournament_unique_name: tr.tournament.name_and_date_unique_name,
+      player: tr.player.name,
+      multiplier: result.multiplier,
+      points: tr.points,
+      total_points: Decimal.mult(result.multiplier, tr.points),
+    }
+  end
+
+  def calculate_total_points(results) do
+    results
+    |> Enum.reduce(0, fn obj, acc ->
+      Decimal.add(acc, obj.total_points)
+    end)
   end
 
   #
@@ -324,7 +339,8 @@ defmodule AptaSeeding.SeedingManager do
           tr
           |> Data.preload_tournament()
 
-        tr.tournament.date
+        d = tr.tournament.date
+        {d.year, d.month, d.day}
       end)
       |> Enum.map(fn tr -> Data.preload_tournament(tr) end)
       |> Enum.reverse()
@@ -344,12 +360,7 @@ defmodule AptaSeeding.SeedingManager do
         }
       end)
 
-    total_points =
-      team_results_objects
-      |> Enum.reduce(0, fn obj, acc ->
-        Decimal.add(acc, obj.total_points)
-      end)
-
+    total_points = calculate_total_points(team_results_objects)
     %{total_points: total_points, details: team_results_objects}
   end
 
@@ -389,11 +400,13 @@ defmodule AptaSeeding.SeedingManager do
     Charities 2015 was played in Nov 2015. This is not a current tournament, should be 50%, because it was 2 seasons ago. multiplier 0.5
   """
   def get_tournament_multiplier(tournament, all_tournaments, type) do
-    {t, multiplier} =
-      create_tournament_multiplier_matrix(tournament, all_tournaments, type)
-      |> Enum.find(fn {t, _multiplier} ->
-        t.name_and_date_unique_name == tournament.name_and_date_unique_name
-      end)
+      result = create_tournament_multiplier_matrix(tournament, all_tournaments, type)
+
+      {t, multiplier} =
+        result
+        |> Enum.find(fn {t, _multiplier} ->
+           t.name_and_date_unique_name == tournament.name_and_date_unique_name
+         end)
 
     %{tournament: t, multiplier: multiplier}
   end
