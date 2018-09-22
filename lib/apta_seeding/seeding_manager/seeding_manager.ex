@@ -56,6 +56,7 @@ defmodule AptaSeeding.SeedingManager do
       state.team_data_objects
       |> Enum.sort_by(fn e -> e end)
       |> Enum.sort(&(Decimal.cmp(&1.total_seeding_points, &2.total_seeding_points) != :gt))
+      |> Enum.reverse()
 
     state =
       state
@@ -409,11 +410,19 @@ defmodule AptaSeeding.SeedingManager do
   def get_tournament_multiplier(tournament, all_tournaments, type) do
       result = create_tournament_multiplier_matrix(tournament, all_tournaments, type)
 
-      {t, multiplier} =
-        result
+        shim = result
         |> Enum.find(fn {t, _multiplier} ->
            t.name_and_date_unique_name == tournament.name_and_date_unique_name
          end)
+
+     {t, multiplier} =
+       case shim do
+         nil ->
+           require IEx; IEx.pry
+
+         {t, multiplier} ->
+           {t, multiplier}
+       end
 
     %{tournament: t, multiplier: multiplier}
   end
