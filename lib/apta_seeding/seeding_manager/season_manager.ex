@@ -70,7 +70,7 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
       Decimal.new("1.0"),
       Decimal.new("0.9"),
       Decimal.new("0.5"),
-      Decimal.new("0.3")
+      Decimal.new("0.0")
     ]
   end
 
@@ -78,7 +78,7 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     [
       Decimal.new("0.9"),
       Decimal.new("0.5"),
-      Decimal.new("0.3")
+      Decimal.new("0.0")
     ]
   end
 
@@ -95,7 +95,7 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     |> Enum.filter(fn t -> t.name == tournament.name end)
     |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
     |> Enum.reverse()
-    |> Enum.take(4)
+    |> Enum.take(Enum.count(multipliers))
     |> Enum.zip(multipliers)
   end
 end
