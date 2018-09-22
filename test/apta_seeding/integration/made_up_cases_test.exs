@@ -1,9 +1,8 @@
 defmodule AptaSeeding.Integration.MadeUpCases.Test do
   use ExUnit.Case
 
-  alias AptaSeeding.SeedingManager.SeasonManager
+  # alias AptaSeeding.SeedingReporter
   alias AptaSeeding.SeedingManager
-  alias AptaSeeding.SeedingReporter
   alias AptaSeeding.Data
   alias AptaSeeding.Data.{Tournament, IndividualResult, TeamResult, Player, Team}
   alias AptaSeeding.Repo
@@ -447,7 +446,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
   describe "These test cases try to be real" do
     test "Anthony McPhearson - this was an edge case we found previously" do
       p1 = %{name: "Anthony McPherson"} |> Data.create_player()
-      p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
+      _p2 = %{name: "Paulo Gonzalez"} |> Data.create_player()
 
       {:ok, tournament} =
         %{
@@ -594,11 +593,22 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       |> Data.create_individual_result()
 
       # Cleveland 2016 happens, they don't play in it
-      {:ok, tournament} =
+      {:ok, _tournament} =
         %{
           name: cleveland_masters_men,
           name_and_date_unique_name: "11/14/16 Cleveland Masters Men",
           date: ~D[2016-11-14],
+          results_have_been_processed: true,
+          raw_results_html: "html"
+        }
+        |> Data.create_tournament()
+
+      # West Penn 2016 happens and they don't play in it
+      {:ok, _tournament} =
+        %{
+          name: "West Penn Men",
+          name_and_date_unique_name: "12/05/16 West Penn Men",
+          date: ~D[2016-12-05],
           results_have_been_processed: true,
           raw_results_html: "html"
         }
@@ -643,8 +653,10 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       first_team_result = Enum.at(results.team_data_objects, 0)
 
+      assert first_team_result.seeding_criteria == :team_has_not_played_together_3_best_individual
+
       expected_details =
-        #  "Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125",
+      #1  "Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125",
               [%{
                 direct_object: "Jeff McMaster",
                 multiplier: Decimal.new("0.5"),
@@ -653,25 +665,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
                 tournament_unique_name: "11/14/15 Cleveland Masters Men"
               },
 
-      #  "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
-              %{
-                direct_object: "Tom Wiese",
-                multiplier: Decimal.new("0.5"),
-                points: Decimal.new("20.25"),
-                total_points: Decimal.new("10.125"),
-                tournament_unique_name: "12/05/15 West Penn Men"
-              },
-
-      #  "Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875",
-              %{
-                direct_object: "Tom Wiese",
-                multiplier: Decimal.new("0.9"),
-                points: Decimal.new("12.1875"),
-                total_points: Decimal.new("10.96875"),
-                tournament_unique_name: "10/14/17 Steel City Open Men"
-              },
-
-      # ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
+      #2 ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
               %{
                 direct_object: "Jeff McMaster",
                 multiplier: Decimal.new("0.5"),
@@ -680,7 +674,25 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
                 tournament_unique_name: "12/05/15 West Penn Men"
               },
 
-      #  "Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25",
+      #3  "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
+              %{
+                direct_object: "Tom Wiese",
+                multiplier: Decimal.new("0.5"),
+                points: Decimal.new("20.25"),
+                total_points: Decimal.new("10.125"),
+                tournament_unique_name: "12/05/15 West Penn Men"
+              },
+
+      #4  "Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875",
+              %{
+                direct_object: "Tom Wiese",
+                multiplier: Decimal.new("0.9"),
+                points: Decimal.new("12.1875"),
+                total_points: Decimal.new("10.96875"),
+                tournament_unique_name: "10/14/17 Steel City Open Men"
+              },
+
+      #5  "Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25",
               %{
                 direct_object: "Tom Wiese",
                 multiplier: Decimal.new("0.9"),
@@ -692,6 +704,14 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       sorted_results = Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
       sorted_expected = Enum.sort_by(expected_details, fn r -> r.tournament_unique_name end)
+
+      _r = [sorted_results, sorted_expected]
+      |> Enum.zip()
+      |> Enum.map(fn {_result, _expected} ->
+        nil
+        # require IEx; IEx.pry
+        # assert result == expected
+      end)
 
       assert sorted_results == sorted_expected
 
@@ -857,7 +877,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       |> Data.create_individual_result()
 
       # # And the 2017 version of that tournament occurs
-      {:ok, tournament} =
+      {:ok, _tournament} =
         %{
           name: "Atlantic Classic Men",
           name_and_date_unique_name: "10/28/17 Atlantic Classic Men",
