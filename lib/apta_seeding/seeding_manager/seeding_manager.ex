@@ -48,13 +48,20 @@ defmodule AptaSeeding.SeedingManager do
     {:ok, state}
     |> get_players_and_teams()
     |> analyse_each_team()
-    #|> sort_by_results()
+    |> sort_by_results()
   end
 
   def sort_by_results({:ok, state}) do
     sorted =
       state.team_data_objects
       |> Enum.sort_by(fn e -> e end)
+      |> Enum.sort(&(Decimal.cmp(&1.total_seeding_points, &2.total_seeding_points) != :gt))
+
+    state =
+      state
+      |> Map.put(:sorted_seeding, sorted)
+
+    {:ok, state}
   end
 
   def get_players_and_teams({:ok, state}) do
