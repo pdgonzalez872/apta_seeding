@@ -38,11 +38,9 @@ defmodule AptaSeeding.SeedingManager do
   ===
   """
 
-  # TODO: change the strings `seeding_criteria` to atoms.
-
   alias AptaSeeding.Data
   alias AptaSeeding.SeedingManager.SeasonManager
-  alias AptaSeeding.SeedingReporter
+  alias AptaSeeding.SeedingManager.SeedingReporter
 
   def call({:ok, state}) do
     {:ok, state}

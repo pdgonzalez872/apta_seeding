@@ -1,4 +1,4 @@
-defmodule AptaSeeding.SeedingReporter do
+defmodule AptaSeeding.SeedingManager.SeedingReporter do
   @moduledoc """
   This is the module that does provides some sanity as we go through this exercise.
   """
