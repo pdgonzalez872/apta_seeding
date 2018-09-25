@@ -23,6 +23,8 @@ defmodule Mix.Tasks.DummySeed do
 
     Application.ensure_all_started(:apta_seeding)
 
+    start_time = Timex.now()
+
     Logger.info("Fetching live seeds from website, this is live.")
     {:ok, result} = priced_tournament_data_structure = %{eid: 228, tid: 496}
     |> FutureTournament.call()
@@ -36,6 +38,11 @@ defmodule Mix.Tasks.DummySeed do
       first_acc <> "#{e.team.name}, #{e.seeding_criteria}, #{e.total_seeding_points}, #{Decimal.round(Decimal.div(e.total_seeding_points, Decimal.new("3.0")), 4)}\n #{details}"
     end)
     |> IO.puts()
+
+    end_time = Timex.now()
+
+    Logger.info("Took, in seconds:")
+    Logger.info(Timex.diff(end_time, start_time) / 1000000)
 
     Logger.info("Finish Task")
   end
