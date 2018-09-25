@@ -130,12 +130,6 @@ defmodule AptaSeeding.SeedingManager do
 
     individual_results_details = TournamentPicker.get_individual_points(tdo, seeding_criteria)
 
-    individual_total_points =
-      individual_results_details
-      |> Enum.reduce(Decimal.new("0"), fn el, acc ->
-        Decimal.add(acc, el.total_points)
-      end)
-
     tdo
     |> Map.put(:seeding_criteria, seeding_criteria)
     |> Map.put(:team_points, team_results_details.total_points)
@@ -143,7 +137,7 @@ defmodule AptaSeeding.SeedingManager do
       :total_seeding_points,
       Decimal.add(
         team_results_details.total_points,
-        individual_total_points
+        calculate_total_points(individual_results_details)
       )
     )
     |> Map.put(
@@ -163,18 +157,12 @@ defmodule AptaSeeding.SeedingManager do
 
     individual_results_details = TournamentPicker.get_individual_points(tdo, seeding_criteria)
 
-    individual_total_points =
-      individual_results_details
-      |> Enum.reduce(Decimal.new("0"), fn el, acc ->
-        Decimal.add(acc, el.total_points)
-      end)
-
     tdo
     |> Map.put(:seeding_criteria, seeding_criteria)
     |> Map.put(:team_points, team_results_details.total_points)
     |> Map.put(
       :total_seeding_points,
-      Decimal.add(team_results_details.total_points, individual_total_points)
+      Decimal.add(team_results_details.total_points, calculate_total_points(individual_results_details))
     )
     |> Map.put(
       :calculation_details,
@@ -191,23 +179,25 @@ defmodule AptaSeeding.SeedingManager do
       ) do
     individual_results_details = TournamentPicker.get_individual_points(tdo, seeding_criteria)
 
-    individual_total_points =
-      individual_results_details
-      |> Enum.reduce(Decimal.new("0"), fn el, acc ->
-        Decimal.add(acc, el.total_points)
-      end)
-
     tdo
     |> Map.put(:seeding_criteria, seeding_criteria)
     |> Map.put(:team_points, Decimal.new("0"))
-    |> Map.put(:total_seeding_points, individual_total_points)
+    |> Map.put(:total_seeding_points, calculate_total_points(individual_results_details))
     |> Map.put(
       :calculation_details,
       create_calculation_details(individual_results_details, seeding_criteria)
     )
   end
 
+  def calculate_total_points(results_details) do
+    results_details
+    |> Enum.reduce(Decimal.new("0"), fn el, acc ->
+      Decimal.add(acc, el.total_points)
+    end)
+  end
+
   @doc """
+  Returns the correct seeding criteria for a team
   """
   def get_seeding_criteria(state) do
     cond do
