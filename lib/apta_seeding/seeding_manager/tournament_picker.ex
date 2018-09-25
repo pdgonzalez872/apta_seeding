@@ -1,5 +1,4 @@
 defmodule AptaSeeding.SeedingManager.TournamentPicker do
-
   alias AptaSeeding.Data
   alias AptaSeeding.SeedingManager.{SeasonManager, SeedingReporter, TournamentPicker}
 
@@ -137,7 +136,7 @@ defmodule AptaSeeding.SeedingManager.TournamentPicker do
       player: tr.player.name,
       multiplier: result.multiplier,
       points: tr.points,
-      total_points: Decimal.mult(result.multiplier, tr.points),
+      total_points: Decimal.mult(result.multiplier, tr.points)
     }
   end
 
@@ -166,21 +165,23 @@ defmodule AptaSeeding.SeedingManager.TournamentPicker do
     Charities 2015 was played in Nov 2015. This is not a current tournament, should be 50%, because it was 2 seasons ago. multiplier 0.5
   """
   def get_tournament_multiplier(tournament, all_tournaments, type) do
-      result = create_tournament_multiplier_matrix(tournament, all_tournaments, type)
+    result = create_tournament_multiplier_matrix(tournament, all_tournaments, type)
 
-        shim = result
-        |> Enum.find(fn {t, _multiplier} ->
-           t.name_and_date_unique_name == tournament.name_and_date_unique_name
-         end)
+    shim =
+      result
+      |> Enum.find(fn {t, _multiplier} ->
+        t.name_and_date_unique_name == tournament.name_and_date_unique_name
+      end)
 
-     {t, multiplier} =
-       case shim do
-         nil ->
-           require IEx; IEx.pry
+    {t, multiplier} =
+      case shim do
+        nil ->
+          require IEx
+          IEx.pry()
 
-         {t, multiplier} ->
-           {t, multiplier}
-       end
+        {t, multiplier} ->
+          {t, multiplier}
+      end
 
     %{tournament: t, multiplier: multiplier}
   end
@@ -192,5 +193,4 @@ defmodule AptaSeeding.SeedingManager.TournamentPicker do
   #
   # Other
   #
-
 end

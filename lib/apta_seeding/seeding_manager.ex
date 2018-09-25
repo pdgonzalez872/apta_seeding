@@ -162,7 +162,10 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(:team_points, team_results_details.total_points)
     |> Map.put(
       :total_seeding_points,
-      Decimal.add(team_results_details.total_points, calculate_total_points(individual_results_details))
+      Decimal.add(
+        team_results_details.total_points,
+        calculate_total_points(individual_results_details)
+      )
     )
     |> Map.put(
       :calculation_details,

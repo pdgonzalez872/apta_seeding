@@ -69,7 +69,6 @@ defmodule AptaSeeding.SeedingManager.SeasonManagerTest do
   end
 
   describe "create_tournament_multiplier_matrix/3" do
-
     test "returns a matrix with the correct multipliers" do
       create_charities_2017_2016()
 
@@ -99,5 +98,4 @@ defmodule AptaSeeding.SeedingManager.SeasonManagerTest do
       assert second_most_recent_multiplier == Decimal.new(0.9)
     end
   end
-
 end

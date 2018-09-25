@@ -71,8 +71,10 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
       Decimal.new("0.9"),
       Decimal.new("0.5"),
       Decimal.new("0.5"),
-      Decimal.new("0.5"), # always 0.5 after a certain point.
-      Decimal.new("0.5"), # always 0.5
+      # always 0.5 after a certain point.
+      Decimal.new("0.5"),
+      # always 0.5
+      Decimal.new("0.5")
     ]
   end
 
@@ -80,9 +82,12 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     [
       Decimal.new("0.9"),
       Decimal.new("0.5"),
-      Decimal.new("0.5"), # always 0.5
-      Decimal.new("0.5"), # always 0.5
-      Decimal.new("0.5"), # always 0.5
+      # always 0.5
+      Decimal.new("0.5"),
+      # always 0.5
+      Decimal.new("0.5"),
+      # always 0.5
+      Decimal.new("0.5")
     ]
   end
 
