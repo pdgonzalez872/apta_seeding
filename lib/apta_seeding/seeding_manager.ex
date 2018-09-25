@@ -190,13 +190,6 @@ defmodule AptaSeeding.SeedingManager do
     )
   end
 
-  def calculate_total_points(results_details) do
-    results_details
-    |> Enum.reduce(Decimal.new("0"), fn el, acc ->
-      Decimal.add(acc, el.total_points)
-    end)
-  end
-
   @doc """
   Returns the correct seeding criteria for a team
   """
@@ -238,7 +231,18 @@ defmodule AptaSeeding.SeedingManager do
   end
 
   #
-  # Calculation details
+  # Calculation helpers
+  #
+
+  def calculate_total_points(results_details) do
+    results_details
+    |> Enum.reduce(Decimal.new("0"), fn el, acc ->
+      Decimal.add(acc, el.total_points)
+    end)
+  end
+
+  #
+  # Calculation details helpers
   #
 
   def create_calculation_details(results, _seeding_criteria) do
