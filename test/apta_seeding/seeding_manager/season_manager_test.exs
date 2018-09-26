@@ -98,4 +98,11 @@ defmodule AptaSeeding.SeedingManager.SeasonManagerTest do
       assert second_most_recent_multiplier == Decimal.new(0.9)
     end
   end
+
+  describe "groups results per season and picks it accordingly" do
+    it "" do
+
+    end
+
+  end
 end
