@@ -44,7 +44,7 @@ defmodule AptaSeeding.SeedingManager do
   def call({:ok, state}) do
     {:ok, state}
     |> get_players_and_teams()
-    |> analyse_each_team()
+    |> analyze_teams()
     |> sort_by_results()
   end
 
@@ -93,7 +93,7 @@ defmodule AptaSeeding.SeedingManager do
     {:ok, state}
   end
 
-  def analyse_each_team({:ok, state}) do
+  def analyze_teams({:ok, state}) do
     team_data_objects =
       state.team_data_objects
       |> Enum.map(fn tdo ->
@@ -212,18 +212,12 @@ defmodule AptaSeeding.SeedingManager do
     end
   end
 
+  #
+  # Season Concept
+  #
+
   def current_tournaments_played(state) do
-    state.team.team_results
-    |> Enum.filter(fn tr ->
-      tr = Data.preload_tournament(tr)
-      tournament = tr.tournament
-
-      target_tournaments =
-        Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
-
-      result = is_current_tournament(tournament, target_tournaments)
-    end)
-    |> Enum.count()
+    SeasonManager.current_tournaments_played(state)
   end
 
   def is_current_tournament(tournament, all_tournaments) do

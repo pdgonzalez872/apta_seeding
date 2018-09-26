@@ -1,5 +1,7 @@
 defmodule AptaSeeding.SeedingManager.SeasonManager do
-  # TODO: Remove multipliers
+
+  alias AptaSeeding.Data
+
   def intervals_and_multipliers() do
     [
       %{
@@ -105,5 +107,19 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
     |> Enum.reverse()
     |> Enum.zip(Enum.take(multipliers, Enum.count(multipliers)))
+  end
+
+  def current_tournaments_played(state) do
+    state.team.team_results
+    |> Enum.filter(fn tr ->
+      tr = Data.preload_tournament(tr)
+      tournament = tr.tournament
+
+      target_tournaments =
+        Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+
+      result = is_current_tournament(tournament, target_tournaments)
+    end)
+    |> Enum.count()
   end
 end
