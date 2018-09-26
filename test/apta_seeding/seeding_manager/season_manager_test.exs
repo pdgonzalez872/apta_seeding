@@ -100,7 +100,7 @@ defmodule AptaSeeding.SeedingManager.SeasonManagerTest do
   end
 
   describe "groups results per season and picks it accordingly" do
-    it "" do
+    test "ha" do
 
     end
 

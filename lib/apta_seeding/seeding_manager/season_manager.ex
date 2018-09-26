@@ -1,4 +1,10 @@
 defmodule AptaSeeding.SeedingManager.SeasonManager do
+  @moduledoc"""
+  This module is responsible for
+  - dealing with seasons
+  - getting the right multipliers for tournaments, based on seasons
+  """
+
   alias AptaSeeding.Data
 
   def intervals_and_multipliers() do
@@ -111,11 +117,18 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
   def current_tournaments_played(state) do
     state.team.team_results
     |> Enum.filter(fn tr ->
+
+      # TODO: Optmize here
+      # There are a few options:
+      # 1) Could add a tournament_date to this model, won't need to query again for the tournament.
+      # 2) Could find out about a season in a different way. Compare dates instead, that would be fastest.
+      #    if we do this (we prob should) we would need to implement the concept of Season that has dates.
+
       tr = Data.preload_tournament(tr)
       tournament = tr.tournament
 
-      target_tournaments =
-        Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+      # this is the bad function that takes a long time
+      target_tournaments = Data.find_tournaments_by_name(tr.tournament.name)
 
       is_current_tournament(tournament, target_tournaments)
     end)

@@ -21,8 +21,9 @@ defmodule AptaSeeding.SeedingManager.TournamentPicker do
       |> Enum.reverse()
       |> Enum.take(tournaments_to_take)
       |> Enum.map(fn tr ->
-        target_tournaments =
-          Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+
+        # This is a time sink
+        target_tournaments = Data.find_tournaments_by_name(tr.tournament.name)
 
         result = get_tournament_multiplier(tr.tournament, target_tournaments, :team)
 
@@ -125,8 +126,8 @@ defmodule AptaSeeding.SeedingManager.TournamentPicker do
   end
 
   def create_result_data_structure(tr, result_type) do
-    target_tournaments =
-      Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
+    # This is the problem
+    target_tournaments = Data.find_tournaments_by_name(tr.tournament.name)
 
     # get the multiplier for a tournament
     result = get_tournament_multiplier(tr.tournament, target_tournaments, result_type)
@@ -166,6 +167,7 @@ defmodule AptaSeeding.SeedingManager.TournamentPicker do
   """
   def get_tournament_multiplier(tournament, all_tournaments, type) do
     result = create_tournament_multiplier_matrix(tournament, all_tournaments, type)
+    #require IEx; IEx.pry
 
     shim =
       result

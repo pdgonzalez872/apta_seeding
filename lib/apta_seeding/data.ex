@@ -104,6 +104,18 @@ defmodule AptaSeeding.Data do
     Tournament.changeset(tournament, %{})
   end
 
+  def find_tournaments_by_name(tournament_name) do
+    query =
+      from(
+        t in "tournaments",
+        where: t.name == ^tournament_name,
+        select: t.id
+      )
+
+    Repo.all(query)
+    |> Enum.map(fn tournament_id -> get_tournament!(tournament_id) end)
+  end
+
   #
   # Player
   #

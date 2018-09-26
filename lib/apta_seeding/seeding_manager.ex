@@ -106,6 +106,10 @@ defmodule AptaSeeding.SeedingManager do
     {:ok, state}
   end
 
+  #
+  # Criteria Handling
+  #
+
   def handle_seeding_criteria(tdo, :team_has_played_3_tournaments = seeding_criteria) do
     team_results_details = TournamentPicker.get_team_points(tdo, seeding_criteria)
 
