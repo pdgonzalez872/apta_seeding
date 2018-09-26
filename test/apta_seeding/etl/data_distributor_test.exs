@@ -122,7 +122,7 @@ defmodule AptaSeeding.ETL.DataDistributorTest do
     end
 
     test "persist_results/1 - persists records correctly" do
-      input = %{
+      _input = %{
         individual_points: Decimal.new("34.375"),
         player_1_name: "Ryan Baxter",
         player_2_name: "Ricky Heath",

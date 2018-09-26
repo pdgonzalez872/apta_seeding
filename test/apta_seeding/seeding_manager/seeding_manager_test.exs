@@ -1,8 +1,6 @@
 defmodule AptaSeeding.SeedingManager.SeedingManagerTest do
   use ExUnit.Case
 
-  alias AptaSeeding.SeedingManager
-
   describe "calculate_valid_points_for_tournament/1" do
     test "takes in tournament and returns the valid points" do
       # raise "Continue here. Must price the tournaments correctly. Maybe start creating tests, reset the db."

@@ -1,12 +1,9 @@
 defmodule AptaSeeding.AcceptanceTest do
   use ExUnit.Case
 
-  alias AptaSeeding.Data
   alias AptaSeeding.Repo
   alias AptaSeeding.ETL.FutureTournament
   alias AptaSeeding.SeedingManager
-  # need to change the namespace there.
-  alias AptaSeeding.SeedingReporter
   alias AptaSeeding.SeedingManager.SeasonManager
 
   setup do
@@ -34,7 +31,7 @@ defmodule AptaSeeding.AcceptanceTest do
         |> Path.join()
         |> File.read!()
 
-      result =
+      _result =
         {:ok, html}
         |> FutureTournament.transform()
         |> SeedingManager.call()
