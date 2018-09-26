@@ -97,7 +97,7 @@ defmodule AptaSeeding.SeedingManager do
     team_data_objects =
       state.team_data_objects
       |> Enum.map(fn tdo ->
-      handle_seeding_criteria(tdo, get_seeding_criteria(tdo))
+        handle_seeding_criteria(tdo, get_seeding_criteria(tdo))
       end)
 
     state =

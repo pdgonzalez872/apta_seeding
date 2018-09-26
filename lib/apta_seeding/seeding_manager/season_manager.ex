@@ -1,5 +1,4 @@
 defmodule AptaSeeding.SeedingManager.SeasonManager do
-
   alias AptaSeeding.Data
 
   def intervals_and_multipliers() do
