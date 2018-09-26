@@ -17,10 +17,6 @@ defmodule AptaSeeding.SeedingManager.SeedingReporter do
     call(name, is_this_a_team)
   end
 
-  def call(name, true) do
-    # team
-  end
-
   def call(name, false) do
     name
     |> Data.find_or_create_player()

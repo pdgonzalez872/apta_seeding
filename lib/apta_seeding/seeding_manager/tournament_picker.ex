@@ -1,6 +1,6 @@
 defmodule AptaSeeding.SeedingManager.TournamentPicker do
   alias AptaSeeding.Data
-  alias AptaSeeding.SeedingManager.{SeasonManager, SeedingReporter, TournamentPicker}
+  alias AptaSeeding.SeedingManager.{SeasonManager}
 
   #
   # Get Team Points

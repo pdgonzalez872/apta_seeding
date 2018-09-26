@@ -33,12 +33,12 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
   end
 
   def seasons_ago(target_date) do
-    intervals_and_multipliers
+    intervals_and_multipliers()
     |> Enum.find_index(fn season -> target_date in season.interval end)
   end
 
   def find_season_attrs(target_date) do
-    intervals_and_multipliers
+    intervals_and_multipliers()
     |> Enum.find(fn season -> target_date in season.interval end)
   end
 
@@ -118,7 +118,7 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
       target_tournaments =
         Enum.filter(Data.list_tournaments(), fn t -> t.name == tr.tournament.name end)
 
-      result = is_current_tournament(tournament, target_tournaments)
+      is_current_tournament(tournament, target_tournaments)
     end)
     |> Enum.count()
   end

@@ -103,7 +103,7 @@ defmodule AptaSeeding.ETL.FutureTournament do
   @doc """
   This happens in all the bigger/serious tournaments.
   """
-  def create_month_and_day([start_date, end_date]) do
+  def create_month_and_day([start_date, _end_date]) do
     [month_abbrev, day] =
       start_date
       |> String.split(", ")

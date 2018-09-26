@@ -39,16 +39,16 @@ defmodule AptaSeeding.SeedingManager do
   """
 
   alias AptaSeeding.Data
-  alias AptaSeeding.SeedingManager.{SeasonManager, SeedingReporter, TournamentPicker}
+  alias AptaSeeding.SeedingManager.{SeasonManager, TournamentPicker}
 
   def call({:ok, state}) do
     {:ok, state}
     |> get_players_and_teams()
     |> analyze_teams()
-    |> sort_by_results()
+    |> sort_by_highest_results()
   end
 
-  def sort_by_results({:ok, state}) do
+  def sort_by_highest_results({:ok, state}) do
     sorted =
       state.team_data_objects
       |> Enum.sort_by(fn e -> e end)

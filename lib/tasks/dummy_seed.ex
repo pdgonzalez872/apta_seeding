@@ -3,13 +3,8 @@ defmodule Mix.Tasks.DummySeed do
   require Logger
   require IEx
 
-  alias AptaSeeding.Data
-  alias AptaSeeding.Repo
   alias AptaSeeding.ETL.FutureTournament
   alias AptaSeeding.SeedingManager
-  # need to change the namespace there.
-  alias AptaSeeding.SeedingReporter
-  alias AptaSeeding.SeedingManager.SeasonManager
 
   @moduledoc """
   This is the task to be run on a daily/weekly basis
@@ -28,7 +23,6 @@ defmodule Mix.Tasks.DummySeed do
     Logger.info("Fetching live seeds from website, this is live.")
 
     {:ok, result} =
-      priced_tournament_data_structure =
       %{eid: 228, tid: 496}
       |> FutureTournament.call()
       |> SeedingManager.call()
