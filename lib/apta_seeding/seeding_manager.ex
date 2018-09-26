@@ -116,7 +116,7 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(:total_seeding_points, team_results_details.total_points)
     |> Map.put(
       :calculation_details,
-      create_calculation_details([team_results_details], seeding_criteria)
+      create_calculations_explanations([team_results_details], seeding_criteria)
     )
   end
 
@@ -140,7 +140,7 @@ defmodule AptaSeeding.SeedingManager do
     )
     |> Map.put(
       :calculation_details,
-      create_calculation_details(
+      create_calculations_explanations(
         [team_results_details] ++ individual_results_details,
         seeding_criteria
       )
@@ -167,7 +167,7 @@ defmodule AptaSeeding.SeedingManager do
     )
     |> Map.put(
       :calculation_details,
-      create_calculation_details(
+      create_calculations_explanations(
         [team_results_details] ++ individual_results_details,
         seeding_criteria
       )
@@ -186,7 +186,7 @@ defmodule AptaSeeding.SeedingManager do
     |> Map.put(:total_seeding_points, calculate_total_points(individual_results_details))
     |> Map.put(
       :calculation_details,
-      create_calculation_details(individual_results_details, seeding_criteria)
+      create_calculations_explanations(individual_results_details, seeding_criteria)
     )
   end
 
@@ -245,7 +245,7 @@ defmodule AptaSeeding.SeedingManager do
   # Calculation details helpers
   #
 
-  def create_calculation_details(results, _seeding_criteria) do
+  def create_calculations_explanations(results, _seeding_criteria) do
     results
     |> Enum.reduce([], fn r, acc -> acc ++ r.details end)
     |> Enum.map(fn r -> create_details(r) end)
