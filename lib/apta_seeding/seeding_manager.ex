@@ -51,7 +51,6 @@ defmodule AptaSeeding.SeedingManager do
   def sort_by_highest_results({:ok, state}) do
     sorted =
       state.team_data_objects
-      |> Enum.sort_by(fn e -> e end)
       |> Enum.sort(&(Decimal.cmp(&1.total_seeding_points, &2.total_seeding_points) != :gt))
       |> Enum.reverse()
 
