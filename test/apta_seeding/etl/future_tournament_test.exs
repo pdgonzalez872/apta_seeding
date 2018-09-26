@@ -15,7 +15,7 @@ defmodule AptaSeeding.ETL.FutureTournamentTest do
     end
   end
 
-  @tag :skip
+  @tag :integration
   describe "extract/1" do
     test "extract step works as expected with a live request" do
       {:ok, html_response} =
