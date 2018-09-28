@@ -7,7 +7,7 @@ config :apta_seeding, AptaSeedingWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :debug
+config :logger, level: :warn
 
 # Configure your database
 config :apta_seeding, AptaSeeding.Repo,
