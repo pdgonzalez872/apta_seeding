@@ -42,6 +42,10 @@ defmodule AptaSeeding.SeedingManager do
   alias AptaSeeding.SeedingManager.{SeasonManager, TournamentPicker}
 
   def call({:ok, state}) do
+    tournaments = Data.list_tournaments()
+
+    state = Map.put(state, :list_of_tournaments, tournaments)
+
     {:ok, state}
     |> get_players_and_teams()
     |> analyze_teams()
@@ -96,7 +100,7 @@ defmodule AptaSeeding.SeedingManager do
     team_data_objects =
       state.team_data_objects
       |> Enum.map(fn tdo ->
-        handle_seeding_criteria(tdo, get_seeding_criteria(tdo))
+        handle_seeding_criteria(tdo, get_seeding_criteria(tdo, state))
       end)
 
     state =
@@ -196,22 +200,22 @@ defmodule AptaSeeding.SeedingManager do
   @doc """
   Returns the correct seeding criteria for a team
   """
-  def get_seeding_criteria(state) do
+  def get_seeding_criteria(team_data_objects, state) do
     cond do
-      current_tournaments_played(state) >= 3 ->
+      current_tournaments_played(team_data_objects, state) >= 3 ->
         :team_has_played_3_tournaments
 
-      current_tournaments_played(state) == 2 ->
+      current_tournaments_played(team_data_objects, state) == 2 ->
         :team_has_played_2_tournaments_1_best_individual
 
-      current_tournaments_played(state) == 1 ->
+      current_tournaments_played(team_data_objects, state) == 1 ->
         :team_has_played_1_tournament_2_best_individual
 
-      current_tournaments_played(state) == 0 ->
+      current_tournaments_played(team_data_objects, state) == 0 ->
         :team_has_not_played_together_3_best_individual
 
       true ->
-        raise "Error in seeding criteria for #{state.team.name}"
+        raise "Error in seeding criteria for #{team_data_objects.team.name}"
     end
   end
 
@@ -219,12 +223,8 @@ defmodule AptaSeeding.SeedingManager do
   # Season Concept
   #
 
-  def current_tournaments_played(state) do
-    SeasonManager.current_tournaments_played(state)
-  end
-
-  def is_current_tournament(tournament, all_tournaments) do
-    SeasonManager.is_current_tournament(tournament, all_tournaments)
+  def current_tournaments_played(team_data_objects, state) do
+    SeasonManager.current_tournaments_played(team_data_objects, state)
   end
 
   #

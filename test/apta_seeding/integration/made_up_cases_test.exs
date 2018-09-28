@@ -992,6 +992,45 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       # expect(result.first[:calculation_details]).not_to eq bad_calculation_details
     end
+
+    test "Pete and Paul test - do not repeat tournaments when picking them." do
+      # Here are the results we are currently getting
+      # Peter Rose - Paul Rose, team_has_played_1_tournament_2_best_individual, 139.41875, 46.4729
+      #  Peter Rose - Paul Rose, 1.0, 59.375, Hinsdale Men's Challenge|2018-02-10
+      #  Peter Rose, 0.9, 25, APTA Men's Nationals|2018-03-09
+      #  Peter Rose, 0.9, 29.6875, Hinsdale Men's Challenge|2018-02-10
+      #  Paul Rose, 0.9, 20.5, APTA Men's Nationals|2018-03-09
+      #  Paul Rose, 0.9, 13.75, Indianapolis Open Men|2018-02-24
+      #
+      # Note how Hinsdale is used twice.
+
+      # raise "Continue HERE"
+
+      # create the tournaments above, assert we are getting the current output
+      # create the other results they have together, so we can assert it still fails
+      # even though we have the right data.
+      # Then, make it not ok to do so.
+    end
+
+    test "Alex and Tyler test - pick the highest results rather than the most recent" do
+      # Here are the results we are currently getting
+      # Alex Bancila - Tyler Fraser, team_has_not_played_together_3_best_individual, 145.63125, 48.5438
+      #  Tyler Fraser, 0.9, 37.5, APTA Men's Nationals|2018-03-09
+      #  Tyler Fraser, 0.9, 28.875, Indianapolis Open Men|2018-02-24
+      #  Tyler Fraser, 0.9, 29.0625, Philadelphia Open Men|2018-02-17
+      #  Alex Bancila, 0.9, 18, Boston Open Men|2018-01-27
+      #  Alex Bancila, 0.9, 31.5, Midwesterns Men|2018-01-13
+      #  Alex Bancila, 0.9, 16.875, Duane L. Hayden Invitational Men|2017-12-02
+      #
+      # Alex and Tyler both had higher results than the ones picked.
+
+      # create the tournaments above, assert we are getting the current output
+      # create the other results they have together, so we can assert it still fails
+      # even though we have the right data.
+      # Then, make it not ok to do so.
+
+      # raise "Continue HERE"
+    end
   end
 
   # TODO: Deprecate

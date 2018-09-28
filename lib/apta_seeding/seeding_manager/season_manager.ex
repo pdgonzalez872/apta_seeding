@@ -114,8 +114,8 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     |> Enum.zip(Enum.take(multipliers, Enum.count(multipliers)))
   end
 
-  def current_tournaments_played(state) do
-    state.team.team_results
+  def current_tournaments_played(team_data_objects, state) do
+    team_data_objects.team.team_results
     |> Enum.filter(fn tr ->
 
       # TODO: Optmize here
@@ -128,7 +128,10 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
       tournament = tr.tournament
 
       # this is the bad function that takes a long time
-      target_tournaments = Data.find_tournaments_by_name(tr.tournament.name)
+      target_tournaments =
+        Enum.filter(state.list_of_tournaments, fn tournament ->
+          tr.tournament.name == tournament.name
+      end)
 
       is_current_tournament(tournament, target_tournaments)
     end)
