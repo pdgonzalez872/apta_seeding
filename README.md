@@ -67,4 +67,4 @@ Thanks Benny McKnight, Scott Kahler, Eric Miller, Ray Crosta, Graham McNerney an
 
 We accept pull requests from anyone. Please create an issue so we can discuss it prior to creating the pull request.
 
-<div style="text-align:center"><img src="app/assets/images/kc_logo.jpg" alt="Drawing" style="width: 200px;"/></div>
+<div style="text-align:center"><img src="kc_logo.jpg" alt="Drawing" style="width: 200px;"/></div>
