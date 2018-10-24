@@ -1,4 +1,4 @@
-defmodule AptaSeeding.SeedingReporter do
+defmodule AptaSeeding.SeedingManager.SeedingReporter do
   @moduledoc """
   This is the module that does provides some sanity as we go through this exercise.
   """
@@ -15,10 +15,6 @@ defmodule AptaSeeding.SeedingReporter do
   def call(name) do
     is_this_a_team = String.contains?(name, "-")
     call(name, is_this_a_team)
-  end
-
-  def call(name, true) do
-    # team
   end
 
   def call(name, false) do

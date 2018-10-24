@@ -104,6 +104,18 @@ defmodule AptaSeeding.Data do
     Tournament.changeset(tournament, %{})
   end
 
+  def find_tournaments_by_name(tournament_name) do
+    query =
+      from(
+        t in "tournaments",
+        where: t.name == ^tournament_name,
+        select: t.id
+      )
+
+    Repo.all(query)
+    |> Enum.map(fn tournament_id -> get_tournament!(tournament_id) end)
+  end
+
   #
   # Player
   #
@@ -208,7 +220,7 @@ defmodule AptaSeeding.Data do
   end
 
   def create_individual_result(
-        %{player_id: player_id, tournament_id: tournament_id, points: points} = attrs
+        %{player_id: _player_id, tournament_id: _tournament_id, points: _points} = attrs
       ) do
     %IndividualResult{}
     |> IndividualResult.changeset(attrs)
@@ -226,7 +238,7 @@ defmodule AptaSeeding.Data do
   end
 
   def create_team_result(
-        %{team_id: team_id, tournament_id: tournament_id, points: points} = attrs
+        %{team_id: _team_id, tournament_id: _tournament_id, points: _points} = attrs
       ) do
     %TeamResult{}
     |> TeamResult.changeset(attrs)
@@ -282,7 +294,7 @@ defmodule AptaSeeding.Data do
 
   def process_tournament_and_tournament_results(%{
         tournament: tournament,
-        results_structure: results_structure,
+        results_structure: _results_structure,
         tournament_should_be_processed: true
       }) do
     message = "Tournament was already processed -> #{tournament.name_and_date_unique_name}"
@@ -309,14 +321,14 @@ defmodule AptaSeeding.Data do
     |> Repo.preload(:tournament)
   end
 
-  def preload_player(%IndividualResult{} = individual_result) do
-    individual_result
-    |> Repo.preload(:player)
-  end
-
   def preload_tournament(%TeamResult{} = team_result) do
     team_result
     |> Repo.preload([:tournament, :team])
+  end
+
+  def preload_player(%IndividualResult{} = individual_result) do
+    individual_result
+    |> Repo.preload(:player)
   end
 
   def get_teams_for_player(%Player{} = player) do

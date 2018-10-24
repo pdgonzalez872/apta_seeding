@@ -1,5 +1,12 @@
 defmodule AptaSeeding.SeedingManager.SeasonManager do
-  # TODO: Remove multipliers
+  @moduledoc"""
+  This module is responsible for
+  - dealing with seasons
+  - getting the right multipliers for tournaments, based on seasons
+  """
+
+  alias AptaSeeding.Data
+
   def intervals_and_multipliers() do
     [
       %{
@@ -31,12 +38,12 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
   end
 
   def seasons_ago(target_date) do
-    intervals_and_multipliers
+    intervals_and_multipliers()
     |> Enum.find_index(fn season -> target_date in season.interval end)
   end
 
   def find_season_attrs(target_date) do
-    intervals_and_multipliers
+    intervals_and_multipliers()
     |> Enum.find(fn season -> target_date in season.interval end)
   end
 
@@ -71,8 +78,10 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
       Decimal.new("0.9"),
       Decimal.new("0.5"),
       Decimal.new("0.5"),
-      Decimal.new("0.5"), # always 0.5 after a certain point.
-      Decimal.new("0.5"), # always 0.5
+      # always 0.5 after a certain point.
+      Decimal.new("0.5"),
+      # always 0.5
+      Decimal.new("0.5")
     ]
   end
 
@@ -80,9 +89,12 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     [
       Decimal.new("0.9"),
       Decimal.new("0.5"),
-      Decimal.new("0.5"), # always 0.5
-      Decimal.new("0.5"), # always 0.5
-      Decimal.new("0.5"), # always 0.5
+      # always 0.5
+      Decimal.new("0.5"),
+      # always 0.5
+      Decimal.new("0.5"),
+      # always 0.5
+      Decimal.new("0.5")
     ]
   end
 
@@ -100,5 +112,29 @@ defmodule AptaSeeding.SeedingManager.SeasonManager do
     |> Enum.sort_by(fn t -> {t.date.year, t.date.month, t.date.day} end)
     |> Enum.reverse()
     |> Enum.zip(Enum.take(multipliers, Enum.count(multipliers)))
+  end
+
+  def current_tournaments_played(team_data_objects, state) do
+    team_data_objects.team.team_results
+    |> Enum.filter(fn tr ->
+
+      # TODO: Optmize here
+      # There are a few options:
+      # 1) Could add a tournament_date to this model, won't need to query again for the tournament.
+      # 2) Could find out about a season in a different way. Compare dates instead, that would be fastest.
+      #    if we do this (we prob should) we would need to implement the concept of Season that has dates.
+
+      tr = Data.preload_tournament(tr)
+      tournament = tr.tournament
+
+      # this is the bad function that takes a long time
+      target_tournaments =
+        Enum.filter(state.list_of_tournaments, fn tournament ->
+          tr.tournament.name == tournament.name
+      end)
+
+      is_current_tournament(tournament, target_tournaments)
+    end)
+    |> Enum.count()
   end
 end

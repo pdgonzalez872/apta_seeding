@@ -318,8 +318,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       first_team_result = Enum.at(results.team_data_objects, 0)
 
-      assert first_team_result.seeding_criteria ==
-               :team_has_played_1_tournament_2_best_individual
+      assert first_team_result.seeding_criteria == :team_has_played_1_tournament_2_best_individual
 
       assert first_team_result.team_points == Decimal.new("500.00")
       assert first_team_result.total_seeding_points == Decimal.new("1400.00")
@@ -402,8 +401,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       first_team_result = Enum.at(results.team_data_objects, 0)
 
-      assert first_team_result.seeding_criteria ==
-               :team_has_not_played_together_3_best_individual
+      assert first_team_result.seeding_criteria == :team_has_not_played_together_3_best_individual
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("2160.00")
@@ -500,8 +498,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       first_team_result = Enum.at(results.team_data_objects, 0)
 
-      assert first_team_result.seeding_criteria ==
-               :team_has_not_played_together_3_best_individual
+      assert first_team_result.seeding_criteria == :team_has_not_played_together_3_best_individual
 
       assert first_team_result.team_points == Decimal.new("0")
       assert first_team_result.total_seeding_points == Decimal.new("21.1265625")
@@ -530,7 +527,9 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         }
       ]
 
-      sorted_results = Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
+      sorted_results =
+        Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
+
       sorted_expected = Enum.sort_by(expected_details, fn r -> r.tournament_unique_name end)
 
       assert sorted_results == sorted_expected
@@ -560,13 +559,22 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> Data.create_tournament()
 
       west_penn_2015_points = Decimal.new("40.5")
+
       %{team_id: team.id, tournament_id: tournament.id, points: west_penn_2015_points}
       |> Data.create_team_result()
 
-      %{player_id: jm.id, tournament_id: tournament.id, points: Decimal.div(west_penn_2015_points, Decimal.new("2"))}
+      %{
+        player_id: jm.id,
+        tournament_id: tournament.id,
+        points: Decimal.div(west_penn_2015_points, Decimal.new("2"))
+      }
       |> Data.create_individual_result()
 
-      %{player_id: tw.id, tournament_id: tournament.id, points: Decimal.div(west_penn_2015_points, Decimal.new("2"))}
+      %{
+        player_id: tw.id,
+        tournament_id: tournament.id,
+        points: Decimal.div(west_penn_2015_points, Decimal.new("2"))
+      }
       |> Data.create_individual_result()
 
       # They play a tournament together, Cleveland 2015
@@ -583,13 +591,22 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> Data.create_tournament()
 
       cleveland_2015_points = Decimal.new("38.25")
+
       %{team_id: team.id, tournament_id: tournament.id, points: cleveland_2015_points}
       |> Data.create_team_result()
 
-      %{player_id: jm.id, tournament_id: tournament.id, points: Decimal.div(cleveland_2015_points, Decimal.new("2"))}
+      %{
+        player_id: jm.id,
+        tournament_id: tournament.id,
+        points: Decimal.div(cleveland_2015_points, Decimal.new("2"))
+      }
       |> Data.create_individual_result()
 
-      %{player_id: tw.id, tournament_id: tournament.id, points: Decimal.div(cleveland_2015_points, Decimal.new("2"))}
+      %{
+        player_id: tw.id,
+        tournament_id: tournament.id,
+        points: Decimal.div(cleveland_2015_points, Decimal.new("2"))
+      }
       |> Data.create_individual_result()
 
       # Cleveland 2016 happens, they don't play in it
@@ -655,49 +672,48 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       assert first_team_result.seeding_criteria == :team_has_not_played_together_3_best_individual
 
-      expected_details =
-              [
-      #5  "Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25",
-              %{
-                direct_object: "Tom Wiese",
-                multiplier: Decimal.new("0.9"),
-                points: Decimal.new("5.25"),
-                total_points: Decimal.new("4.725"),
-                tournament_unique_name: "11/11/17 Cleveland Masters Men"
-              },
-      #4  "Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875",
-              %{
-                direct_object: "Tom Wiese",
-                multiplier: Decimal.new("0.9"),
-                points: Decimal.new("12.1875"),
-                total_points: Decimal.new("10.96875"),
-                tournament_unique_name: "10/14/17 Steel City Open Men"
-              },
-      #3  "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
-              %{
-                direct_object: "Tom Wiese",
-                multiplier: Decimal.new("0.5"),
-                points: Decimal.new("20.25"),
-                total_points: Decimal.new("10.125"),
-                tournament_unique_name: "12/05/15 West Penn Men"
-              },
-      #2 ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
-              %{
-                direct_object: "Jeff McMaster",
-                multiplier: Decimal.new("0.5"),
-                points: Decimal.new("20.25"),
-                total_points: Decimal.new("10.125"),
-                tournament_unique_name: "12/05/15 West Penn Men"
-              },
-      #1  "Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125",
-              %{
-                direct_object: "Jeff McMaster",
-                multiplier: Decimal.new("0.5"),
-                points: Decimal.new("19.125"),
-                total_points: Decimal.new("9.5625"),
-                tournament_unique_name: "11/14/15 Cleveland Masters Men"
-              },
-            ]
+      expected_details = [
+        # 5  "Tom Wiese, 11/11/17 Cleveland Masters Men, 0.9, 5.25",
+        %{
+          direct_object: "Tom Wiese",
+          multiplier: Decimal.new("0.9"),
+          points: Decimal.new("5.25"),
+          total_points: Decimal.new("4.725"),
+          tournament_unique_name: "11/11/17 Cleveland Masters Men"
+        },
+        # 4  "Tom Wiese, 10/14/17 Steel City Open Men, 0.9, 12.1875",
+        %{
+          direct_object: "Tom Wiese",
+          multiplier: Decimal.new("0.9"),
+          points: Decimal.new("12.1875"),
+          total_points: Decimal.new("10.96875"),
+          tournament_unique_name: "10/14/17 Steel City Open Men"
+        },
+        # 3  "Tom Wiese, 12/05/15 West Penn Men, 0.5, 20.25"]
+        %{
+          direct_object: "Tom Wiese",
+          multiplier: Decimal.new("0.5"),
+          points: Decimal.new("20.25"),
+          total_points: Decimal.new("10.125"),
+          tournament_unique_name: "12/05/15 West Penn Men"
+        },
+        # 2 ["Jeff McMaster, 12/05/15 West Penn Men, 0.5, 20.25",
+        %{
+          direct_object: "Jeff McMaster",
+          multiplier: Decimal.new("0.5"),
+          points: Decimal.new("20.25"),
+          total_points: Decimal.new("10.125"),
+          tournament_unique_name: "12/05/15 West Penn Men"
+        },
+        # 1  "Jeff McMaster, 11/14/15 Cleveland Masters Men, 0.5, 19.125",
+        %{
+          direct_object: "Jeff McMaster",
+          multiplier: Decimal.new("0.5"),
+          points: Decimal.new("19.125"),
+          total_points: Decimal.new("9.5625"),
+          tournament_unique_name: "11/14/15 Cleveland Masters Men"
+        }
+      ]
 
       [first_team_result.calculation_details, expected_details]
       |> Enum.zip()
@@ -752,13 +768,22 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
         |> Data.create_tournament()
 
       sound_shore_2016_points = Decimal.new("56.25")
+
       %{team_id: team.id, tournament_id: tournament.id, points: sound_shore_2016_points}
       |> Data.create_team_result()
 
-      %{player_id: mg.id, tournament_id: tournament.id, points: Decimal.div(sound_shore_2016_points, Decimal.new("2"))}
+      %{
+        player_id: mg.id,
+        tournament_id: tournament.id,
+        points: Decimal.div(sound_shore_2016_points, Decimal.new("2"))
+      }
       |> Data.create_individual_result()
 
-      %{player_id: sk.id, tournament_id: tournament.id, points: Decimal.div(sound_shore_2016_points, Decimal.new("2"))}
+      %{
+        player_id: sk.id,
+        tournament_id: tournament.id,
+        points: Decimal.div(sound_shore_2016_points, Decimal.new("2"))
+      }
       |> Data.create_individual_result()
 
       # # SK plays Boston
@@ -891,8 +916,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
       first_team_result = Enum.at(results.team_data_objects, 0)
 
       expected_details = [
-
-      # ["Marco Grangeiro, 11/04/17 Chicago Charities Men, 0.9, 34.125",
+        # ["Marco Grangeiro, 11/04/17 Chicago Charities Men, 0.9, 34.125",
         %{
           multiplier: Decimal.new("0.9"),
           direct_object: "Marco Grangeiro",
@@ -900,7 +924,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           total_points: Decimal.new("30.7125"),
           tournament_unique_name: "11/04/17 Chicago Charities Men"
         },
-      #  "Marco Grangeiro, 12/02/17 Duane L. Hayden Invitational Men, 0.9, 33.75",
+        #  "Marco Grangeiro, 12/02/17 Duane L. Hayden Invitational Men, 0.9, 33.75",
         %{
           multiplier: Decimal.new("0.9"),
           direct_object: "Marco Grangeiro",
@@ -908,7 +932,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           total_points: Decimal.new("30.375"),
           tournament_unique_name: "12/02/17 Duane L. Hayden Invitational Men"
         },
-      #  "Marco Grangeiro, 11/18/17 Sound Shore Men, 0.9, 30.1875",
+        #  "Marco Grangeiro, 11/18/17 Sound Shore Men, 0.9, 30.1875",
         %{
           multiplier: Decimal.new("0.9"),
           direct_object: "Marco Grangeiro",
@@ -916,7 +940,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           total_points: Decimal.new("27.16875"),
           tournament_unique_name: "11/18/17 Sound Shore Men"
         },
-      #  "Scott Kahler, 01/28/17 Boston Open Men, 0.9, 36.0",
+        #  "Scott Kahler, 01/28/17 Boston Open Men, 0.9, 36.0",
         %{
           multiplier: Decimal.new("0.9"),
           direct_object: "Scott Kahler",
@@ -924,7 +948,7 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           total_points: Decimal.new("32.4"),
           tournament_unique_name: "01/28/17 Boston Open Men"
         },
-      #  "Scott Kahler, 01/14/17 Midwesterns Men, 0.9, 34.875",
+        #  "Scott Kahler, 01/14/17 Midwesterns Men, 0.9, 34.875",
         %{
           multiplier: Decimal.new("0.9"),
           direct_object: "Scott Kahler",
@@ -932,17 +956,19 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
           total_points: Decimal.new("31.3875"),
           tournament_unique_name: "01/14/17 Midwesterns Men"
         },
-      #  "Scott Kahler, 10/14/17 Steel City Open Men, 0.9, 33.75"]
+        #  "Scott Kahler, 10/14/17 Steel City Open Men, 0.9, 33.75"]
         %{
           multiplier: Decimal.new("0.9"),
           direct_object: "Scott Kahler",
           points: Decimal.new("33.75"),
           total_points: Decimal.new("30.375"),
           tournament_unique_name: "10/14/17 Steel City Open Men"
-        },
+        }
       ]
 
-      sorted_results = Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
+      sorted_results =
+        Enum.sort_by(first_team_result.calculation_details, fn r -> r.tournament_unique_name end)
+
       sorted_expected = Enum.sort_by(expected_details, fn r -> r.tournament_unique_name end)
 
       assert sorted_results == sorted_expected
@@ -966,129 +992,44 @@ defmodule AptaSeeding.Integration.MadeUpCases.Test do
 
       # expect(result.first[:calculation_details]).not_to eq bad_calculation_details
     end
-  end
 
-  # TODO: Deprecate
-  describe "is_current_tournament/2" do
-    def create_charities_2017_2016() do
-      [
-        %{
-          name: "Chicago Charities Men",
-          name_and_date_unique_name: "Chicago Charities Men|2017-11-04",
-          date: ~D[2017-11-04],
-          results_have_been_processed: true,
-          raw_results_html: "html"
-        },
-        %{
-          name: "Chicago Charities Men",
-          name_and_date_unique_name: "Chicago Charities Men|2016-11-05",
-          date: ~D[2016-11-05],
-          results_have_been_processed: true,
-          raw_results_html: "html"
-        }
-      ]
-      |> Enum.map(fn tournament_attrs -> Data.create_tournament(tournament_attrs) end)
+    test "Pete and Paul test - do not repeat tournaments when picking them." do
+      # Here are the results we are currently getting
+      # Peter Rose - Paul Rose, team_has_played_1_tournament_2_best_individual, 139.41875, 46.4729
+      #  Peter Rose - Paul Rose, 1.0, 59.375, Hinsdale Men's Challenge|2018-02-10
+      #  Peter Rose, 0.9, 25, APTA Men's Nationals|2018-03-09
+      #  Peter Rose, 0.9, 29.6875, Hinsdale Men's Challenge|2018-02-10
+      #  Paul Rose, 0.9, 20.5, APTA Men's Nationals|2018-03-09
+      #  Paul Rose, 0.9, 13.75, Indianapolis Open Men|2018-02-24
+      #
+      # Note how Hinsdale is used twice.
+
+      # raise "Continue HERE"
+
+      # create the tournaments above, assert we are getting the current output
+      # create the other results they have together, so we can assert it still fails
+      # even though we have the right data.
+      # Then, make it not ok to do so.
     end
 
-    def create_charities_2018() do
-      %{
-        name: "Chicago Charities Men",
-        name_and_date_unique_name: "Chicago Charities Men|2018-11-04",
-        date: ~D[2017-11-04],
-        results_have_been_processed: true,
-        raw_results_html: "html"
-      }
-      |> Data.create_tournament()
+    test "Alex and Tyler test - pick the highest results rather than the most recent" do
+      # Here are the results we are currently getting
+      # Alex Bancila - Tyler Fraser, team_has_not_played_together_3_best_individual, 145.63125, 48.5438
+      #  Tyler Fraser, 0.9, 37.5, APTA Men's Nationals|2018-03-09
+      #  Tyler Fraser, 0.9, 28.875, Indianapolis Open Men|2018-02-24
+      #  Tyler Fraser, 0.9, 29.0625, Philadelphia Open Men|2018-02-17
+      #  Alex Bancila, 0.9, 18, Boston Open Men|2018-01-27
+      #  Alex Bancila, 0.9, 31.5, Midwesterns Men|2018-01-13
+      #  Alex Bancila, 0.9, 16.875, Duane L. Hayden Invitational Men|2017-12-02
+      #
+      # Alex and Tyler both had higher results than the ones picked.
+
+      # create the tournaments above, assert we are getting the current output
+      # create the other results they have together, so we can assert it still fails
+      # even though we have the right data.
+      # Then, make it not ok to do so.
+
+      # raise "Continue HERE"
     end
-
-    test "charities 2017 and 2016, then create 2018" do
-      create_charities_2017_2016()
-
-      charities_2017 =
-        Data.list_tournaments()
-        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
-
-      charities_2016 =
-        Data.list_tournaments()
-        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2016-11-05" end)
-
-      assert SeedingManager.is_current_tournament(charities_2017, Data.list_tournaments()) == true
-
-      assert SeedingManager.is_current_tournament(charities_2016, Data.list_tournaments()) ==
-               false
-
-      create_charities_2018()
-
-      charities_2018 =
-        Data.list_tournaments()
-        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2018-11-04" end)
-
-      assert SeedingManager.is_current_tournament(charities_2018, Data.list_tournaments()) == true
-
-      assert SeedingManager.is_current_tournament(charities_2017, Data.list_tournaments()) ==
-               false
-
-      assert SeedingManager.is_current_tournament(charities_2016, Data.list_tournaments()) ==
-               false
-    end
-  end
-
-  # TODO: delete this
-  describe "get_tournament_multiplier/3" do
-    test "Gets the correct multiplier - Current tournament" do
-      create_charities_2017_2016()
-
-      charities_2017 =
-        Data.list_tournaments()
-        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
-
-      charities_2016 =
-        Data.list_tournaments()
-        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2016-11-05" end)
-
-      charities_2017_results =
-        SeedingManager.get_tournament_multiplier(charities_2017, Data.list_tournaments(), :team)
-
-      assert charities_2017_results.multiplier == Decimal.new("1.0")
-
-      charities_2016_results =
-        SeedingManager.get_tournament_multiplier(charities_2016, Data.list_tournaments(), :team)
-
-      assert charities_2016_results.multiplier == Decimal.new("0.9")
-    end
-  end
-
-  describe "create_tournament_multiplier_matrix/3" do
-    test "returns a matrix with the correct multipliers" do
-      create_charities_2017_2016()
-
-      charities_2017 =
-        Data.list_tournaments()
-        |> Enum.find(fn t -> t.name_and_date_unique_name == "Chicago Charities Men|2017-11-04" end)
-
-      result =
-        SeedingManager.create_tournament_multiplier_matrix(
-          charities_2017,
-          Data.list_tournaments(),
-          :team
-        )
-
-      {most_recent_tournament, most_recent_multiplier} = Enum.at(result, 0)
-
-      assert most_recent_tournament.name_and_date_unique_name ==
-               "Chicago Charities Men|2017-11-04"
-
-      assert most_recent_multiplier == Decimal.new(1.0)
-
-      {second_most_recent_tournament, second_most_recent_multiplier} = Enum.at(result, 1)
-
-      assert second_most_recent_tournament.name_and_date_unique_name ==
-               "Chicago Charities Men|2016-11-05"
-
-      assert second_most_recent_multiplier == Decimal.new(0.9)
-    end
-  end
-
-  describe "get_team_points/2" do
   end
 end

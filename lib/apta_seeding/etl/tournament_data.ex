@@ -59,28 +59,27 @@ defmodule AptaSeeding.ETL.TournamentData do
         |> create_date_and_name()
         |> create_attributes()
 
-      result =
-        case Data.create_tournament(attrs) do
-          {:ok, tournament_record} ->
-            Logger.info(
-              "New tournament -> #{attrs.name_and_date_unique_name}, will fetch tournament results"
-            )
+      case Data.create_tournament(attrs) do
+        {:ok, tournament_record} ->
+          Logger.info(
+            "New tournament -> #{attrs.name_and_date_unique_name}, will fetch tournament results"
+          )
 
-            {:ok, raw_results_html} =
-              tournament
-              |> create_tournament_json_payload()
-              |> make_request()
-              |> decode_json_response()
+          {:ok, raw_results_html} =
+            tournament
+            |> create_tournament_json_payload()
+            |> make_request()
+            |> decode_json_response()
 
-            tournament_record
-            |> Data.update_tournament(%{raw_results_html: raw_results_html})
+          tournament_record
+          |> Data.update_tournament(%{raw_results_html: raw_results_html})
 
-          {:error, changeset} ->
-            Logger.info("Tournament already created")
+        {:error, _changeset} ->
+          Logger.info("Tournament already created")
 
-          _ ->
-            raise "whoa, not new or existing. Interesting! #{IO.inspect(tournament)}"
-        end
+        _ ->
+          raise "whoa, not new or existing. Interesting! #{IO.inspect(tournament)}"
+      end
     end)
 
     state =

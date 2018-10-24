@@ -2,7 +2,6 @@ defmodule AptaSeeding.DataTest do
   use AptaSeeding.DataCase
 
   alias AptaSeeding.Data
-  alias AptaSeeding.Repo
 
   describe "tournaments" do
     alias AptaSeeding.Data.Tournament
@@ -97,7 +96,7 @@ defmodule AptaSeeding.DataTest do
       assert post_player_create - pre_player_count == 1
       assert cant_find_a_player_that_does_not_exist_so_it_will_create.name == "Kasey"
 
-      {:ok, will_find_this_player_since_it_exists} = Data.find_or_create_player("Kasey")
+      {:ok, _will_find_this_player_since_it_exists} = Data.find_or_create_player("Kasey")
 
       post_player_find = Data.list_players() |> Enum.count()
 
@@ -118,7 +117,7 @@ defmodule AptaSeeding.DataTest do
       assert post_team_create - pre_team_count == 1
       assert cant_find_a_team_that_does_not_exist_so_it_will_create.name == "Butler - Kasey"
 
-      will_find_this_team_since_it_exists =
+      _will_find_this_team_since_it_exists =
         Data.find_or_create_team(%{team_name: "Butler - Kasey", player_1_id: 1, player_2_id: 2})
 
       post_team_find = Data.list_teams() |> Enum.count()
@@ -181,7 +180,7 @@ defmodule AptaSeeding.DataTest do
       tournament = create_indi_tournament()
       assert tournament.results_have_been_processed == false
 
-      output =
+      _output =
         Data.process_tournament_and_tournament_results(%{
           tournament: tournament,
           results_structure: results_structure,

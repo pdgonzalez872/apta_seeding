@@ -1,12 +1,9 @@
 defmodule AptaSeeding.AcceptanceTest do
   use ExUnit.Case
 
-  alias AptaSeeding.Data
   alias AptaSeeding.Repo
   alias AptaSeeding.ETL.FutureTournament
   alias AptaSeeding.SeedingManager
-  # need to change the namespace there.
-  alias AptaSeeding.SeedingReporter
   alias AptaSeeding.SeedingManager.SeasonManager
 
   setup do
@@ -34,7 +31,7 @@ defmodule AptaSeeding.AcceptanceTest do
         |> Path.join()
         |> File.read!()
 
-      result =
+      _result =
         {:ok, html}
         |> FutureTournament.transform()
         |> SeedingManager.call()
@@ -42,10 +39,10 @@ defmodule AptaSeeding.AcceptanceTest do
       s = SeasonManager.call()
 
       target_date = ~D[2017-10-20]
-      result = Enum.find_index(s, fn season -> target_date in season.interval end)
+      _result = Enum.find_index(s, fn season -> target_date in season.interval end)
 
-      require IEx
-      IEx.pry()
+      # require IEx
+      # IEx.pry()
     end
   end
 end
