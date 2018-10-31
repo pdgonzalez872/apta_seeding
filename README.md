@@ -2,7 +2,7 @@ This is a clone of the APTA seeding app I wrote earlier in 2018 but written in E
 
 There are some interesting parts of this project that did get done:
 
-- The ETL process and API is done well I believe.
+- [The ETL process and API is done well I believe:] (https://github.com/pdgonzalez872/apta_seeding/tree/master/lib/apta_seeding/etl)
 
 Here is the readme from the other project. Please let me know if you have any questions by reaching out to me via email.
 
